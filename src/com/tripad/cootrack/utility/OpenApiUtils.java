@@ -21,6 +21,7 @@ public class OpenApiUtils  {
 	
 	public String getToken() {
 		//http://api.gpsoo.net/1/auth/access_token?account=demobkt&time=1445586322&signature=c4fc3f5175a41e63bc5b33eda62fa1b5
+		return null;
 	}
 	
 	public long getUnixTime() {
