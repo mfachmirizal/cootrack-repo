@@ -1,21 +1,24 @@
 package com.tripad.cootrack.utility;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Date;
-
- 
- import org.openbravo.base.exception.OBException;
- //import org.openbravo.client.kernel.BaseActionHandler;
- import org.openbravo.dal.service.OBDal;
- import com.tripad.cootrack.data.TmcToken;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
-import org.openbravo.dal.service.OBCriteria;
 import org.hibernate.criterion.Restrictions;
+import org.openbravo.base.exception.OBException;
 import org.openbravo.base.provider.OBProvider;
+import org.openbravo.dal.service.OBCriteria;
+//import org.openbravo.client.kernel.BaseActionHandler;
+import org.openbravo.dal.service.OBDal;
+
+import com.tripad.cootrack.data.TmcToken;
 
 public class OpenApiUtils {
   // Nanti static var ini hapus
@@ -23,91 +26,158 @@ public class OpenApiUtils {
   public static final String COOTRACK_PASSWORD = "123456";
   // static var
   public static final String COOTRACK_GET_TOKEN_URL = "http://api.gpsoo.net/1/auth/access_token?";
-  public static final String COOTRACK_GET_MONITOR_URL = "http://api.gpsoo.net/1/account/monitor?"; 
+  public static final String COOTRACK_GET_MONITOR_URL_BY_TARGET = "http://api.gpsoo.net/1/account/monitor?target";
 
   public OpenApiUtils() {
   }
-  
+
   private String commonParameters(boolean tokenIsAlreadyExist) {
-      if (tokenIsAlreadyExist) {
-        return "access_token="+getToken()+"&account=" + COOTRACK_USERNAME + "&time="+getUnixTime();
-      }else {
-        return "account=" + COOTRACK_USERNAME + "&time="+getUnixTime() + "&signature="+ (convertToMd5((convertToMd5(COOTRACK_PASSWORD)) + getUnixTime()));
-      }
+    if (tokenIsAlreadyExist) {
+      return "access_token=" + getToken().getToken() + "&account=" + COOTRACK_USERNAME + "&time="
+          + getUnixTime();
+    } else {
+      return "account=" + COOTRACK_USERNAME + "&time=" + getUnixTime() + "&signature="
+          + (convertToMd5((convertToMd5(COOTRACK_PASSWORD)) + getUnixTime()));
+    }
   }
-  
+
   /**
    * method untuk memeriksa hasil response dari api server
-   * @param response berupa message dari server :
-   *    Code 	Desc
-   *     10001 	System Error
-   *     10002 	The API you request does not exist
-   *     10003 	Request frequence exceeds limitation
-   *     10004 	access_token not existed
-   *     10005 	access_token error
-   *     10006 	access_token has expired, a new one should be acquired
+   * 
+   * @param response
+   *          berupa message dari server : Code Desc 10001 System Error 10002 The API you request
+   *          does not exist 10003 Request frequence exceeds limitation 10004 access_token not
+   *          existed 10005 access_token error 10006 access_token has expired, a new one should be
+   *          acquired
    *
-   *     Business Level Error Codes：
-   *     Code 	Desc
-   *     20001 	Account or Password Error
-   *     20002 	Required Parameter missing (%s)
-   *     20003 	Parameter Value Not Valid
-   *     20004 	Account does not existed
-   *     20005 	Not authorized to get the account info
-   *     20006 	The count of targets under the account (%s) exceeds limitation
-   *     20007 	IMEI (%s) is not existed
-   *     20008 	Not authorized to get the target info
-   *     20009 	Count of targets being requestd exceeds limitation
-   *     20010 	Target (%s) has expired
-   *     20011 	Map Type Error
-   *     20012 	Latitude or Longitude Not Valid
-   *     55555  Error Tripad (bisa berbagai macam sebab)
+   *          Business Level Error Codes： Code Desc 20001 Account or Password Error 20002 Required
+   *          Parameter missing (%s) 20003 Parameter Value Not Valid 20004 Account does not existed
+   *          20005 Not authorized to get the account info 20006 The count of targets under the
+   *          account (%s) exceeds limitation 20007 IMEI (%s) is not existed 20008 Not authorized to
+   *          get the target info 20009 Count of targets being requestd exceeds limitation 20010
+   *          Target (%s) has expired 20011 Map Type Error 20012 Latitude or Longitude Not Valid
+   *          55555 Error Tripad (bisa berbagai macam sebab)
    */
-  private void cekStatusResponse(String response) {
-      //cek error message :
-      
-  }
-  
-  public TmcToken getToken() {
-    final  OBCriteria<TmcToken> tmcTokenCrit = OBDal.getInstance().createCriteria(TmcToken.class);
-    tmcTokenCrit.add(Restrictions.eq(TmcToken.PROPERTY_VALUE, "1"));
-    
-    if (tmcTokenCrit.count() > 0) {
-        for (TmcToken tokenFromDB : tmcTokenCrit.list()) {
-            return tokenFromDB;
+  private String checkAndProcessStatusResponse(JSONObject response) {
+    // cek error message :
+    int result = 55555;
+    try {
+      result = Integer.parseInt(response.get("ret").toString());
+      /*
+       * 10001 System Error 10002 The API you request does not exist 10003 Request frequence exceeds
+       * limitation 10004 access_token not existed 10005 access_token error 10006 access_token has
+       * expired, a new one should be acquired
+       * 
+       * Business Level Error Codes： 20001 Account or Password Error 20002 Required Parameter
+       * missing (%s) 20003 Parameter Value Not Valid 20004 Account does not existed 20005 Not
+       * authorized to get the account info 20006 The count of targets under the account (%s)
+       * exceeds limitation 20007 IMEI (%s) is not existed 20008 Not authorized to get the target
+       * info 20009 Count of targets being requestd exceeds limitation 20010 Target (%s) has expired
+       * 20011 Map Type Error 20012 Latitude or Longitude Not Valid
+       */
+      if (result == 0) {
+        // untuk test return ada : return ""; // sukses
+        JSONArray headerIds = (JSONArray) response.get("data");
+        String rslt = "";
+        for (int i = 0; i < headerIds.length(); i++) {
+          rslt += headerIds.getString(i);
         }
+        return rslt;
+      } else if (result == 10006) {
+        // token expired, ambil yg baru
+        deleteToken();
+        if (getToken() != null) {
+          return getToken().getMessage();
+        } else {
+          return "Gagal Mendapatkan Token Kembali !, Token = null";
+        }
+      } else { // error code lain
+        return (response.get("msg").toString());
+      }
+    } catch (NumberFormatException e) {
+      return "Return Message bukan angka !";
+    } catch (JSONException e) {
+      return "JSON Exception !" + e.getMessage();
     }
-    else {
-        //dapatkan token dari server API lewat internet
-        String getTokenUrl = COOTRACK_GET_TOKEN_URL +commonParameters(false);
-        String jsonResponse = new CootrackHttpClient().post(getTokenUrl);
-        JSONObject jsonData = null;
-        try {
-            jsonData = new JSONObject(jsonResponse);
+    // return "Error Pengecekan status, Status tidak di temukan";
+  }
 
-            TmcToken tmcToken = OBProvider.getInstance().get(TmcToken.class);	
-            tmcToken.setActive(true);
-            tmcToken.setValue("1");        
-            if ((int)jsonData.get("ret") == 0) {
-                tmcToken.setToken(jsonData.get("access_token").toString());    
-            }
-            else {
-                tmcToken.setToken("-");
-            }
-            tmcToken.setMessage(jsonData.get("msg").toString());
-            tmcToken.setReturnCode(((int)jsonData.get("ret"))+"");  
+  private String encode(String param) {
 
-            OBDal.getInstance().save(tmcToken);
-            OBDal.getInstance().flush();
+    return param;
+  }
 
-            OBDal.getInstance().commitAndClose();
+  public String getListMonitoring() {
+    String debug = ""; // hapus nanti
+    String getMonitorUrl = COOTRACK_GET_MONITOR_URL_BY_TARGET + "=" + encodeString("Bangun") + "&"
+        + commonParameters(true);
 
-            return tmcToken;
-            
-        } catch (JSONException ex) {
-            Logger.getLogger(OpenApiUtils.class.getName()).log(Level.SEVERE, null, ex);
-             throw new OBException("Error get Json ! : " + ex.getMessage());
+    String jsonResponse = "";
+    jsonResponse = new CootrackHttpClient().post(getMonitorUrl);
+    JSONObject jsonData;
+    try {
+      jsonData = new JSONObject(jsonResponse);
+    } catch (JSONException e) {
+      return "Error : " + e.getMessage();
+    }
+    // cek status response dari server
+
+    return checkAndProcessStatusResponse(jsonData);
+  }
+
+  public void deleteToken() {
+    final OBCriteria<TmcToken> tmcTokenCrit = OBDal.getInstance().createCriteria(TmcToken.class);
+    tmcTokenCrit.add(Restrictions.eq(TmcToken.PROPERTY_VALUE, "1"));
+    for (TmcToken tokenFromDB : tmcTokenCrit.list()) {
+      OBDal.getInstance().remove(tokenFromDB);
+      OBDal.getInstance().flush();
+      OBDal.getInstance().commitAndClose();
+    }
+  }
+
+  public TmcToken getToken() {
+    final OBCriteria<TmcToken> tmcTokenCrit = OBDal.getInstance().createCriteria(TmcToken.class);
+    tmcTokenCrit.add(Restrictions.eq(TmcToken.PROPERTY_VALUE, "1"));
+
+    if (tmcTokenCrit.count() > 0) {
+      for (TmcToken tokenFromDB : tmcTokenCrit.list()) {
+        return tokenFromDB;
+      }
+    } else {
+      // dapatkan token dari server API lewat internet
+      TmcToken tmcToken = OBProvider.getInstance().get(TmcToken.class);
+      String getTokenUrl = COOTRACK_GET_TOKEN_URL + commonParameters(false);
+      String jsonResponse = new CootrackHttpClient().post(getTokenUrl);
+      JSONObject jsonData = null;
+
+      try {
+        jsonData = new JSONObject(jsonResponse);
+
+        tmcToken.setActive(true);
+        tmcToken.setValue("1");
+        if (Integer.parseInt(jsonData.get("ret").toString()) == 0) {
+          tmcToken.setToken(jsonData.get("access_token").toString());
+        } else {
+          tmcToken.setToken("-");
         }
+        tmcToken.setMessage(jsonData.get("msg").toString());
+        tmcToken.setReturnCode((Integer.parseInt(jsonData.get("ret").toString())) + "");
+
+        OBDal.getInstance().save(tmcToken);
+        OBDal.getInstance().flush();
+
+        OBDal.getInstance().commitAndClose();
+
+        return tmcToken;
+
+      } catch (JSONException ex) {
+        tmcToken.setActive(true);
+        tmcToken.setValue("1");
+        tmcToken.setToken("-");
+        tmcToken.setMessage(ex.getMessage());
+        tmcToken.setReturnCode("55555");
+        Logger.getLogger(OpenApiUtils.class.getName()).log(Level.SEVERE, null, ex);
+      }
     }
     return null;
   }
@@ -116,6 +186,14 @@ public class OpenApiUtils {
     Date date = new Date();
     long unixTime = (long) date.getTime() / 1000;
     return unixTime;
+  }
+
+  private String encodeString(String param) {
+    try {
+      return URLEncoder.encode(param, "UTF-8");
+    } catch (UnsupportedEncodingException e) {
+      throw new OBException("Error ! : " + e.getMessage());
+    }
   }
 
   public String convertToMd5(String param) {
