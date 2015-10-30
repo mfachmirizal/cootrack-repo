@@ -20,8 +20,8 @@ public class RefreshListChildAccount extends BaseActionHandler {
     
     protected JSONObject execute(Map<String, Object> parameters, String data) {
         String hasil = "";
-        HashMap<String,String> tempDataHash = new HashMap<String , String>();
-        ArrayList<HashMap<String,String>> tempDataServer = new ArrayList<HashMap<String,String>>();
+        
+        ArrayList<String> tempIdDataServer = new ArrayList<String>();
         try {
             OpenApiUtils utils = new OpenApiUtils();
             
@@ -31,18 +31,18 @@ public class RefreshListChildAccount extends BaseActionHandler {
             JSONArray childList = (JSONArray) utils.requestStringListChildAccount().get("children");
             String rslt = "";
             OBCriteria<TmcListChildAcc> tmcListChildAcc = null;
-            OBCriteria<TmcListChildAcc> tmcNotExsListChildAcc = null;
+            //OBCriteria<TmcListChildAcc> tmcNotExsListChildAcc = null;
             for (int i = 0; i < childList.length(); i++) {
                 String id = childList.getJSONObject(i).get("id").toString();
                 String name = childList.getJSONObject(i).get("name").toString();
                 String showname = childList.getJSONObject(i).get("showname").toString();
-//                
+//
 //                tempDataHash.put("id", id);
 //                tempDataHash.put("name", name);
 //                tempDataHash.put("showname", showname);
-//                
+//
 //                tempDataServer.add(tempDataHash);
-               
+                
                 tmcListChildAcc = OBDal.getInstance()
                         .createCriteria(TmcListChildAcc.class);
                 tmcListChildAcc.add(Restrictions.eq(TmcListChildAcc.PROPERTY_VALUE, id));
@@ -66,20 +66,17 @@ public class RefreshListChildAccount extends BaseActionHandler {
                     OBDal.getInstance().flush();
                 }
                 
+                tempIdDataServer.add(id);
                 
-                // Bagian delete yg tidak ada di server
-//                tmcNotExsListChildAcc = OBDal.getInstance()
-//                        .createCriteria(TmcListChildAcc.class);
-//                tmcNotExsListChildAcc.add(Restrictions.not(Restrictions.eq(TmcListChildAcc.PROPERTY_VALUE, id))); //
-//                
-//                //TmcListChildAcc notExistsTmcListChildAcc = ;
-//                if (tmcNotExsListChildAcc.count() > 0) {
-//                    OBDal.getInstance().remove(tmcNotExsListChildAcc.list().get(0));
-//                    OBDal.getInstance().flush();
-//                }
-                
-               
-                
+            }
+            
+            tmcListChildAcc = OBDal.getInstance()
+                    .createCriteria(TmcListChildAcc.class);
+            tmcListChildAcc.add(Restrictions.not(Restrictions.in(TmcListChildAcc.PROPERTY_VALUE, tempIdDataServer))); //
+            //TmcListChildAcc notExistsTmcListChildAcc = ;
+            for (TmcListChildAcc removeRecord : tmcListChildAcc.list()) {
+                OBDal.getInstance().remove(removeRecord);
+                OBDal.getInstance().flush();
             }
             
             
