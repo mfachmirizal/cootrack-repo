@@ -62,8 +62,10 @@ public class RefreshListChildAccount extends BaseActionHandler {
                 tmcListChildAcc.add(Restrictions.ne(TmcListChildAcc.PROPERTY_VALUE, id));
                 
                 //TmcListChildAcc notExistsTmcListChildAcc = ;
+                if (tmcListChildAcc.count() > 0) {
                 OBDal.getInstance().remove(tmcListChildAcc.list().get(0));
                 OBDal.getInstance().flush();
+                }
                 
                 
                 
