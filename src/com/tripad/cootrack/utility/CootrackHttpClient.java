@@ -33,8 +33,9 @@ public class CootrackHttpClient {
             if (statusCode != HttpStatus.SC_OK) {
                 //System.err.println("Method failed: " + method.getStatusLine());
                 //throw new OBException("Error !, status code : " + statusCode
-                result = "{\"ret\": 55555, " +
-                        "    \"msg\": \"Error !, status : ("+statusCode+") "+HttpStatus.getStatusText(statusCode)+" \"}";
+                result = new CustomJsonErrorResponse("5555", "Error !, status : ("+statusCode+") "+HttpStatus.getStatusText(statusCode)).getStringErrResponse();
+                        /* "{\"ret\": 55555, " +                        
+                "    \"msg\": \"Error !, status : ("+statusCode+") "+HttpStatus.getStatusText(statusCode)+" \"}"; */
                 return result;
             }
             
@@ -50,13 +51,15 @@ public class CootrackHttpClient {
             //System.err.println("Fatal protocol violation: " + e.getMessage());
             //e.printStackTrace();
             //throw new OBException("Tidak dapat Tersambung ke server API !"+e.getMessage());
-            result = "{\"ret\": 55555, " +
-                        "    \"msg\": \"Fatal protocol violation : "+e.getMessage()+" \"}";
+            result = new CustomJsonErrorResponse("5555", "Fatal protocol violation : "+e.getMessage()).getStringErrResponse(); 
+                    /* "{\"ret\": 55555, " +
+                        "    \"msg\": \"Fatal protocol violation : "+e.getMessage()+" \"}"; */
         } catch (IOException e) {
             // System.err.println("Fatal transport error: " + e.getMessage());
             //e.printStackTrace();
-            result = "{\"ret\": 55555, " +
-                        "    \"msg\": \"Gagal Terhubung dengan server,Harap Cek Koneksi internet anda. Target : "+e.getMessage()+" \"}";
+            result = new CustomJsonErrorResponse("5555", "Gagal Terhubung dengan server,Harap Cek Koneksi internet anda. Target : "+e.getMessage() ).getStringErrResponse(); 
+                    /* "{\"ret\": 55555, " +
+                        "    \"msg\": \"Gagal Terhubung dengan server,Harap Cek Koneksi internet anda. Target : "+e.getMessage()+" \"}"; */
         } finally {
             // Release the connection.
             method.releaseConnection();

@@ -15,8 +15,8 @@ public class RefreshTokenHandler extends BaseActionHandler {
     try {
       OpenApiUtils utils = new OpenApiUtils();
 
-      // hasil = utils.getToken().getMessage();
-      hasil = utils.getListMonitoring();
+       hasil = utils.getToken().getMessage();
+      //hasil = utils.getListMonitoring();
 
       // String isProcessed = "N";
 
