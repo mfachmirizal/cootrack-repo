@@ -69,7 +69,7 @@
             } else if (view.isEditingGrid && grid.getEditForm().isNew) {
                 this.setDisabled(true);
             } else {
-                this.setDisabled(selectedRecords.length !== 0);
+                this.setDisabled(false);
             }
         }
     };
