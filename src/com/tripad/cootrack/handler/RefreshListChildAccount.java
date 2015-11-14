@@ -8,6 +8,7 @@ import org.openbravo.base.exception.OBException;
 import org.openbravo.client.kernel.BaseActionHandler;
 
 import com.tripad.cootrack.utility.OpenApiUtils;
+import com.tripad.cootrack.utility.ResponseResultToDB;
 import java.util.ArrayList;
 import java.util.HashMap;
 import org.codehaus.jettison.json.JSONArray;
@@ -21,67 +22,15 @@ public class RefreshListChildAccount extends BaseActionHandler {
     protected JSONObject execute(Map<String, Object> parameters, String data) {
         String hasil = "";
         
-        ArrayList<String> tempIdDataServer = new ArrayList<String>();
+        //ArrayList<String> tempIdDataServer = new ArrayList<String>();
         try {
             OpenApiUtils utils = new OpenApiUtils();
+            JSONObject hasilRetrieve  = utils.requestStringListChildAccount();
             
-            hasil = utils.requestStringListChildAccount().get("msg").toString();
-            //debug code
-            //hasil =utils.requestStringListMonitoring().toString()+" POPOP "+utils.requestStringListChildAccount().toString();
-            JSONArray childList = (JSONArray) utils.requestStringListChildAccount().get("children");
-            String rslt = "";
-            OBCriteria<TmcListChildAcc> tmcListChildAcc = null;
-            //OBCriteria<TmcListChildAcc> tmcNotExsListChildAcc = null;
-            for (int i = 0; i < childList.length(); i++) {
-                String id = childList.getJSONObject(i).get("id").toString();
-                String name = childList.getJSONObject(i).get("name").toString();
-                String showname = childList.getJSONObject(i).get("showname").toString();
-//
-//                tempDataHash.put("id", id);
-//                tempDataHash.put("name", name);
-//                tempDataHash.put("showname", showname);
-//
-//                tempDataServer.add(tempDataHash);
-                
-                tmcListChildAcc = OBDal.getInstance()
-                        .createCriteria(TmcListChildAcc.class);
-                tmcListChildAcc.add(Restrictions.eq(TmcListChildAcc.PROPERTY_VALUE, id));
-                
-                if (tmcListChildAcc.count() == 0 ) { //bila tidak ada maka insert
-                    TmcListChildAcc newTmcListChildAcc = OBProvider.getInstance().get(TmcListChildAcc.class);
-                    
-                    newTmcListChildAcc.setActive(true);
-                    newTmcListChildAcc.setValue(id);
-                    newTmcListChildAcc.setName(name);
-                    newTmcListChildAcc.setShowname(showname);
-                    
-                    OBDal.getInstance().save(newTmcListChildAcc);
-                    OBDal.getInstance().flush();
-                } else { //bila adaa edit
-                    
-                    tmcListChildAcc.list().get(0).setName(name);
-                    tmcListChildAcc.list().get(0).setShowname(showname);
-                    
-                    OBDal.getInstance().save(tmcListChildAcc.list().get(0));
-                    OBDal.getInstance().flush();
-                }
-                
-                tempIdDataServer.add(id);
-                
+            hasil = hasilRetrieve.get("msg").toString();
+            if (hasil.length() == 0) {
+                new ResponseResultToDB().validateChildList(hasilRetrieve);
             }
-            
-            tmcListChildAcc = OBDal.getInstance()
-                    .createCriteria(TmcListChildAcc.class);
-            tmcListChildAcc.add(Restrictions.not(Restrictions.in(TmcListChildAcc.PROPERTY_VALUE, tempIdDataServer))); //
-            //TmcListChildAcc notExistsTmcListChildAcc = ;
-            for (TmcListChildAcc removeRecord : tmcListChildAcc.list()) {
-                OBDal.getInstance().remove(removeRecord);
-                OBDal.getInstance().flush();
-            }
-            
-            
-            OBDal.getInstance().commitAndClose();
-            
             //new CustomJsonErrorResponse("5555", "Fatal protocol violation : "+e.getMessage()).getErrResponse();
             JSONObject json = new JSONObject();
             json.put("jawaban", hasil);

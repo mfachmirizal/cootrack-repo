@@ -106,6 +106,10 @@ public class OpenApiUtils {
         } catch (JSONException e) {
             throw new OBException("Error [OpenApiUtils] ! : " + e.getMessage());//return new CustomJsonErrorResponse("5555", "OpenApiUtils, JSON Exception !" + e.getMessage() ).getJSONErrResponse();
         }
+         catch (Throwable z) {
+            throw new OBException("Error [OpenApiUtils] ! : " + z.getMessage());//return new CustomJsonErrorResponse("5555", "OpenApiUtils, JSON Exception !" + e.getMessage() ).getJSONErrResponse();
+        }
+        
         // return "Error Pengecekan status, Status tidak di temukan";
     }
     
