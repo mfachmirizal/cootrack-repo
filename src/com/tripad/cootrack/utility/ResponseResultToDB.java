@@ -6,6 +6,7 @@
 package com.tripad.cootrack.utility;
 
 import com.tripad.cootrack.data.TmcListChildAcc;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONObject;
@@ -14,6 +15,8 @@ import org.openbravo.base.exception.OBException;
 import org.openbravo.base.provider.OBProvider;
 import org.openbravo.dal.service.OBCriteria;
 import org.openbravo.dal.service.OBDal;
+import org.openbravo.model.common.businesspartner.BusinessPartner;
+import org.openbravo.model.common.businesspartner.Category;
 
 /**
  *
@@ -81,7 +84,7 @@ public class ResponseResultToDB {
         ArrayList<String> tempIdDataServer = new ArrayList<String>();
         JSONArray childList = (JSONArray) hasilRetrieve.get("children");
         String rslt = "";
-        OBCriteria<TmcListChildAcc> tmcListChildAcc = null;
+        OBCriteria<BusinessPartner> tmcListChildAcc = null;
         //OBCriteria<TmcListChildAcc> tmcNotExsListChildAcc = null;
         for (int i = 0; i < childList.length(); i++) {
             String id = childList.getJSONObject(i).get("id").toString();
@@ -89,23 +92,33 @@ public class ResponseResultToDB {
             String showname = childList.getJSONObject(i).get("showname").toString();
             
             tmcListChildAcc = OBDal.getInstance()
-                    .createCriteria(TmcListChildAcc.class);
-            tmcListChildAcc.add(Restrictions.eq(TmcListChildAcc.PROPERTY_VALUE, id));
+                    .createCriteria(BusinessPartner.class);
+            tmcListChildAcc.add(Restrictions.eq(BusinessPartner.PROPERTY_TMCOPENAPIIDENT, id));
             
             if (tmcListChildAcc.count() == 0 ) { //bila tidak ada maka insert
-                TmcListChildAcc newTmcListChildAcc = OBProvider.getInstance().get(TmcListChildAcc.class);
+                BusinessPartner newBusinessPartner = OBProvider.getInstance().get(BusinessPartner.class);
                 
-                newTmcListChildAcc.setActive(true);
-                newTmcListChildAcc.setValue(id);
-                newTmcListChildAcc.setName(name);
-                newTmcListChildAcc.setShowname(showname);
+                newBusinessPartner.setActive(true);
+                newBusinessPartner.setTmcOpenapiIdent(id);
+            //    newBusinessPartner.setTmcOpenapiUser(name);
+                newBusinessPartner.setSearchKey(name);
+                newBusinessPartner.setName(showname);
+                newBusinessPartner.setConsumptionDays(Long.getLong("0"));
+                newBusinessPartner.setCreditLimit(BigDecimal.ZERO);
                 
-                OBDal.getInstance().save(newTmcListChildAcc);
+                OBCriteria<Category> bpCrit = OBDal.getInstance()
+                        .createCriteria(Category.class);
+                bpCrit.add(Restrictions.eq(Category.PROPERTY_SEARCHKEY, "CustomerOpenApi"));
+                
+                newBusinessPartner.setBusinessPartnerCategory(bpCrit.list().get(0));
+                
+                OBDal.getInstance().save(newBusinessPartner);
                 OBDal.getInstance().flush();
             } else { //bila adaa edit
                 
-                tmcListChildAcc.list().get(0).setName(name);
-                tmcListChildAcc.list().get(0).setShowname(showname);
+             //   tmcListChildAcc.list().get(0).setTmcOpenapiUser(name);
+                tmcListChildAcc.list().get(0).setSearchKey(name);
+                tmcListChildAcc.list().get(0).setName(showname);
                 
                 OBDal.getInstance().save(tmcListChildAcc.list().get(0));
                 OBDal.getInstance().flush();
@@ -117,10 +130,10 @@ public class ResponseResultToDB {
         
         //adegan menghapus record yg ada di local tapi tidak ada di server open api
         tmcListChildAcc = OBDal.getInstance()
-                .createCriteria(TmcListChildAcc.class);
-        tmcListChildAcc.add(Restrictions.not(Restrictions.in(TmcListChildAcc.PROPERTY_VALUE, tempIdDataServer))); //
+                .createCriteria(BusinessPartner.class);
+        tmcListChildAcc.add(Restrictions.not(Restrictions.in(BusinessPartner.PROPERTY_TMCOPENAPIIDENT, tempIdDataServer))); //
         //TmcListChildAcc notExistsTmcListChildAcc = ;
-        for (TmcListChildAcc removeRecord : tmcListChildAcc.list()) {
+        for (BusinessPartner removeRecord : tmcListChildAcc.list()) {
             OBDal.getInstance().remove(removeRecord);
             OBDal.getInstance().flush();
         }

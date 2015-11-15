@@ -10,12 +10,13 @@ import com.tripad.cootrack.utility.ResponseResultToDB;
 import java.util.Map;
 import org.codehaus.jettison.json.JSONObject;
 import org.openbravo.base.exception.OBException;
+import org.openbravo.client.kernel.BaseActionHandler;
 
 /**
  *
  * @author mfachmirizal
  */
-public class RefreshListBPFromOA {
+public class RefreshListBPFromOA extends BaseActionHandler{
     protected JSONObject execute(Map<String, Object> parameters, String data) {
         String hasil = "";
         OpenApiUtils utils = new OpenApiUtils();
@@ -26,6 +27,8 @@ public class RefreshListBPFromOA {
             if (hasil.length() == 0) {
                 //Retrieve seluruh Data dari OpenAPi Ke BP
                 new ResponseResultToDB().validateBPList(hasilRetrieve);
+                
+                //JSONArray dataList = (JSONArray) hasilRetrieve.get("children");
                 
             }
             //new CustomJsonErrorResponse("5555", "Fatal protocol violation : "+e.getMessage()).getErrResponse();
