@@ -25,7 +25,7 @@ public class RefreshListChildAccount extends BaseActionHandler {
         //ArrayList<String> tempIdDataServer = new ArrayList<String>();
         try {
             OpenApiUtils utils = new OpenApiUtils();
-            JSONObject hasilRetrieve  = utils.requestStringListChildAccount();
+            JSONObject hasilRetrieve  = utils.requestStringListChildAccount(null);
             
             hasil = hasilRetrieve.get("msg").toString();
             if (hasil.length() == 0) {

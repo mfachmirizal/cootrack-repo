@@ -106,7 +106,7 @@ public class OpenApiUtils {
         } catch (JSONException e) {
             throw new OBException("Error [OpenApiUtils] ! : " + e.getMessage());//return new CustomJsonErrorResponse("5555", "OpenApiUtils, JSON Exception !" + e.getMessage() ).getJSONErrResponse();
         }
-         catch (Throwable z) {
+        catch (Throwable z) {
             throw new OBException("Error [OpenApiUtils] ! : " + z.getMessage());//return new CustomJsonErrorResponse("5555", "OpenApiUtils, JSON Exception !" + e.getMessage() ).getJSONErrResponse();
         }
         
@@ -118,10 +118,22 @@ public class OpenApiUtils {
         return param;
     }
     
-       public JSONObject requestStringListChildAccount() {
-        String getListChildAccountUrl = COOTRACK_GET_TARGET_INFO + "=" + encodeString(COOTRACK_USERNAME) + "&"
-                + commonParameters(true);
+    /**
+     * 
+     * @param target Target user yg akan di dapatkan informasinya, bila kosong target = Dealer
+     * @return Hasil Response berupa List Informasi User dari OpenAPI
+     */
+    public JSONObject requestStringListChildAccount(String target) {
+        if (target == null) {
+            target = encodeString(COOTRACK_USERNAME);
+        }
+        if ("".equals(target)) {
+            target = encodeString(COOTRACK_USERNAME);
+        }
         
+        String getListChildAccountUrl ="";
+            getListChildAccountUrl = COOTRACK_GET_TARGET_INFO + "=" +  target + "&"
+                    + commonParameters(true);
         String jsonResponse = "";
         jsonResponse = new CootrackHttpClient().post(getListChildAccountUrl);
         JSONObject jsonData;
