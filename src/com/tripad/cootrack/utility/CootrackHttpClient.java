@@ -6,6 +6,17 @@ import org.apache.commons.httpclient.params.HttpMethodParams;
 import java.io.*;
 import org.openbravo.base.exception.OBException;
 
+//ganti methodnya dengan ini : http://stackoverflow.com/questions/5769717/how-can-i-get-an-http-response-body-as-a-string-in-java
+/*
+URL url = new URL("http://www.example.com/");
+URLConnection con = url.openConnection();
+InputStream in = con.getInputStream();
+String encoding = con.getContentEncoding();
+encoding = encoding == null ? "UTF-8" : encoding;
+String body = IOUtils.toString(in, encoding);
+System.out.println(body);
+*/
+
 public class CootrackHttpClient {
     
     public CootrackHttpClient() {

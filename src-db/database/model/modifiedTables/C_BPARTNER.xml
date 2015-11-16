@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
   <database name="MODIFIED TABLE C_BPARTNER">
     <table name="C_BPARTNER" primaryKey="C_BPARTNER_KEY">
-      <column name="EM_TMC_OPENAPI_IDENT" primaryKey="false" required="false" type="VARCHAR" size="32" autoIncrement="false">
-        <default/>
+      <column name="EM_TMC_OPENAPI_IDENT" primaryKey="false" required="true" type="VARCHAR" size="32" autoIncrement="false">
+        <default><![CDATA[000]]></default>
         <onCreateDefault/>
       </column>
     </table>
