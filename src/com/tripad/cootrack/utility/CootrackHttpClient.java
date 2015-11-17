@@ -1,10 +1,18 @@
 package com.tripad.cootrack.utility;
 
-import org.apache.commons.httpclient.*;
-import org.apache.commons.httpclient.methods.*;
-import org.apache.commons.httpclient.params.HttpMethodParams;
-import java.io.*;
-import org.openbravo.base.exception.OBException;
+//import org.apache.commons.httpclient.*;
+//import org.apache.commons.httpclient.methods.*;
+//import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
+import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.HttpException;
+import org.apache.commons.httpclient.HttpStatus;
+import org.apache.commons.httpclient.methods.GetMethod;
+import org.apache.commons.io.*;
 
 //ganti methodnya dengan ini : http://stackoverflow.com/questions/5769717/how-can-i-get-an-http-response-body-as-a-string-in-java
 /*
@@ -17,12 +25,14 @@ String body = IOUtils.toString(in, encoding);
 System.out.println(body);
 */
 
+import org.apache.commons.io.IOUtils;
 public class CootrackHttpClient {
     
     public CootrackHttpClient() {
     }
     
     //private static String url = "http://www.apache.org/";
+    
     
     public String post(String url) {
         String result ="";
@@ -76,6 +86,25 @@ public class CootrackHttpClient {
             method.releaseConnection();
         }
         return (result);
+    }
+    
+    public String post2 (String urlParam){ 
+        String result ="";
+        try {
+            URL url = new URL(urlParam);
+            URLConnection con = url.openConnection();
+            
+            InputStream in = con.getInputStream();
+            String encoding = con.getContentEncoding();
+            encoding = encoding == null ? "UTF-8" : encoding;
+            result = IOUtils.toString(in, encoding);
+        } catch (MalformedURLException ex) {
+            result = new CustomJsonErrorResponse("5555", "Url Server Tidak Valid. : "+ex.getMessage() ).getStringErrResponse(); 
+        } catch (IOException ioe) {
+            result = new CustomJsonErrorResponse("5555", "Gagal Terhubung dengan server,Harap Cek Koneksi internet anda. : "+ioe.getMessage() ).getStringErrResponse(); 
+        }
+   
+        return result;
     }
     
 }

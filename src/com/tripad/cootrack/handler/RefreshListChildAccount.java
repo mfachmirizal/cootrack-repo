@@ -21,17 +21,16 @@ public class RefreshListChildAccount extends BaseActionHandler {
     
     protected JSONObject execute(Map<String, Object> parameters, String data) {
         String hasil = "";
-        
-        //ArrayList<String> tempIdDataServer = new ArrayList<String>();
         try {
             OpenApiUtils utils = new OpenApiUtils();
             JSONObject hasilRetrieve  = utils.requestStringListChildAccount(null);
             
+//debug            hasil = hasilRetrieve.toString();
             hasil = hasilRetrieve.get("msg").toString();
             if (hasil.length() == 0) {
                 new ResponseResultToDB().validateChildList(hasilRetrieve);
             }
-            //new CustomJsonErrorResponse("5555", "Fatal protocol violation : "+e.getMessage()).getErrResponse();
+            
             JSONObject json = new JSONObject();
             json.put("jawaban", hasil);
             
