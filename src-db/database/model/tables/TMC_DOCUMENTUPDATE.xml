@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
-  <database name="TABLE TMC_TOKEN">
-    <table name="TMC_TOKEN" primaryKey="TMC_TOKEN_KEY">
-      <column name="TMC_TOKEN_ID" primaryKey="true" required="true" type="VARCHAR" size="32" autoIncrement="false">
+  <database name="TABLE TMC_DOCUMENTUPDATE">
+    <table name="TMC_DOCUMENTUPDATE" primaryKey="TMC_DOCUMENTUPDATE_KEY">
+      <column name="TMC_DOCUMENTUPDATE_ID" primaryKey="true" required="true" type="VARCHAR" size="32" autoIncrement="false">
         <default/>
         <onCreateDefault/>
       </column>
@@ -33,26 +33,25 @@
         <default/>
         <onCreateDefault/>
       </column>
-      <column name="VALUE" primaryKey="false" required="true" type="VARCHAR" size="40" autoIncrement="false">
+      <column name="C_DOCTYPETARGET_ID" primaryKey="false" required="true" type="VARCHAR" size="32" autoIncrement="false">
         <default/>
         <onCreateDefault/>
       </column>
-      <column name="TOKEN" primaryKey="false" required="true" type="CLOB" size="4000" autoIncrement="false">
+      <column name="DATEUPDATED" primaryKey="false" required="true" type="TIMESTAMP" size="7" autoIncrement="false">
+        <default><![CDATA[SYSDATE]]></default>
+        <onCreateDefault/>
+      </column>
+      <column name="DOCUMENTNO" primaryKey="false" required="true" type="VARCHAR" size="30" autoIncrement="false">
         <default/>
         <onCreateDefault/>
       </column>
-      <column name="MESSAGE" primaryKey="false" required="false" type="VARCHAR" size="2000" autoIncrement="false">
-        <default/>
-        <onCreateDefault/>
-      </column>
-      <column name="RETURN_CODE" primaryKey="false" required="true" type="VARCHAR" size="32" autoIncrement="false">
-        <default/>
-        <onCreateDefault/>
-      </column>
-      <foreign-key foreignTable="AD_CLIENT" name="TMC_TOKEN_AD_CLIENT">
+      <foreign-key foreignTable="C_DOCTYPE" name="C_DOCTYPETARGET_DOCUPDATE">
+        <reference local="C_DOCTYPETARGET_ID" foreign="C_DOCTYPE_ID"/>
+      </foreign-key>
+      <foreign-key foreignTable="AD_CLIENT" name="TMC_DOCUMENTUPDATE_AD_CLIENT">
         <reference local="AD_CLIENT_ID" foreign="AD_CLIENT_ID"/>
       </foreign-key>
-      <foreign-key foreignTable="AD_ORG" name="TMC_TOKEN_AD_ORG">
+      <foreign-key foreignTable="AD_ORG" name="TMC_DOCUMENTUPDATE_AD_ORG">
         <reference local="AD_ORG_ID" foreign="AD_ORG_ID"/>
       </foreign-key>
     </table>

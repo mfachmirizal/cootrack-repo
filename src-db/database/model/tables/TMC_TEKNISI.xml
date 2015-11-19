@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
-  <database name="TABLE TMC_TOKEN">
-    <table name="TMC_TOKEN" primaryKey="TMC_TOKEN_KEY">
-      <column name="TMC_TOKEN_ID" primaryKey="true" required="true" type="VARCHAR" size="32" autoIncrement="false">
+  <database name="TABLE TMC_TEKNISI">
+    <table name="TMC_TEKNISI" primaryKey="TMC_TEKNISI_KEY">
+      <column name="TMC_TEKNISI_ID" primaryKey="true" required="true" type="VARCHAR" size="32" autoIncrement="false">
         <default/>
         <onCreateDefault/>
       </column>
@@ -33,26 +33,14 @@
         <default/>
         <onCreateDefault/>
       </column>
-      <column name="VALUE" primaryKey="false" required="true" type="VARCHAR" size="40" autoIncrement="false">
+      <column name="NAME" primaryKey="false" required="true" type="VARCHAR" size="30" autoIncrement="false">
         <default/>
         <onCreateDefault/>
       </column>
-      <column name="TOKEN" primaryKey="false" required="true" type="CLOB" size="4000" autoIncrement="false">
-        <default/>
-        <onCreateDefault/>
-      </column>
-      <column name="MESSAGE" primaryKey="false" required="false" type="VARCHAR" size="2000" autoIncrement="false">
-        <default/>
-        <onCreateDefault/>
-      </column>
-      <column name="RETURN_CODE" primaryKey="false" required="true" type="VARCHAR" size="32" autoIncrement="false">
-        <default/>
-        <onCreateDefault/>
-      </column>
-      <foreign-key foreignTable="AD_CLIENT" name="TMC_TOKEN_AD_CLIENT">
+      <foreign-key foreignTable="AD_CLIENT" name="TMC_TEKNISI_AD_CLIENT">
         <reference local="AD_CLIENT_ID" foreign="AD_CLIENT_ID"/>
       </foreign-key>
-      <foreign-key foreignTable="AD_ORG" name="TMC_TOKEN_AD_ORG">
+      <foreign-key foreignTable="AD_ORG" name="TMC_TEKNISI_AD_ORG">
         <reference local="AD_ORG_ID" foreign="AD_ORG_ID"/>
       </foreign-key>
     </table>
