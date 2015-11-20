@@ -64,7 +64,7 @@ public class OpenApiUtils {
      *          Target (%s) has expired 20011 Map Type Error 20012 Latitude or Longitude Not Valid
      *          55555 Error Tripad (bisa berbagai macam sebab)
      */
-    private JSONObject checkAndProcessStatusResponse(JSONObject response) {
+    private JSONObject checkAndProcessStatusResponse(JSONObject response,String url) {
         // cek error message :
         int result = 55555;
         try {
@@ -93,20 +93,53 @@ public class OpenApiUtils {
             } else if (result == 10006) {
                 // token expired, ambil yg baru
                 deleteToken();
+                //getToken();
                 if (getToken() != null) {
-                    return new CustomJsonErrorResponse("5555", getToken().getMessage()).getJSONErrResponse();  //getToken().getMessage();
+                    //return new CustomJsonErrorResponse("5555", getToken().getMessage()).getJSONErrResponse();  //getToken().getMessage();
+                    //lakukan request ulang
+                    //System.out.println("Retry request dikarenakan token expired");
+                    return retryRequest(url);
+                    
                 } else {
                     return new CustomJsonErrorResponse("5555", "Gagal Mendapatkan Token Kembali !, Token = null").getJSONErrResponse();
                 }
             } else { // error code lain
-                return new CustomJsonErrorResponse("5555", (response.get("msg").toString()) ).getJSONErrResponse();
+                if ((response.get("ret").toString()).equals("10101")) {
+                    JSONObject hasilRetry;
+                    //10101
+                    do {
+                        //System.out.println("Masuk Sini 2 "+response.toString());
+                        Thread.sleep(350);
+                        hasilRetry = retryRequest(url);
+                    } while(hasilRetry.get("ret").toString().equals("10101"));
+                    return hasilRetry;
+                }
+                else {
+                    return new CustomJsonErrorResponse("5555", "Error Lain - "+(response.get("msg").toString()) ).getJSONErrResponse();
+                }
             }
         } catch (NumberFormatException e) {
             throw new OBException("Error [OpenApiUtils] ! : " + e.getMessage());// return new CustomJsonErrorResponse("5555", "Return Message bukan angka !" ).getJSONErrResponse();
         } catch (JSONException e) {
             throw new OBException("Error [OpenApiUtils] ! : " + e.getMessage());//return new CustomJsonErrorResponse("5555", "OpenApiUtils, JSON Exception !" + e.getMessage() ).getJSONErrResponse();
         }
+        catch (Throwable z) {
+            throw new OBException("Error [OpenApiUtils] ! : " + z.getMessage());//return new CustomJsonErrorResponse("5555", "OpenApiUtils, JSON Exception !" + e.getMessage() ).getJSONErrResponse();
+        }
+        
         // return "Error Pengecekan status, Status tidak di temukan";
+    }
+    
+    private JSONObject retryRequest(String url) {
+        String jsonResponse = "";
+        jsonResponse = new CootrackHttpClient().post2(url);
+        JSONObject jsonData;
+        try {
+            jsonData = new JSONObject(jsonResponse);
+            return jsonData;
+        } catch (JSONException e) {
+            throw new OBException("Error [OpenApiUtils] ! : " + e.getMessage());//return new CustomJsonErrorResponse("5555", "Error : " + e.getMessage() ).getJSONErrResponse();
+        }
     }
     
     private String encode(String param) {
@@ -114,12 +147,24 @@ public class OpenApiUtils {
         return param;
     }
     
-       public JSONObject requestStringListChildAccount() {
-        String getListChildAccountUrl = COOTRACK_GET_TARGET_INFO + "=" + encodeString(COOTRACK_USERNAME) + "&"
-                + commonParameters(true);
+    /**
+     *
+     * @param target Target user yg akan di dapatkan informasinya, bila kosong target = Dealer
+     * @return Hasil Response berupa List Informasi User dari OpenAPI
+     */
+    public JSONObject requestStringListChildAccount(String target) {
+        if (target == null) {
+            target = encodeString(COOTRACK_USERNAME);
+        }
+        if ("".equals(target)) {
+            target = encodeString(COOTRACK_USERNAME);
+        }
         
+        String getListChildAccountUrl ="";
+        getListChildAccountUrl = COOTRACK_GET_TARGET_INFO + "=" +  target + "&"
+                + commonParameters(true);
         String jsonResponse = "";
-        jsonResponse = new CootrackHttpClient().post(getListChildAccountUrl);
+        jsonResponse = new CootrackHttpClient().post2(getListChildAccountUrl);
         JSONObject jsonData;
         try {
             jsonData = new JSONObject(jsonResponse);
@@ -128,7 +173,7 @@ public class OpenApiUtils {
         }
         // cek status response dari server
         
-        return checkAndProcessStatusResponse(jsonData);
+        return checkAndProcessStatusResponse(jsonData,getListChildAccountUrl);
     }
     
     public JSONObject requestStringListMonitoring() {
@@ -136,7 +181,7 @@ public class OpenApiUtils {
                 + commonParameters(true);
         
         String jsonResponse = "";
-        jsonResponse = new CootrackHttpClient().post(getMonitorUrl);
+        jsonResponse = new CootrackHttpClient().post2(getMonitorUrl);
         JSONObject jsonData;
         try {
             jsonData = new JSONObject(jsonResponse);
@@ -145,7 +190,7 @@ public class OpenApiUtils {
         }
         // cek status response dari server
         
-        return checkAndProcessStatusResponse(jsonData);
+        return checkAndProcessStatusResponse(jsonData,getMonitorUrl);
     }
     
     public void deleteToken() {
@@ -170,7 +215,7 @@ public class OpenApiUtils {
             // dapatkan token dari server API lewat internet
             TmcToken tmcToken = OBProvider.getInstance().get(TmcToken.class);
             String getTokenUrl = COOTRACK_GET_TOKEN_URL + commonParameters(false);
-            String jsonResponse = new CootrackHttpClient().post(getTokenUrl);
+            String jsonResponse = new CootrackHttpClient().post2(getTokenUrl);
             JSONObject jsonData = null;
             
             try {
