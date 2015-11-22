@@ -41,22 +41,6 @@
         <default/>
         <onCreateDefault/>
       </column>
-      <column name="CONTACT" primaryKey="false" required="false" type="VARCHAR" size="32" autoIncrement="false">
-        <default/>
-        <onCreateDefault/>
-      </column>
-      <column name="NOMOBIL" primaryKey="false" required="false" type="VARCHAR" size="32" autoIncrement="false">
-        <default/>
-        <onCreateDefault/>
-      </column>
-      <column name="IMEI" primaryKey="false" required="false" type="VARCHAR" size="32" autoIncrement="false">
-        <default/>
-        <onCreateDefault/>
-      </column>
-      <column name="NOSIMCARD" primaryKey="false" required="false" type="VARCHAR" size="32" autoIncrement="false">
-        <default/>
-        <onCreateDefault/>
-      </column>
       <column name="SALESDATE" primaryKey="false" required="true" type="TIMESTAMP" size="7" autoIncrement="false">
         <default><![CDATA[SYSDATE]]></default>
         <onCreateDefault/>
@@ -157,14 +141,21 @@
         <default/>
         <onCreateDefault/>
       </column>
-      <foreign-key foreignTable="C_BPARTNER" name="C_BPARTNER_PARTNER">
-        <reference local="C_BPARTNER_ID" foreign="C_BPARTNER_ID"/>
-      </foreign-key>
+      <column name="TMC_CAR_ID" primaryKey="false" required="true" type="VARCHAR" size="32" autoIncrement="false">
+        <default/>
+        <onCreateDefault/>
+      </column>
       <foreign-key foreignTable="AD_CLIENT" name="TMC_DOCUMENTLINE_AD_CLIENT">
         <reference local="AD_CLIENT_ID" foreign="AD_CLIENT_ID"/>
       </foreign-key>
       <foreign-key foreignTable="AD_ORG" name="TMC_DOCUMENTLINE_AD_ORG">
         <reference local="AD_ORG_ID" foreign="AD_ORG_ID"/>
+      </foreign-key>
+      <foreign-key foreignTable="C_BPARTNER" name="TMC_DOCUMENTLINE_C_BPARTNER">
+        <reference local="C_BPARTNER_ID" foreign="C_BPARTNER_ID"/>
+      </foreign-key>
+      <foreign-key foreignTable="TMC_CAR" name="TMC_DOCUMENTLINE_CAR">
+        <reference local="TMC_CAR_ID" foreign="TMC_CAR_ID"/>
       </foreign-key>
       <foreign-key foreignTable="TMC_DOCUMENTUPDATE" name="TMC_DOCUMENTLINE_HEADER">
         <reference local="TMC_DOCUMENTUPDATE_ID" foreign="TMC_DOCUMENTUPDATE_ID"/>

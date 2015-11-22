@@ -23,10 +23,12 @@ import org.openbravo.dal.service.OBCriteria;
 import org.openbravo.dal.service.OBDal;
 
 import com.tripad.cootrack.data.TmcToken;
+import org.openbravo.dal.core.OBContext;
 
 public class OpenApiUtils {
     // Nanti static var ini hapus
-    public static final String COOTRACK_USERNAME = "enduserdahlia";
+    public String COOTRACK_USERNAME = OBContext.getOBContext().getUser().getUsername();//"enduserdahlia";
+    
     public static final String COOTRACK_PASSWORD = "123456";
     // static var
     public static final String COOTRACK_GET_TOKEN_URL = "http://api.gpsoo.net/1/auth/access_token?";
@@ -35,6 +37,7 @@ public class OpenApiUtils {
     
     
     public OpenApiUtils() {
+        
     }
     
     private String commonParameters(boolean tokenIsAlreadyExist) {
@@ -46,7 +49,29 @@ public class OpenApiUtils {
                     + (convertToMd5((convertToMd5(COOTRACK_PASSWORD)) + getUnixTime()));
         }
     }
+    /*  private String commonParameters(boolean tokenIsAlreadyExist) {
+    System.out.println("USER  : "+COOTRACK_USERNAME);
+    if (tokenIsAlreadyExist) {
+    //     if (getToken() != null) {
+    TmcToken token = getToken();
+    if (token != null) {
+    return "access_token=" + token.getToken() + "&account=" + COOTRACK_USERNAME + "&time="
+    + getUnixTime();
+    } else {
+    return noTokenParam();
+    }
     
+    //        } else {
+    //            return "account=" + COOTRACK_USERNAME + "&time=" + getUnixTime() + "&signature="
+    //                    + (convertToMd5((convertToMd5(COOTRACK_PASSWORD)) + getUnixTime()));
+    //        }
+    }
+    
+    private String noTokenParam() {
+    return "account=" + COOTRACK_USERNAME + "&time=" + getUnixTime() + "&signature="
+    + (convertToMd5((convertToMd5(COOTRACK_PASSWORD)) + getUnixTime()));
+    }
+    */
     /**
      * method untuk memeriksa hasil response dari api server
      *
@@ -69,6 +94,8 @@ public class OpenApiUtils {
         int result = 55555;
         try {
             result = Integer.parseInt(response.get("ret").toString());
+            
+            System.out.println("Hasil Result : "+result);
             /*
             * 10001 System Error 10002 The API you request does not exist 10003 Request frequence exceeds
             * limitation 10004 access_token not existed 10005 access_token error 10006 access_token has
@@ -93,23 +120,29 @@ public class OpenApiUtils {
             } else if (result == 10006) {
                 // token expired, ambil yg baru
                 deleteToken();
-                //getToken();
+                System.out.println("Memasuki delete token");                //getToken();
                 if (getToken() != null) {
                     //return new CustomJsonErrorResponse("5555", getToken().getMessage()).getJSONErrResponse();  //getToken().getMessage();
                     //lakukan request ulang
                     //System.out.println("Retry request dikarenakan token expired");
+                    System.out.println("Memasuki Retry Request");
                     return retryRequest(url);
                     
                 } else {
-                    return new CustomJsonErrorResponse("5555", "Gagal Mendapatkan Token Kembali !, Token = null").getJSONErrResponse();
+                    return new CustomJsonErrorResponse("5555", "Gagal Mendapatkan Token Kembali !,Username Tidak terdapat di openAPI").getJSONErrResponse();
                 }
             } else { // error code lain
-                if ((response.get("ret").toString()).equals("10101")) {
+                
+                if ((response.get("ret").toString()).equals("20004") || (response.get("ret").toString()).equals("20001")) { //account tidak ada
+                    System.out.println("user tidak da di open api : " + new CustomJsonErrorResponse("5151", "User ini tidak terdapat di OpenAPi" ).getJSONErrResponse().toString());
+                    return new CustomJsonErrorResponse("5151", "User ini tidak terdapat di OpenAPI" ).getJSONErrResponse();
+                }
+                else if ((response.get("ret").toString()).equals("10101")) {
                     JSONObject hasilRetry;
                     //10101
                     do {
                         //System.out.println("Masuk Sini 2 "+response.toString());
-                        Thread.sleep(350);
+                        Thread.sleep(99);
                         hasilRetry = retryRequest(url);
                     } while(hasilRetry.get("ret").toString().equals("10101"));
                     return hasilRetry;
@@ -135,7 +168,9 @@ public class OpenApiUtils {
         jsonResponse = new CootrackHttpClient().post2(url);
         JSONObject jsonData;
         try {
+            System.out.println("Melakukan retry request");
             jsonData = new JSONObject(jsonResponse);
+            System.out.println("Hasill json retry : "+jsonData.toString());
             return jsonData;
         } catch (JSONException e) {
             throw new OBException("Error [OpenApiUtils] ! : " + e.getMessage());//return new CustomJsonErrorResponse("5555", "Error : " + e.getMessage() ).getJSONErrResponse();
@@ -220,14 +255,20 @@ public class OpenApiUtils {
             
             try {
                 jsonData = new JSONObject(jsonResponse);
+                jsonData = checkAndProcessStatusResponse(jsonData, getTokenUrl);
+                
+                if (jsonData.get("ret").toString().equals("5151")) {
+                    return null;
+                }
+                
                 
                 tmcToken.setActive(true);
                 tmcToken.setValue("1");
-                if (Integer.parseInt(jsonData.get("ret").toString()) == 0) {
-                    tmcToken.setToken(jsonData.get("access_token").toString());
-                } else {
-                    tmcToken.setToken("-");
-                }
+                //if (Integer.parseInt(jsonData.get("ret").toString()) == 0) {
+                tmcToken.setToken(jsonData.get("access_token").toString());
+//                } else {
+//                    tmcToken.setToken("-");
+//                }
                 tmcToken.setMessage(jsonData.get("msg").toString());
                 tmcToken.setReturnCode((Integer.parseInt(jsonData.get("ret").toString())) + "");
                 
@@ -239,12 +280,13 @@ public class OpenApiUtils {
                 return tmcToken;
                 
             } catch (JSONException ex) {
-                tmcToken.setActive(true);
-                tmcToken.setValue("1");
-                tmcToken.setToken("-");
-                tmcToken.setMessage(ex.getMessage());
-                tmcToken.setReturnCode("55555");
-                Logger.getLogger(OpenApiUtils.class.getName()).log(Level.SEVERE, null, ex);
+//                tmcToken.setActive(true);
+//                tmcToken.setValue("1");
+//                tmcToken.setToken("-");
+//                tmcToken.setMessage(ex.getMessage());
+//                tmcToken.setReturnCode("55555");
+//                Logger.getLogger(OpenApiUtils.class.getName()).log(Level.SEVERE, null, ex);
+                return null;
             }
         }
         return null;

@@ -15,8 +15,10 @@ import org.codehaus.jettison.json.JSONObject;
 import org.hibernate.criterion.Restrictions;
 import org.openbravo.base.exception.OBException;
 import org.openbravo.base.provider.OBProvider;
+import org.openbravo.dal.core.OBContext;
 import org.openbravo.dal.service.OBCriteria;
 import org.openbravo.dal.service.OBDal;
+import org.openbravo.model.ad.access.User;
 import org.openbravo.model.common.businesspartner.BusinessPartner;
 import org.openbravo.model.common.businesspartner.Category;
 
@@ -25,6 +27,7 @@ import org.openbravo.model.common.businesspartner.Category;
  * @author mfachmirizal
  */
 public class ResponseResultToDB {
+    public User COOTRACK_USER = OBContext.getOBContext().getUser();
     
     public ResponseResultToDB() {
     }
@@ -44,6 +47,7 @@ public class ResponseResultToDB {
             tmcListChildAcc = OBDal.getInstance()
                     .createCriteria(TmcListChildAcc.class);
             tmcListChildAcc.add(Restrictions.eq(TmcListChildAcc.PROPERTY_VALUE, id));
+            tmcListChildAcc.add(Restrictions.eq(TmcListChildAcc.PROPERTY_CREATEDBY, COOTRACK_USER));
             
             if (tmcListChildAcc.count() == 0 ) { //bila tidak ada maka insert
                 TmcListChildAcc newTmcListChildAcc = OBProvider.getInstance().get(TmcListChildAcc.class);
@@ -74,6 +78,7 @@ public class ResponseResultToDB {
         tmcListChildAcc = OBDal.getInstance()
                 .createCriteria(TmcListChildAcc.class);
         tmcListChildAcc.add(Restrictions.not(Restrictions.in(TmcListChildAcc.PROPERTY_VALUE, tempIdDataServer))); //
+        tmcListChildAcc.add(Restrictions.eq(TmcListChildAcc.PROPERTY_CREATEDBY, COOTRACK_USER));
         //TmcListChildAcc notExistsTmcListChildAcc = ;
         for (TmcListChildAcc removeRecord : tmcListChildAcc.list()) {
             OBDal.getInstance().remove(removeRecord);
@@ -104,6 +109,7 @@ public class ResponseResultToDB {
             tmcListChildAcc = OBDal.getInstance()
                     .createCriteria(BusinessPartner.class);
             tmcListChildAcc.add(Restrictions.eq(BusinessPartner.PROPERTY_TMCOPENAPIIDENT, id));
+            tmcListChildAcc.add(Restrictions.eq(BusinessPartner.PROPERTY_CREATEDBY, COOTRACK_USER));
             
             if (tmcListChildAcc.list().isEmpty()) { //bila tidak ada maka insert
                 BusinessPartner newBusinessPartner = OBProvider.getInstance().get(BusinessPartner.class);
@@ -186,7 +192,9 @@ public class ResponseResultToDB {
                     //carList.getJSONObject(i).get("imei").toString()
                     OBCriteria<TmcCar> tmcListCar = OBDal.getInstance().createCriteria(TmcCar.class);
                     tmcListCar.add(Restrictions.eq(TmcCar.PROPERTY_BPARTNER, tmcListChildAcc.list().get(0)));
+                    tmcListCar.add(Restrictions.eq(TmcCar.PROPERTY_CREATEDBY, COOTRACK_USER));
                     tmcListCar.add(Restrictions.eq(TmcCar.PROPERTY_IMEI, carList.getJSONObject(c).get("imei").toString()));
+                    
                     
                     if (tmcListCar.list().isEmpty()) {
                         TmcCar newTmcCar = OBProvider.getInstance().get(TmcCar.class);
@@ -222,7 +230,7 @@ public class ResponseResultToDB {
                 //adegan menghapus LINE Bila tidak ada yg seragam
                 OBCriteria<TmcCar> tmcListCarRemove = OBDal.getInstance().createCriteria(TmcCar.class);
                 tmcListCarRemove.add(Restrictions.eq(TmcCar.PROPERTY_BPARTNER,tmcListChildAcc.list().get(0) ));
-                //tmcListCar.add(Restrictions.eq(TmcCar.PROPERTY_IMEI, carList.getJSONObject(c).get("imei").toString()));
+                tmcListCarRemove.add(Restrictions.eq(TmcCar.PROPERTY_CREATEDBY,COOTRACK_USER));
                 tmcListCarRemove.add(Restrictions.not(Restrictions.in(TmcCar.PROPERTY_IMEI, tempImeiServer)));
                 
                 for (TmcCar removeRecord : tmcListCarRemove.list()) {
@@ -242,6 +250,7 @@ public class ResponseResultToDB {
         tmcListChildAcc = OBDal.getInstance()
                 .createCriteria(BusinessPartner.class);
         tmcListChildAcc.add(Restrictions.not(Restrictions.in(BusinessPartner.PROPERTY_TMCOPENAPIIDENT, tempIdDataServer))); //
+        tmcListChildAcc.add(Restrictions.eq(BusinessPartner.PROPERTY_CREATEDBY, COOTRACK_USER));
         tmcListChildAcc.add(Restrictions.eq(BusinessPartner.PROPERTY_ACTIVE, true));
         OBCriteria<Category> bpCrit = OBDal.getInstance()
                 .createCriteria(Category.class);

@@ -24,6 +24,7 @@ public class RefreshListBPFromOA extends BaseActionHandler{
         //ArrayList<String> tempIdDataServer = new ArrayList<String>();
         try {    
             hasil = hasilRetrieve.get("msg").toString();
+            System.out.println("HASIL : "+hasil);
             if (hasil.length() == 0) {
                 //Retrieve seluruh Data dari OpenAPi Ke BP
                 new ResponseResultToDB().validateBPList(hasilRetrieve);

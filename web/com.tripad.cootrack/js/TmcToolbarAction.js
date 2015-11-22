@@ -7,7 +7,7 @@
             var string_id="",postParams = [];
             var command = "";
             var baseContainer = this;
-            
+
             baseContainer.setDisabled(true);
             headers.push('iseng_di_isi');
             callback = function(rpcResponse, data, rpcRequest) {
@@ -36,7 +36,7 @@
             }
         }
     };
-    
+
     var buttonRefreshListAcc = {
         action: function(){
             var ids = [], i, view = this.view, grid = view.viewGrid, selectedRecords = grid.getSelectedRecords(), idtab = view.tabId ;
@@ -44,7 +44,7 @@
             var string_id="",postParams = [];
             var command = "";
             var baseContainer = this;
-            
+
             baseContainer.setDisabled(true);
             headers.push('iseng_di_isi');
             callback = function(rpcResponse, data, rpcRequest) {
@@ -73,7 +73,7 @@
             }
         }
     };
-    
+
         var buttonRefreshListBPFromOA = {
         action: function(){
             var ids = [], i, view = this.view, grid = view.viewGrid, selectedRecords = grid.getSelectedRecords(), idtab = view.tabId ;
@@ -81,7 +81,8 @@
             var string_id="",postParams = [];
             var command = "";
             var baseContainer = this;
-            
+
+            /*
             baseContainer.setDisabled(true);
             headers.push('iseng_di_isi');
             callback = function(rpcResponse, data, rpcRequest) {
@@ -96,6 +97,17 @@
                 baseContainer.setDisabled(false);
             }
             OB.RemoteCallManager.call('com.tripad.cootrack.handler.RefreshListBPFromOA', {headers: headers}, {}, callback);
+            */
+            //postParams.action[0] = 'dari toolbar';
+            var params = {action:'kosong'};
+
+            isc.TMC_LoadingPopup.create({
+              headers: headers,
+              view: view,
+              params: params,
+              actionHandler: 'com.tripad.cootrack.handler.RefreshListBPFromOA'
+            }).show();
+
         },
         buttonType: 'tmc_refreshlistbpfromoa',
         prompt: 'Refresh List Business Partner dari OpenApi',
@@ -116,4 +128,3 @@
     OB.ToolbarRegistry.registerButton(buttonRefreshListAcc.buttonType, isc.OBToolbarIconButton, buttonRefreshListAcc, 100, ['F0AD6F9195E74AE695FAE4E242BBEF74']);
     OB.ToolbarRegistry.registerButton(buttonRefreshListBPFromOA.buttonType, isc.OBToolbarIconButton, buttonRefreshListBPFromOA, 100, ['220']);
 }());
-

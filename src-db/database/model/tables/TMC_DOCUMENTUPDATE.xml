@@ -45,14 +45,18 @@
         <default/>
         <onCreateDefault/>
       </column>
-      <foreign-key foreignTable="C_DOCTYPE" name="C_DOCTYPETARGET_DOCUPDATE">
-        <reference local="C_DOCTYPETARGET_ID" foreign="C_DOCTYPE_ID"/>
-      </foreign-key>
+      <column name="BTN_GET_LINE" primaryKey="false" required="false" type="VARCHAR" size="1" autoIncrement="false">
+        <default/>
+        <onCreateDefault/>
+      </column>
       <foreign-key foreignTable="AD_CLIENT" name="TMC_DOCUMENTUPDATE_AD_CLIENT">
         <reference local="AD_CLIENT_ID" foreign="AD_CLIENT_ID"/>
       </foreign-key>
       <foreign-key foreignTable="AD_ORG" name="TMC_DOCUMENTUPDATE_AD_ORG">
         <reference local="AD_ORG_ID" foreign="AD_ORG_ID"/>
+      </foreign-key>
+      <foreign-key foreignTable="C_DOCTYPE" name="TMC_DOCUMENTUPDATE_DOCTYPE">
+        <reference local="C_DOCTYPETARGET_ID" foreign="C_DOCTYPE_ID"/>
       </foreign-key>
     </table>
   </database>
