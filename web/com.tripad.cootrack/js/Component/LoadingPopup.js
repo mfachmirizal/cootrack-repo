@@ -102,14 +102,13 @@ isc.TMC_LoadingPopup.addProperties({
 
   //eksekusi di background
   var hasilCallback,pop = this;
-  console.log('eksekus');
   var callback = function(rpcResponse, data, rpcRequest) {
     //isc.say(OB.I18N.getLabel('OBEXAPP_SumResult', [data.total]));
     hasilCallback = data.jawaban;
     if (hasilCallback != '') {
       isc.say(hasilCallback)
     }
-    console.log('Hasil CB : '+hasilCallback);
+    console.log(pop);
     pop.closeClick();
 
     if(typeof pop.view.viewGrid !== 'undefined'){
