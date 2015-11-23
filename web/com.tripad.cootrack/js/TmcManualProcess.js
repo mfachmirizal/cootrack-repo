@@ -36,7 +36,7 @@ action: params.action
 */
 
 if (params.action === 'filtercarbystatusproblem') {
-  handlerclass = 'com.tripad.cootrack.handler.RefreshListBPFromOA';
+  handlerclass = 'com.tripad.cootrack.handler.RefreshListFilteredCarByStatus';
 }
 // else if (params.action === 'getlistchildaccount') {
 //   handlerclass = 'com.tripad.cootrack.handler.RefreshListBPFromOA';
