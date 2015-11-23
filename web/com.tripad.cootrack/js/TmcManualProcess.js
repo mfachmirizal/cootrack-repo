@@ -36,7 +36,8 @@ action: params.action
 */
 
 if (params.action === 'filteredstatuscarbyimei') {
-  handlerclass = 'com.tripad.cootrack.handler.RefreshListFilteredCarByStatus';
+  handlerclass = 'com.tripad.cootrack.handler.RefreshListFilteredStatusCarByImei';
+  console.log('handlerclass : '+handlerclass);
 }
 // else if (params.action === 'getlistchildaccount') {
 //   handlerclass = 'com.tripad.cootrack.handler.RefreshListBPFromOA';

@@ -20,6 +20,8 @@ import org.openbravo.model.ad.access.User;
 
 import com.tripad.cootrack.data.TmcCar;
 import com.tripad.cootrack.utility.OpenApiUtils;
+import com.tripad.cootrack.utility.ResponseResultToDB;
+import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 
 /**
@@ -30,18 +32,22 @@ public class RefreshListFilteredStatusCarByImei extends BaseActionHandler {
     private User COOTRACK_USER = OBContext.getOBContext().getUser();
     
     protected JSONObject execute(Map<String, Object> parameters, String data) {
-        String hasil = "";
         JSONObject json = new JSONObject();
+        String headerId ="";
+        String hasil = "";
         String imeiString = "";
         List<TmcCar> carList = null;
         List<String> waveList = new ArrayList<String>();
         OpenApiUtils utils = new OpenApiUtils();
-        
-        // hasil = (imeiList.size()) + "";
         try {
-            // for () {
-            // JSONObject hasilRetrieve = utils.requestStringListChildAccount(null);
-            // }
+            //parameter
+            final JSONObject jsonData = new JSONObject(data);
+            final JSONArray headerIds = jsonData.getJSONArray("headers");
+            
+            for (int i = 0; i < headerIds.length(); i++) {
+                headerId = headerIds.getString(i);
+            }
+            
             
             // loop dulu list imei
             OBCriteria<TmcCar> tmcCarCriteria = OBDal.getInstance().createCriteria(TmcCar.class);
@@ -59,16 +65,15 @@ public class RefreshListFilteredStatusCarByImei extends BaseActionHandler {
                 
                 if (count % 99 == 0) {
                     imeiString = "";
-                    count = 1;
+                    count = 0; //1
                     waveCount++;
                 }
                 count++;
             }
             
             int cc = 0;
-            
             for (String wave : waveList) {
-                String arr[] = utils.convertToArray(wave.substring(1), ",");
+                //String arr[] = utils.convertToArray(wave.substring(1), ",");
                 // requestData disini
                 JSONObject hasilRetrieve = utils.requestStatusFilteredCarByImei(wave.substring(1));
                 if (hasilRetrieve.get("msg").toString().length() > 0) {
@@ -76,23 +81,11 @@ public class RefreshListFilteredStatusCarByImei extends BaseActionHandler {
                     break;
                 }
                 else {
-                    // ResponseResultToDB().validateBPList(hasilRetrieve);
-                }
-                count = 0;
-                Thread.sleep(300);
+                    new ResponseResultToDB().validateCarStatusList(headerId,hasilRetrieve);
+                }              
+                Thread.sleep(100);
                 cc++;
             }
-            
-            // System.out.println("HASIL : " + hasil);
-            // if (hasil.length() == 0) {
-            // Retrieve seluruh Data dari OpenAPi Ke BP
-            // new ResponseResultToDB().validateBPList(hasilRetrieve);
-            
-            // JSONArray dataList = (JSONArray) hasilRetrieve.get("children");
-            
-            // }
-            // new CustomJsonErrorResponse("5555", "Fatal protocol violation :
-            // "+e.getMessage()).getErrResponse();
             
             json.put("jawaban", hasil);
             
@@ -103,6 +96,6 @@ public class RefreshListFilteredStatusCarByImei extends BaseActionHandler {
         }finally {
             return json;
         }
-         
+        
     }
 }
