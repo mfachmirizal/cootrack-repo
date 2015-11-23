@@ -12,6 +12,7 @@ import com.tripad.cootrack.utility.ResponseResultToDB;
 import java.util.ArrayList;
 import java.util.HashMap;
 import org.codehaus.jettison.json.JSONArray;
+import org.codehaus.jettison.json.JSONException;
 import org.hibernate.criterion.Restrictions;
 import org.openbravo.base.provider.OBProvider;
 import org.openbravo.dal.service.OBCriteria;
@@ -21,9 +22,10 @@ public class RefreshListChildAccount extends BaseActionHandler {
     
     protected JSONObject execute(Map<String, Object> parameters, String data) {
         String hasil = "";
+        JSONObject json = new JSONObject();
         try {
             OpenApiUtils utils = new OpenApiUtils();
-            JSONObject hasilRetrieve  = utils.requestStringListChildAccount(null);
+            JSONObject hasilRetrieve  = utils.requestListChildAccount(null);
             
 //debug            hasil = hasilRetrieve.toString();
             hasil = hasilRetrieve.get("msg").toString();
@@ -31,13 +33,16 @@ public class RefreshListChildAccount extends BaseActionHandler {
                 new ResponseResultToDB().validateChildList(hasilRetrieve);
             }
             
-            JSONObject json = new JSONObject();
+            
             json.put("jawaban", hasil);
             
+            
             // and return it
+            
+        } catch (JSONException e) {
+            json.put("jawaban", e.getMessage());
+        }finally {
             return json;
-        } catch (Exception e) {
-            throw new OBException(e);
         }
     }
 }

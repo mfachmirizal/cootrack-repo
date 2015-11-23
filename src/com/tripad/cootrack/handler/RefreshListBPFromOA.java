@@ -8,6 +8,7 @@ package com.tripad.cootrack.handler;
 import com.tripad.cootrack.utility.OpenApiUtils;
 import com.tripad.cootrack.utility.ResponseResultToDB;
 import java.util.Map;
+import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.openbravo.base.exception.OBException;
 import org.openbravo.client.kernel.BaseActionHandler;
@@ -19,10 +20,12 @@ import org.openbravo.client.kernel.BaseActionHandler;
 public class RefreshListBPFromOA extends BaseActionHandler{
     protected JSONObject execute(Map<String, Object> parameters, String data) {
         String hasil = "";
+        JSONObject json = new JSONObject();
         OpenApiUtils utils = new OpenApiUtils();
-        JSONObject hasilRetrieve  = utils.requestStringListChildAccount(null);
+        
         //ArrayList<String> tempIdDataServer = new ArrayList<String>();
-        try {    
+        try {
+            JSONObject hasilRetrieve  = utils.requestListChildAccount(null);
             hasil = hasilRetrieve.get("msg").toString();
             System.out.println("HASIL : "+hasil);
             if (hasil.length() == 0) {
@@ -33,15 +36,15 @@ public class RefreshListBPFromOA extends BaseActionHandler{
                 
             }
             //new CustomJsonErrorResponse("5555", "Fatal protocol violation : "+e.getMessage()).getErrResponse();
-            JSONObject json = new JSONObject();
+            
             json.put("jawaban", hasil);
             
             // and return it
             return json;
-        } catch (Exception e) {
-            throw new OBException(e);
-        } catch (Throwable ex) {
-            throw new OBException(ex);
+        } catch (JSONException e) {
+            json.put("jawaban", e.getMessage());
+        }finally {
+            return json;
         }
     }
 }

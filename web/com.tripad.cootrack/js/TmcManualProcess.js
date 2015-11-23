@@ -22,7 +22,7 @@ OB.TMC.Request = {
   console.log('Hasil CB : '+hasilCallback);
   params.button.contextView.viewGrid.refreshGrid();
 }
-if (params.action === 'filtercarbystatusproblem') {
+if (params.action === 'filteredstatuscarbyimei') {
 handlerclass = 'com.tripad.cootrack.handler.RefreshListBPFromOA';
 }
 else if (params.action === 'getlistchildaccount') {
@@ -35,7 +35,7 @@ action: params.action
 }, {}, callback);
 */
 
-if (params.action === 'filtercarbystatusproblem') {
+if (params.action === 'filteredstatuscarbyimei') {
   handlerclass = 'com.tripad.cootrack.handler.RefreshListFilteredCarByStatus';
 }
 // else if (params.action === 'getlistchildaccount') {
@@ -54,8 +54,8 @@ isc.TMC_LoadingPopup.create({
 
 },
 
-filtercarbystatusproblem: function (params, view) {
-  params.action = 'filtercarbystatusproblem';
+filteredstatuscarbyimei: function (params, view) {
+  params.action = 'filteredstatuscarbyimei';
   OB.TMC.Request.execute(params, view);
 }
 };

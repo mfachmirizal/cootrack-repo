@@ -140,7 +140,7 @@ public class ResponseResultToDB {
         OBDal.getInstance().flush();
 
         // get car list
-        hasilTarget = utils.requestStringListChildAccount(name);
+        hasilTarget = utils.requestListChildAccount(name);
         try {
           // System.out.println(hasilTarget.toString());
           carList = (JSONArray) hasilTarget.get("data");
@@ -176,7 +176,7 @@ public class ResponseResultToDB {
         OBDal.getInstance().flush();
 
         // edit line
-        hasilTarget = utils.requestStringListChildAccount(name);
+        hasilTarget = utils.requestListChildAccount(name);
         // try {
 
         carList = (JSONArray) hasilTarget.get("data");
