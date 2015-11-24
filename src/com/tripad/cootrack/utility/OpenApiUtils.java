@@ -8,7 +8,6 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.Date;
 
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
@@ -22,6 +21,13 @@ import org.openbravo.dal.service.OBDal;
 import org.openbravo.model.ad.access.User;
 
 import com.tripad.cootrack.data.TmcToken;
+import java.util.Date;
+import org.joda.time.DateTime;
+import org.joda.time.Days;
+import org.joda.time.Hours;
+import org.joda.time.Instant;
+import org.joda.time.Interval;
+import org.joda.time.Minutes;
 
 public class OpenApiUtils {
     // Nanti static var ini hapus
@@ -85,7 +91,7 @@ public class OpenApiUtils {
         try {
             result = Integer.parseInt(response.get("ret").toString());
             
-            System.out.println("Hasil Result : " + result);
+            //System.out.println("Hasil Result : " + result);
             /*
             * 10001 System Error 10002 The API you request does not exist 10003 Request frequence exceeds
             * limitation 10004 access_token not existed 10005 access_token error 10006 access_token has
@@ -110,13 +116,13 @@ public class OpenApiUtils {
             } else if (result == 10006) {
                 // token expired, ambil yg baru
                 deleteToken();
-                System.out.println("Memasuki delete token"); // getToken();
+                // System.out.println("Memasuki delete token"); // getToken();
                 if (getToken() != null) {
                     // return new CustomJsonErrorResponse("5555",
                     // getToken().getMessage()).getJSONErrResponse(); //getToken().getMessage();
                     // lakukan request ulang
                     // System.out.println("Retry request dikarenakan token expired");
-                    System.out.println("Memasuki Retry Request");
+                    //     System.out.println("Memasuki Retry Request");
                     return retryRequest(url);
                     
                 } else { // akan deprecated
@@ -333,6 +339,47 @@ public class OpenApiUtils {
             throw new OBException("Error ! : " + e.getMessage());
         }
     }
+    
+    /**
+     *
+     * @param param1 waktu awal dalam format unix
+     * @param param2 waktu akhir dalam format unix
+     * @param get    tipe periode yg ingin di dapatkan (years,months,weeks,days,hours,minutes,seconds)
+     * @return       interval dalam int, dari 2 parameter yg di inputkan
+     */
+    public int getIntervalFromUnix(long param1,long param2,String get) {
+        int hasil = 0;
+        //Interval interval = new Interval( ((long)param1*1000), ((long)param2*1000) );
+        Interval interval = new Interval((param1 * 1000L), (param2 * 1000L));
+        get = get.toLowerCase();
+        
+//        if ("years".equals(get)) {
+//            hasil = interval.toPeriod().getYears();
+//        }else if ("months".equals(get)) {
+//            hasil = interval.toPeriod().getMonths();
+//        }else if ("weeks".equals(get)) {
+//            hasil = interval.toPeriod().getWeeks();
+//        }
+        if ("days".equals(get)) {
+            //hasil = interval.toPeriod().getDays();
+            hasil = interval.toDuration().toStandardDays().getDays();
+        }else if ("hours".equals(get)) {
+            hasil = interval.toDuration().toStandardHours().getHours();
+        }else if ("minutes".equals(get)) {
+            hasil = interval.toDuration().toStandardMinutes().getMinutes();
+        }else if ("seconds".equals(get)) {
+            hasil = interval.toDuration().toStandardSeconds().getSeconds();
+            
+        } else {
+            throw new OBException(get+" bukan parameter yg tepat untuk method : +getIntervalFromUnix");
+        }
+        return hasil;
+    }
+    
+//    public String debugTanggal(long param1) {
+//        DateTime dt = new DateTime(param1 * 1000L)
+//        return null;
+//    }
     
     public String convertToMd5(String param) {
         String password = param;

@@ -108,12 +108,17 @@ isc.TMC_LoadingPopup.addProperties({
     if (hasilCallback != '') {
       isc.say(hasilCallback)
     }
-    console.log(pop);
-    pop.closeClick();
-
+   // console.log(pop);
+    
+    if(typeof pop.params.button.contextView.viewGrid !== 'undefined'){
+      pop.params.button.contextView.viewGrid.refreshGrid();
+    };
+    
     if(typeof pop.view.viewGrid !== 'undefined'){
       pop.view.viewGrid.refreshGrid();
     };
+
+    pop.closeClick();
 
     //rpcRequest.clientContext.pop.closeClick();
   }
