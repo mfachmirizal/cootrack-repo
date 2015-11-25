@@ -109,16 +109,24 @@ isc.TMC_LoadingPopup.addProperties({
       isc.say(hasilCallback)
     }
    // console.log(pop);
-    
-    if(typeof pop.params.button.contextView.viewGrid !== 'undefined'){
-      pop.params.button.contextView.viewGrid.refreshGrid();
-    };
-    
+   
+   pop.closeClick();
+   /* 
+	if(typeof pop.params.button !== 'undefined'){
+		.contextView.viewGrid
+	}
+	*/
+	
     if(typeof pop.view.viewGrid !== 'undefined'){
       pop.view.viewGrid.refreshGrid();
     };
+	
+    if(typeof pop.params.button !== 'undefined'){
+      pop.params.button.contextView.viewGrid.refreshGrid();
+    };
+    
 
-    pop.closeClick();
+    
 
     //rpcRequest.clientContext.pop.closeClick();
   }

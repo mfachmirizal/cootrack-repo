@@ -305,7 +305,7 @@ public class ResponseResultToDB {
                 
                 
                 
-                if (statusCategory != null ) {
+ //               if (statusCategory != null ) {
                     
                     OBCriteria<TmcDocumentUpdateLine> tmcDocumentUpdateLine = OBDal.getInstance().createCriteria(TmcDocumentUpdateLine.class);
                     //filter header nya [ok]
@@ -348,34 +348,9 @@ public class ResponseResultToDB {
                         tempValidDocumentUpdateLine.add(tmcDocumentUpdateLine.list().get(0).getId()); //untuk data yg sinkron berdasar static 8 jam, dll dan ada
                     }
                     
-                } //end record perlu di masukan berdasar status yg ditentukan
+ //               } //end record perlu di masukan berdasar status yg ditentukan
                 
             }
-            /** deprecated
-             * if (tmcCarCriteria.count() == 0) { // bila tidak ada maka insert
-             * TmcDocumentUpdateLine newTmcDocumentUpdateLine = OBProvider.getInstance().get(TmcDocumentUpdateLine.class);
-             *
-             * newTmcDocumentUpdateLine.setActive(true);
-             * newTmcDocumentUpdateLine.setCustomerName(tmcCarCriteria.list().get(0).getBpartner());
-             * newTmcDocumentUpdateLine.setTMCCar(tmcCarCriteria.list().get(0));
-             * //newTmcDocumentUpdateLine.setStatus("?"); di isi dari open api
-             *
-             * OBDal.getInstance().save(newTmcDocumentUpdateLine);
-             * OBDal.getInstance().flush();
-             *
-             * } else { // bila adaa edit
-             *
-             * tmcListChildAcc.list().get(0).setName(name);
-             * tmcListChildAcc.list().get(0).setShowname(showname);
-             *
-             * OBDal.getInstance().save(tmcListChildAcc.list().get(0));
-             * OBDal.getInstance().flush();
-             * }
-             *
-             * tempIdDataServer.add(id);
-             *
-             * }
-             */
         }
         
         TmcDocumentUpdate header = getHeaderInstance(header_id);
@@ -427,9 +402,13 @@ public class ResponseResultToDB {
         else if ( (device_info.equals("0")) && (dayInterval >= 1) /*&& (speed.equals("0"))*/ ) {
             hasil = "Static 1 Day";
         }
-        //offline 1 days ++
-        else if ( (device_info.equals("3")) && (dayInterval >= 1) /*&& (speed.equals("0"))*/ ) {
+        //offline 1 ~ 59 days 
+        else if ( (device_info.equals("3")) && (dayInterval < 60) /*&& (speed.equals("0"))*/ ) {
             hasil = "Offline 1 Days";
+        }
+		//offline 60 days ++
+        else if ( (device_info.equals("3")) && (dayInterval >= 60) /*&& (speed.equals("0"))*/ ) {
+            hasil = "Expired Payment";
         }
         //Arrear Payment
         else if ( (device_info.equals("2"))  /*&& (speed.equals("0"))*/ ) {
