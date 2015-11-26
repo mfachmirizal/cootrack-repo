@@ -23,20 +23,23 @@ public class RefreshListChildAccount extends BaseActionHandler {
     protected JSONObject execute(Map<String, Object> parameters, String data) {
         String hasil = "";
         JSONObject json = new JSONObject();
+        OpenApiUtils utils = new OpenApiUtils();
         try {
-            OpenApiUtils utils = new OpenApiUtils();
-            JSONObject hasilRetrieve  = utils.requestListChildAccount(null);
-            
+            if (utils.getCurrentPassword() != null ) {
+                JSONObject hasilRetrieve  = utils.requestListChildAccount(null);
+                
 //debug            hasil = hasilRetrieve.toString();
-            hasil = hasilRetrieve.get("msg").toString();
-            if (hasil.length() == 0) {
-                new ResponseResultToDB().validateChildList(hasilRetrieve);
+                hasil = hasilRetrieve.get("msg").toString();
+                if (hasil.length() == 0) {
+                    new ResponseResultToDB().validateChildList(hasilRetrieve);
+                }
+                
+                
+                json.put("jawaban", hasil);
+                
+            } else {
+                json.put("jawaban", "This Openbravo user not synchronized with OpenAPI !");
             }
-            
-            
-            json.put("jawaban", hasil);
-            
-            
             // and return it
             
         } catch (JSONException e) {

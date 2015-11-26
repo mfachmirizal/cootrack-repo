@@ -1,0 +1,120 @@
+<?xml version="1.0"?>
+  <database name="FUNCTION TMC_SYNCHRONIZE_USER">
+    <function name="TMC_SYNCHRONIZE_USER" type="NULL">
+      <parameter name="pinstance_id" type="VARCHAR" mode="in">
+        <default/>
+      </parameter>
+      <body><![CDATA[-- Logistice
+  v_ResultStr VARCHAR2(2000):='';
+  v_Message VARCHAR2(2000):='';
+  v_Record_ID VARCHAR2(32);
+  -- Parameter
+  TYPE RECORD IS REF CURSOR;
+    Cur_Parameter RECORD;
+    -- Lines to create
+    Cur_MovementLine RECORD;
+    -- Parameter Variables
+    v_AD_User_ID VARCHAR2(32) ;
+    v_ClientID varchar2(32) ;
+    v_OrgID varchar2(32) ;
+    v_Password varchar2(60) ;
+    v_PasswordConf varchar2(60) ;
+    v_PasswordFinal varchar2(60) ;
+    
+    v_Processed NUMBER;
+    END_PROCESS BOOLEAN:=false;
+  BEGIN
+    --  Update AD_PInstance
+    DBMS_OUTPUT.PUT_LINE('Updating PInstance - Processing ' || PInstance_ID) ;
+    v_ResultStr:='PInstanceNotFound';
+    AD_UPDATE_PINSTANCE(PInstance_ID, NULL, 'Y', NULL, NULL) ;
+  BEGIN --BODY
+    -- Get Parameters
+    v_ResultStr:='ReadingParameters';
+    FOR Cur_Parameter IN
+      (SELECT i.Record_ID,
+        p.ParameterName,
+        p.P_String,
+        p.P_Number,
+        p.P_Date,
+        i.CreatedBy AS AD_User_ID
+      FROM AD_PInstance i
+      LEFT JOIN AD_PInstance_Para p
+        ON i.AD_PInstance_ID=p.AD_PInstance_ID
+      WHERE i.AD_PInstance_ID=PInstance_ID
+      ORDER BY p.SeqNo
+      )
+    LOOP
+      v_Record_ID:=Cur_Parameter.Record_ID;
+      v_AD_User_ID:=Cur_Parameter.AD_User_ID;
+      
+      IF(Cur_Parameter.ParameterName='password') THEN
+        v_Password:=Cur_Parameter.P_String;
+        DBMS_OUTPUT.PUT_LINE(' password=' || v_Password) ;
+      ELSIF(Cur_Parameter.ParameterName='passwordconf') THEN
+        v_PasswordConf:=Cur_Parameter.P_String;
+        DBMS_OUTPUT.PUT_LINE(' passwordconf=' || v_PasswordConf);
+      ELSIF(Cur_Parameter.ParameterName='clientid') THEN
+        v_ClientID:=Cur_Parameter.P_String;
+        DBMS_OUTPUT.PUT_LINE(' clientid=' || v_ClientID);
+      /*ELSIF(Cur_Parameter.ParameterName='orgid') THEN
+        v_OrgID:=Cur_Parameter.P_String;
+        DBMS_OUTPUT.PUT_LINE(' orgid=' || v_OrgID); */
+      ELSE
+        DBMS_OUTPUT.PUT_LINE('*** Unknown Parameter=' || Cur_Parameter.ParameterName) ;
+      END IF;
+    END LOOP; -- Get Parameter  
+    DBMS_OUTPUT.PUT_LINE('  Record_ID=' || v_Record_ID) ;
+    -- Reading tmc_user_sync
+    SELECT COUNT(1)
+	INTO v_Processed
+    FROM tmc_user_sync
+    WHERE tmc_user_sync.ad_user_id=v_AD_User_ID;
+    
+    
+    
+    IF (v_PasswordConf = v_Password) THEN
+	v_PasswordFinal := v_Password;
+    ELSE 
+	--error
+	END_PROCESS := true;
+	RAISE_APPLICATION_ERROR(-20000,'Password does not match !') ;
+    END IF;
+    
+    IF(NOT END_PROCESS) THEN
+        
+	--insert bila belum ada
+	IF (v_Processed = 0) THEN
+		Ad_Sequence_Next('Tmc_User_Sync', v_ClientID, v_Record_ID) ;
+
+		INSERT INTO tmc_user_sync(
+		    tmc_user_sync_id, ad_client_id, ad_org_id, isactive, created, 
+		    createdby, updated, updatedby, ad_user_id, password, btn_process)
+		    VALUES (
+		    v_Record_ID, v_ClientID, '0', 'Y', now(), 
+			    v_AD_User_ID, now(), v_AD_User_ID, v_AD_User_ID, MD5(v_PasswordFinal), 'N');
+	    
+	ELSE
+		delete from tmc_token where createdby = v_AD_User_ID;
+		UPDATE tmc_user_sync SET password = MD5(v_PasswordFinal) where AD_USER_ID = v_AD_User_ID;
+		v_Message := 'Update Succesful';
+	END IF;
+        
+    
+    END IF;--END_PROCESS
+    --<<END_PROCESS>>
+    --  Update AD_PInstance
+    DBMS_OUTPUT.PUT_LINE('Updating PInstance - Finished ' || v_Message) ;
+    AD_UPDATE_PINSTANCE(PInstance_ID, NULL, 'N', 1, v_Message) ;
+    RETURN;
+  END; --BODY
+EXCEPTION
+WHEN OTHERS THEN
+  v_ResultStr:= '@ERROR=' || SQLERRM;
+  DBMS_OUTPUT.PUT_LINE(v_ResultStr) ;
+  AD_UPDATE_PINSTANCE(PInstance_ID, NULL, 'N', 0, v_ResultStr) ;
+  RETURN;
+END TMC_SYNCHRONIZE_USER
+]]></body>
+    </function>
+  </database>
