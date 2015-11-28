@@ -40,27 +40,78 @@ public class OpenApiUtils {
 
   }
 
+ /*
   private String commonParameters(boolean tokenIsAlreadyExist) throws NullPointerException {
-
     if (tokenIsAlreadyExist) {
-        TmcToken token = getToken();
-        if (token == null) {
-            return "TokenFailed";
-        }
-        else {
-            return "access_token=" + token.getToken()  + "&account=" + COOTRACK_USERNAME.getUsername()
-                    + "&time=" + getUnixTime();
-        }
+      TmcToken token = getToken();
+      if (token.getReturnCode().equals("20001") ||token.getReturnCode().equals("20004") ) {
+        return "Wrong Username / Password !";
+      } else if (token.getReturnCode().equals("0")) {
+        return "access_token=" + token.getToken() + "&account=" + COOTRACK_USERNAME.getUsername()
+            + "&time=" + getUnixTime();
+      }
+      else {
+        return "Unknown error when retrieve !";
+      }
     } else {
-        return "account=" + COOTRACK_USERNAME.getUsername() + "&time=" + getUnixTime() + "&signature="
-                + (convertToMd5((COOTRACK_PASSWORD) + getUnixTime()));
+      return "account=" + COOTRACK_USERNAME.getUsername() + "&time=" + getUnixTime() + "&signature="
+          + (convertToMd5((COOTRACK_PASSWORD) + getUnixTime()));
     }
   }
-  
+  */
+  private JSONObject requestData(String action,String... param) throws JSONException {
+      String commonParam = "";
+      TmcToken token = getToken();
+      if (token == null) {
+        return new CustomJsonErrorResponse(token.getReturnCode(), "Failed to get Token !").getJSONErrResponse();
+      }
+      if (token.getReturnCode().equals("0")) {
+        commonParam = "access_token=" + token.getToken() + "&account=" + COOTRACK_USERNAME.getUsername()
+        + "&time=" + getUnixTime();
+      } else if (token.getReturnCode().equals("20001") ||token.getReturnCode().equals("20004") ) {
+        return new CustomJsonErrorResponse(token.getReturnCode(), "Wrong Username / Password !").getJSONErrResponse();
+      } else {
+        return new CustomJsonErrorResponse(token.getReturnCode(), token.getMessage()+", Delete Token and try again").getJSONErrResponse();
+      }
+      
+    String url = "";
+    if (action.equals("tracking")) {
+      url = COOTRACK_GET_TRACKING_URL_BY_IMEI + "=" + param[0] + "&" + commonParam;
+    } else if (action.equals("info")) {
+      if (param[0] == null) {
+        param[0] = encodeString(COOTRACK_USERNAME.getUsername());
+      }
+      if ("".equals(param[0])) {
+        param[0] = encodeString(COOTRACK_USERNAME.getUsername());
+      }
+      url = COOTRACK_GET_TARGET_INFO + "=" + param[0] + "&" + commonParam;
+    }
+
+    String jsonResponse = "";
+    jsonResponse = new CootrackHttpClient().post2(url);
+    
+    JSONObject hasil = new JSONObject(jsonResponse);
+    
+    if ((hasil.get("ret").toString()).equals("10101")) { // 10101 : ip limit
+      JSONObject hasilRetry;
+      do {
+        try {
+          Thread.sleep(91);
+        } catch (InterruptedException e) {
+          return new CustomJsonErrorResponse("5151", "Thread Error : "+e.getMessage()).getJSONErrResponse();
+        }
+        hasilRetry = retryRequest(url);
+      } while (hasilRetry.get("ret").toString().equals("10101"));
+      //return hasilRetry;
+    }
+
+    return hasil;
+  }
+
   /*
-  * private String commonParameters(boolean tokenIsAlreadyExist) { System.out.println("USER  : "
-  * +COOTRACK_USERNAME); if (tokenIsAlreadyExist) { // if (getToken() != null) { TmcToken token =
-  * getToken(); if (token != null) { return "access_token=" + token.getToken() + "&account=" +
+   * private String commonParameters(boolean tokenIsAlreadyExist) { System.out.println("USER  : "
+   * +COOTRACK_USERNAME); if (tokenIsAlreadyExist) { // if (getToken() != null) { TmcToken token =
+   * getToken(); if (token != null) { return "access_token=" + token.getToken() + "&account=" +
    * COOTRACK_USERNAME + "&time=" + getUnixTime(); } else { return noTokenParam(); }
    *
    * // } else { // return "account=" + COOTRACK_USERNAME + "&time=" + getUnixTime() + "&signature="
@@ -87,7 +138,7 @@ public class OpenApiUtils {
    *          Target (%s) has expired 20011 Map Type Error 20012 Latitude or Longitude Not Valid
    *          55555 Error Tripad (bisa berbagai macam sebab)
    */
-  private JSONObject checkAndProcessStatusResponse(JSONObject response, String url) {
+  private JSONObject checkAndProcessStatusResponse(JSONObject response) throws JSONException {
     // cek error message :
     int result = 55555;
     try {
@@ -115,7 +166,7 @@ public class OpenApiUtils {
         // rslt += headerIds.getString(i);
         // }
         // return rslt;
-      } else if (result == 10006) {
+      } /*else if (result == 10006) {
         // token expired, ambil yg baru
         deleteToken();
         // System.out.println("Memasuki delete token"); // getToken();
@@ -132,17 +183,19 @@ public class OpenApiUtils {
               "Gagal Mendapatkan Token Kembali !,Username Tidak terdapat di openAPI")
                   .getJSONErrResponse();
         }
-      } else { // error code lain
+      } */
+      else { // error code lain
 
         if ((response.get("ret").toString()).equals("20004")
             || (response.get("ret").toString()).equals("20001")) { // account tidak ada
-            
+
           System.out.println("user tidak da di open api : "
               + new CustomJsonErrorResponse("5151", "User ini tidak terdapat di OpenAPi")
                   .getJSONErrResponse().toString());
-          
-          return new CustomJsonErrorResponse("5151", "User ini tidak terdapat di OpenAPI").getJSONErrResponse();
-        } else if ((response.get("ret").toString()).equals("10101")) { // 10101 : ip limit
+
+          return new CustomJsonErrorResponse("5151", "User ini tidak terdapat di OpenAPI")
+              .getJSONErrResponse();
+        }/* else if ((response.get("ret").toString()).equals("10101")) { // 10101 : ip limit
           JSONObject hasilRetry;
           do {
             Thread.sleep(91);
@@ -152,47 +205,38 @@ public class OpenApiUtils {
         } else {
           return new CustomJsonErrorResponse("5555",
               "Error Lain - " + (response.get("msg").toString())).getJSONErrResponse();
-        }
+        } */
       }
     } catch (NumberFormatException e) {
-      throw new OBException("Error [OpenApiUtils] ! : " + e.getMessage());// return new
-      // CustomJsonErrorResponse("5555",
-      // "Return Message bukan
-      // angka !"
-      // ).getJSONErrResponse();
+        return new CustomJsonErrorResponse("5555", "Return Message bukan angka !").getJSONErrResponse();
     } catch (JSONException e) {
-      throw new OBException("Error [OpenApiUtils] ! : " + e.getMessage());// return new
-      // CustomJsonErrorResponse("5555",
-      // "OpenApiUtils, JSON
-      // Exception !" +
-      // e.getMessage()
-      // ).getJSONErrResponse();
+      return new CustomJsonErrorResponse("5555","OpenApiUtils, JSON Exception !" + e.getMessage()).getJSONErrResponse();
     } catch (Throwable z) {
-      throw new OBException("Error [OpenApiUtils] ! : " + z.getMessage());// return new
-      // CustomJsonErrorResponse("5555",
-      // "OpenApiUtils, JSON
-      // Exception !" +
-      // e.getMessage()
-      // ).getJSONErrResponse();
+      //throw new OBException("Error [OpenApiUtils] ! : " + z.getMessage());// return new
+       return new CustomJsonErrorResponse("5555","OpenApiUtils, JSON Exception !" +z.getMessage()).getJSONErrResponse();
     }
-
+    return new CustomJsonErrorResponse("5151", "Unknown Error when checking Status Response")
+        .getJSONErrResponse();
   }
 
-  private JSONObject retryRequest(String url) {
+  private JSONObject retryRequest(String url)  {
     String jsonResponse = "";
     jsonResponse = new CootrackHttpClient().post2(url);
-    JSONObject jsonData;
+    JSONObject jsonData =null;
     try {
       System.out.println("Melakukan retry request");
       jsonData = new JSONObject(jsonResponse);
       System.out.println("Hasill json retry : " + jsonData.toString());
-      return jsonData;
+      
     } catch (JSONException e) {
-      throw new OBException("Error [OpenApiUtils] ! : " + e.getMessage());// return new
-      // CustomJsonErrorResponse("5555",
-      // "Error : " +
-      // e.getMessage()
-      // ).getJSONErrResponse();
+      //throw new OBException("Error [OpenApiUtils] ! : " + e.getMessage());// return new
+      jsonData = new CustomJsonErrorResponse("5555",
+       "Error : " +
+       e.getMessage()
+       ).getJSONErrResponse();
+    }
+    finally {
+      return jsonData;
     }
   }
 
@@ -208,6 +252,8 @@ public class OpenApiUtils {
    *          Target user yg akan di dapatkan informasinya, bila kosong target = Dealer
    * @return Hasil Response berupa List Informasi User dari OpenAPI
    */
+  
+  /* @Deprecated
   public JSONObject requestListChildAccount(String target) throws JSONException {
     if (target == null) {
       target = encodeString(COOTRACK_USERNAME.getUsername());
@@ -223,38 +269,41 @@ public class OpenApiUtils {
     JSONObject jsonData;
     jsonData = new JSONObject(jsonResponse);
     // cek status response dari server
-    
+
     return checkAndProcessStatusResponse(jsonData, getListChildAccountUrl);
   }
-
-  public JSONObject requestListMonitoring() {
-    String getMonitorUrl = COOTRACK_GET_MONITOR_URL_BY_TARGET + "=" + encodeString("Bangun") + "&"
-        + commonParameters(true);
-
-    String jsonResponse = "";
-    jsonResponse = new CootrackHttpClient().post2(getMonitorUrl);
+*/
+  public JSONObject requestListChildAccount(String target) throws JSONException {
     JSONObject jsonData;
-    try {
-      jsonData = new JSONObject(jsonResponse);
-    } catch (JSONException e) {
-      throw new OBException("Error [OpenApiUtils] ! : " + e.getMessage());// return new
-      // CustomJsonErrorResponse("5555",
-      // "Error : " +
-      // e.getMessage()
-      // ).getJSONErrResponse();
-    }
+    jsonData = requestData("info",target);
+    
     // cek status response dari server
 
-    return checkAndProcessStatusResponse(jsonData, getMonitorUrl);
+   // return checkAndProcessStatusResponse(jsonData);
+    return jsonData;
   }
-
+  
+  /*
+   * @Deprecated public JSONObject requestListMonitoring() { String getMonitorUrl =
+   * COOTRACK_GET_MONITOR_URL_BY_TARGET + "=" + encodeString("Bangun") + "&" +
+   * commonParameters(true);
+   * 
+   * String jsonResponse = ""; jsonResponse = new CootrackHttpClient().post2(getMonitorUrl);
+   * JSONObject jsonData; try { jsonData = new JSONObject(jsonResponse); } catch (JSONException e) {
+   * throw new OBException("Error [OpenApiUtils] ! : " + e.getMessage());// return new } // cek
+   * status response dari server
+   * 
+   * return checkAndProcessStatusResponse(jsonData, getMonitorUrl); }
+   */
+  
+  /* @Deprecated
   public JSONObject requestStatusFilteredCarByImei(String imeis) throws JSONException {
-      String commonParam = commonParameters(true);
-      if (commonParam.equals("TokenFailed")) {
-          return new CustomJsonErrorResponse("5151", "Gagal Mendapatkan Token [User / Password salah] ").getJSONErrResponse();
-      }
-    String getTrackingUrl = COOTRACK_GET_TRACKING_URL_BY_IMEI + "=" + imeis + "&"
-        + commonParam;
+    String commonParam = commonParameters(true);
+    if (commonParam.equals("TokenFailed")) {
+      return new CustomJsonErrorResponse("5151", "Gagal Mendapatkan Token [User / Password salah] ")
+          .getJSONErrResponse();
+    }
+    String getTrackingUrl = COOTRACK_GET_TRACKING_URL_BY_IMEI + "=" + imeis + "&" + commonParam;
 
     String jsonResponse = "";
     jsonResponse = new CootrackHttpClient().post2(getTrackingUrl);
@@ -263,6 +312,15 @@ public class OpenApiUtils {
     jsonData = new JSONObject(jsonResponse);
     System.out.println("lewat sini");
     return checkAndProcessStatusResponse(jsonData, getTrackingUrl);
+  }
+
+*/
+  public JSONObject requestStatusFilteredCarByImei(String imeis) throws JSONException {
+    JSONObject jsonData;
+    jsonData = requestData("tracking",imeis);
+    
+    //return checkAndProcessStatusResponse(jsonData);
+    return jsonData;
   }
 
   public void deleteToken() {
@@ -283,34 +341,35 @@ public class OpenApiUtils {
 
     if (tmcTokenCrit.count() > 0) {
       for (TmcToken tokenFromDB : tmcTokenCrit.list()) {
-        // thought
-        // if tokenFromDB.getName().equals("-")
-        // deleteToken();
-        // getToken()
-        return tokenFromDB;
+        if (tokenFromDB.getMessage().equals("10006")) {// token expired, delete dan dapatkan kembali
+          deleteToken();
+          getToken();
+        } //else if 5555
+        else {
+          return tokenFromDB;
+        }
       }
+      
     } else {
       // dapatkan token dari server API lewat internet
       TmcToken tmcToken = OBProvider.getInstance().get(TmcToken.class);
-      String getTokenUrl = COOTRACK_GET_TOKEN_URL + commonParameters(false);
+      String tokenParam = "account=" + COOTRACK_USERNAME.getUsername() + "&time=" + getUnixTime() + "&signature="
+              + (convertToMd5(COOTRACK_PASSWORD + getUnixTime()));
+      String getTokenUrl = COOTRACK_GET_TOKEN_URL + tokenParam;
       String jsonResponse = new CootrackHttpClient().post2(getTokenUrl);
       JSONObject jsonData = null;
 
       try {
         jsonData = new JSONObject(jsonResponse);
-        jsonData = checkAndProcessStatusResponse(jsonData, getTokenUrl);
-
-        if (jsonData.get("ret").toString().equals("5151")) {
-          return null;
-        }
-
+        //jsonData = checkAndProcessStatusResponse(jsonData);
+        
         tmcToken.setActive(true);
         tmcToken.setValue("1");
-        // if (Integer.parseInt(jsonData.get("ret").toString()) == 0) {
-        tmcToken.setToken(jsonData.get("access_token").toString());
-        // } else {
-        // tmcToken.setToken("-");
-        // }
+        if (Integer.parseInt(jsonData.get("ret").toString()) == 0) {
+            tmcToken.setToken(jsonData.get("access_token").toString());
+         } else {
+         tmcToken.setToken("-");
+         }
         tmcToken.setMessage(jsonData.get("msg").toString());
         tmcToken.setReturnCode((Integer.parseInt(jsonData.get("ret").toString())) + "");
 
@@ -322,13 +381,13 @@ public class OpenApiUtils {
         return tmcToken;
 
       } catch (JSONException ex) {
-        // tmcToken.setActive(true);
-        // tmcToken.setValue("1");
-        // tmcToken.setToken("-");
-        // tmcToken.setMessage(ex.getMessage());
-        // tmcToken.setReturnCode("55555");
+         tmcToken.setActive(true);
+         tmcToken.setValue("1");
+         tmcToken.setToken("-");
+         tmcToken.setMessage(ex.getMessage());
+         tmcToken.setReturnCode("55555");
         // Logger.getLogger(OpenApiUtils.class.getName()).log(Level.SEVERE, null, ex);
-        return null;
+        return tmcToken;
       }
     }
     return null;
@@ -428,7 +487,7 @@ public class OpenApiUtils {
     String hasil[] = src.split(delim);
     return hasil;
   }
-  
+
   public String getCurrentPassword() {
     OBCriteria<TmcUserSync> tmcUserSyncCrit = OBDal.getInstance().createCriteria(TmcUserSync.class);
     tmcUserSyncCrit.add(Restrictions.eq(TmcUserSync.PROPERTY_USER, COOTRACK_USERNAME));
