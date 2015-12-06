@@ -232,7 +232,7 @@ public class ResponseResultToDB {
                         .add(Restrictions.not(Restrictions.in(TmcCar.PROPERTY_IMEI, tempImeiServer)));
                 
                 for (TmcCar removeRecord : tmcListCarRemove.list()) {
-                    for (TmcDocumentUpdateLine tmcListChildCar : removeRecord.getTmcDocumentupdatelineList() ) {
+                    for (TmcDocumentUpdateLine tmcListChildCar : removeRecord.getTmcDocumentUpdateLineList()) {
                         OBDal.getInstance().remove(tmcListChildCar);
                         OBDal.getInstance().flush();
                     }
@@ -262,7 +262,7 @@ public class ResponseResultToDB {
         
         for (BusinessPartner removeRecord : tmcListChildAcc.list()) {
             for (TmcCar removeLine : removeRecord.getTmcCarList()) {
-                for (TmcDocumentUpdateLine tmcListChildCar : removeLine.getTmcDocumentupdatelineList()) {
+                for (TmcDocumentUpdateLine tmcListChildCar : removeLine.getTmcDocumentUpdateLineList()) {
                     OBDal.getInstance().remove(tmcListChildCar);
                     OBDal.getInstance().flush();
                 }
