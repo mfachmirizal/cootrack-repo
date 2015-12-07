@@ -1,0 +1,447 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+ *************************************************************************
+ * The contents of this file are subject to the Openbravo  Public  License
+ * Version  1.0  (the  "License"),  being   the  Mozilla   Public  License
+ * Version 1.1  with a permitted attribution clause; you may not  use this
+ * file except in compliance with the License. You  may  obtain  a copy of
+ * the License at http://www.openbravo.com/legal/license.html
+ * Software distributed under the License  is  distributed  on  an "AS IS"
+ * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the
+ * License for the specific  language  governing  rights  and  limitations
+ * under the License.
+ * The Original Code is Openbravo ERP.
+ * The Initial Developer of the Original Code is Openbravo SLU
+ * All portions are Copyright (C) 2010-2013 Openbravo SLU
+ * All Rights Reserved.
+ * Contributor(s):  ______________________________________.
+ *************************************************************************
+-->
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title id="paramTitle">xxTitle</title>
+        <link rel="shortcut icon" href="../../../../../web/images/favicon.ico" type="image/x-icon" />
+        <link rel="stylesheet" type="text/css" href="../../../../../web/skins/Default/Openbravo_ERP_250.css" id="paramCSS"></link>
+        
+        <script language="JavaScript" type="text/javascript" id="paramDirectory">
+            var baseDirectory = "../../../../../web/";
+        </script>
+        <script language="JavaScript" src="../../../../../web/js/messages.js" type="text/javascript"></script>
+        <script language="JavaScript" src="../utility/DynamicJS.js" type="text/javascript"></script>
+        <script language="JavaScript" type="text/javascript" id="paramLanguage">
+            var defaultLang = "en_US";
+        </script>
+        <script language="JavaScript" src="../../../../../web/js/shortcuts.js" type="text/javascript"></script>
+        <script language="JavaScript" src="../../../../../web/js/utils.js" type="text/javascript"></script>
+        <script language="JavaScript" src="../../../../../web/js/windowKeyboard.js" type="text/javascript"></script>
+        <script language="JavaScript" src="../../../../../web/js/appStatus.js" type="text/javascript"></script>
+        <script language="JavaScript" src="../../../../../web/js/searchs.js" type="text/javascript"></script>
+        <script language="JavaScript" src="../../../../../web/js/ajax.js" type="text/javascript"></script>
+        <script language="JavaScript" src="../../../../../web/js/default/MessageBox.js" type="text/javascript"></script>
+        <script language="JavaScript" src="../../../../../web/js/messages.js" type="text/javascript"></script>
+        <script language="JavaScript" src="../utility/DynamicJS.js" type="text/javascript"></script>
+        <script language="JavaScript" src="../../../../../web/org.openbravo.userinterface.selector/js/classic-skin-variable.js" type="text/javascript"></script>
+        <script language="JavaScript" src="../../../../../web/../org.openbravo.client.kernel/OBCLKER_Kernel/StaticResources" type="text/javascript"></script>
+        <script language="JavaScript" src="../../../../../web/js/calculator.js" type="text/javascript"></script>
+        <script language="JavaScript" src="../../../../../web/js/jscalendar/calendar.js" type="text/javascript"></script>
+        <script language="JavaScript" src="../../../../../web/js/jscalendar/lang/calendar-es.js" type="text/javascript" id="fieldCalendar"></script>
+        <script language="JavaScript" src="../../../../../web/js/default/DateTextBox.js" type="text/javascript"></script>
+        <script language="JavaScript" src="../../../../../web/js/appStatus.js" type="text/javascript"></script>
+        <script type="text/javascript">
+            window.onunload = reloadOpener; // reloads opener on closing
+        </script>
+        
+        <script language="JavaScript" type="text/javascript">
+            function validate(action) {
+                var frm = document.frmMain;
+                // if (frm.inpSenderCat.value === null || frm.inpSenderCat.value === '') {
+                //   setWindowElementFocus(frm.inpSenderCat);
+                //   showJSMessage(7);
+                //   return false;
+                // }
+
+                /*  if (frm.inpActualPayment.value === null || frm.inpActualPayment.value === '') {
+              setWindowElementFocus(frm.inpActualPayment);
+              showJSMessage(7);
+              return false;
+            } else {
+              var diffAction = frm.inpDifferenceAction,
+                  selectedAction = null, i, actionSelected = false;
+              for (i = 0; i < diffAction.length; i++) {
+                if (diffAction[i].checked) {
+                  actionSelected = true;
+                  break;
+                }
+              }
+              if (actionSelected) {
+                 selectedAction = diffAction[i].value;
+              }
+              if (!validateSelectedPendingPayments(true, selectedAction)) { return false; }
+            }
+            OB.APRM.AP//FT_GLItems = OB.APRM.APFT_GLItems || [];
+                 */
+
+                return true;
+            }
+
+            //method2
+
+
+        </script>
+        
+        <script language="JavaScript" type="text/javascript">
+            function validateDate(element) {
+                //  if(isValidDate(element.value, element.getAttribute("displayformat")))
+            }
+
+            function onLoadDo() {
+                this.windowTables = new Array(
+                        new windowTableId('client','buttonAction')
+                        );
+                setWindowTableParentElement();
+                this.tabsTables = new Array(
+                        new tabTableId('tdtopTabs')
+                        );
+                setTabTableParentElement();
+                enableShortcuts('edition');
+                setBrowserAutoComplete(false);
+
+
+                //resizePopup();
+                //updateMenuIcon('buttonMenu');
+
+                //setWindowElementFocus(document.frmMain.inpGLItemId);
+            }
+
+            // function onResizeDo(){
+            //   resizeArea();
+            // }
+
+
+
+            function closeThisPage() {
+                closePage();
+            }
+
+        </script>
+    </head>
+    <body leftmargin="0" topmargin="0" marginwidth="0" marginheight="0" onload="onLoadDo();" >
+        <form name="frmMain" method="post" action="CootrackUserSynchronization.html">
+            <input type="hidden" name="Command" />
+            <input type="hidden" name="IsPopUpCall" value="1" />
+            <input type="hidden" name="inpadOrgId" value="" id="fieldOrg"/>
+            <input type="hidden" name="inpadWindowId" value="" id="fieldWindowId"/>
+            <!-- <input type="hidden" name="inpTabId" value="" id="fieldTabId"/> -->
+            <input type="hidden" name="inpIdTab" value="" id="fieldTabId"/>
+            <input type="hidden" name="inpUserId" value="" id="fieldUserId"/>
+            <!-- fooParam -->
+            
+            
+            <!-- Custom Field -->
+            
+            <!-- end Custom field -->
+            
+            <div class="Popup_ContentPane_CircleLogo">
+                <div class="Popup_WindowLogo">
+                    <img class="Popup_WindowLogo_Icon Popup_WindowLogo_Icon_process" src="../../../../../web/images/blank.gif" border=0/></img>
+                </div>
+            </div>
+            <table cellspacing="0" cellpadding="0" width="100%" id="table_header">
+                <tr>
+                    <td>
+                        <table cellspacing="0" cellpadding="0" class="Popup_ContentPane_NavBar">
+                            <tr class="Popup_NavBar_bg"><td></td>
+                                <td class="Popup_NavBar_separator_cell"></td>
+                                <td class="Popup_NavBar_bg_logo_left"></td>
+                                <td class="Popup_NavBar_bg_logo" width="1" onclick="openNewBrowser('http://www.openbravo.com', 'Openbravo');return false;"><img src="../../../../../web/images/blank.gif" alt="Openbravo" title="Openbravo" border="0" id="openbravoLogo" class="Popup_NavBar_logo" /></td>
+                                <td class="Popup_NavBar_bg_logo_right"></td>
+                                <td class="Popup_NavBar_Popup_title_cell"><span name="lblR" id="lblRPopupTitle">Openbravo - Cootrack User Synchronization</span><span name="lblP" id="lblPPopupTitle"></span></td>
+                                <td class="Popup_NavBar_separator_cell"></td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                
+                <tr>
+                    <td>
+                        <table cellspacing="0" cellpadding="0" class="Popup_ContentPane_SeparatorBar">
+                            <tr>
+                                <td class="Popup_SeparatorBar_bg"></td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                
+            </table>
+            <table cellspacing="0" cellpadding="0" width="100%">
+                <tr>
+                    <td>
+                        <div class="Popup_ContentPane_Client" style="overflow: auto;" id="client_messagebox">
+                            
+                            <!-- MessageBox -->
+                            <table cellpadding="0" cellspacing="0" id="messageBoxID" class="MessageBoxyy">
+                                <tbody>
+                                    <tr class="MessageBox_TopMargin">
+                                        <td class="MessageBox_LeftMargin"></td>
+                                        <td></td>
+                                        <td class="MessageBox_RightMargin"></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="MessageBox_LeftMargin"></td>
+                                        <td>
+                                            
+                                            <table cellpadding="0" cellspacing="0" class="MessageBox_Container">
+                                                <tbody>
+                                                    <tr>
+                                                        <td class="MessageBox_LeftTrans">
+                                                            <table style="width: 100%; height: 100%" cellpadding="0" cellspacing="0">
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <td class="MessageBox_TopLeft"></td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td class="MessageBox_Left"></td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </td>
+                                                        <td class="MessageBox_bg">
+                                                            
+                                                            <table class="MessageBox_Top">
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <td>
+                                                                            <span>
+                                                                                <table cellpadding="0" cellspacing="0" class="MessageBox_Body_ContentCell">
+                                                                                    <tbody>
+                                                                                        <tr>
+                                                                                            <td class="MessageBox_Icon_ContentCell">
+                                                                                                <div class="MessageBox_Icon"></div>
+                                                                                            </td>
+                                                                                            <td style="vertical-align: top;" id="messageBoxIDContent">
+                                                                                                <span>
+                                                                                                    <div class="MessageBox_TextTitle" id="messageBoxIDTitle">
+                                                                                                        xxInfo: AccessTableWithNoView
+                                                                                                    </div>
+                                                                                                    <div class="MessageBox_TextDescription" id="messageBoxIDMessage">
+                                                                                                        xxThe current information is empty.
+                                                                                                    </div>
+                                                                                                    <div class="MessageBox_TextSeparator"></div>
+                                                                                                </span>
+                                                                                            </td>
+                                                                                        </tr>
+                                                                                    </tbody>
+                                                                                </table>
+                                                                            </span>
+                                                                        </td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                            
+                                                        </td>
+                                                        <td class="MessageBox_RightTrans">
+                                                            <table style="width: 100%; height: 100%" cellpadding="0" cellspacing="0">
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <td class="MessageBox_TopRight"></td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td class="MessageBox_Right"></td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td rowspan="2" class="MessageBox_BottomLeft">
+                                                        </td>
+                                                        <td class="MessageBox_BottomTrans MessageBox_bg">
+                                                        </td>
+                                                        <td rowspan="2" class="MessageBox_BottomRight">
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="MessageBox_Bottom">
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                            
+                                        </td>
+                                        <td class="MessageBox_RightMargin"></td>
+                                    </tr>
+                                    <tr class="MessageBox_BottomMargin">
+                                        <td class="MessageBox_LeftMargin"></td>
+                                        <td></td>
+                                        <td class="MessageBox_RightMargin"></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <!-- MessageBox END -->
+                        </div>
+                    </td>
+                </tr>
+            </table>
+            
+            <table cellspacing="0" cellpadding="0" width="100%">
+                <!-- group Filter -->
+                <tr>
+                    <td>
+                        <table class="Main_Client_TableEdition">
+                            <tr>
+                                <td class="TableEdition_OneCell_width"></td>
+                                <td class="TableEdition_OneCell_width"></td>
+                                <td class="TableEdition_OneCell_width"></td>
+                                <td class="TableEdition_OneCell_width"></td>
+                                <td class="TableEdition_OneCell_width"></td>
+                                <td class="TableEdition_OneCell_width"></td>
+                                <td class="TableEdition_OneCell_width"></td>
+                            </tr>
+                            <tr>
+                                <td colspan="7">
+                                    <table class="FieldGroup" cellspacing="0" cellpadding="0" border="0">
+                                        <tbody>
+                                            <tr class="FieldGroup_TopMargin"/> </tr>
+                                            <tr>
+                                                <td class="FieldGroupTitle_Left"><img class="FieldGroupTitle_Left_bg" border="0" src="../../../../../web/images/blank.gif"/></td>
+                                                <td class="FieldGroupTitle">Form</td>
+                                                <td class="FieldGroupTitle_Right"><img class="FieldGroupTitle_Right_bg" border="0" src="../../../../../web/images/blank.gif"/></td>
+                                                <td class="FieldGroupContent"/></td>
+                                            </tr>
+                                            <tr class="FieldGroup_BottomMargin"/> </tr>
+                                        </tbody>
+                                    </table>
+                                </td>
+                            </tr>
+                            <!-- parameter element area -->
+                            
+                            <!-- no surat ijin belajar -->
+                            <tr id="hide0" style="display:gg;"> 
+                                <td class="TitleCell"><span class="LabelText">Username</span></td>
+                                <td class="Combo_ContentCell" colspan="3">
+                                    <input class="dojoValidateValid TextBox_TwoCells_width" type="text" readonly="true" name="inpUser" maxlength="20" value="" id="paramUser"></input>
+                                </td>
+                            </tr>
+                            
+                            <tr id="hide0" style="display:gg;"> 
+                                <td class="TitleCell"><span class="LabelText">Password</span></td>
+                                <td class="Combo_ContentCell" colspan="3">
+                                    <input class="dojoValidateValid TextBox_TwoCells_width" type="password"  name="inpPasswd" maxlength="20" value="" id="paramPasswd"></input>
+                                </td>
+                            </tr>
+                            <!-- end parameter element area -->
+                        </table>
+                        
+                        <!-- end test -->
+                    </td>
+                </tr>
+                <!--  end group filter-->
+                
+                <!--  group button -->
+                <tr>
+                    <td>
+                        <table class="Main_Client_TableEdition">
+                            <tr>
+                                <td class="TableEdition_OneCell_width"></td>
+                                <td class="TableEdition_OneCell_width"></td>
+                                <td class="TableEdition_OneCell_width"></td>
+                                <td class="TableEdition_OneCell_width"></td>
+                                <td class="TableEdition_OneCell_width"></td>
+                                <td class="TableEdition_OneCell_width"></td>
+                                <td class="TableEdition_OneCell_width"></td>
+                            </tr>
+                            <tr>
+                                <td colspan="7">
+                                    <table class="FieldGroup" cellspacing="0" cellpadding="0" border="0">
+                                        <tbody>
+                                            <tr class="FieldGroup_TopMargin"/> </tr>
+                                            <tr>
+                                                <td class="FieldGroupTitle_Left"><img class="FieldGroupTitle_Left_bg" border="0" src="../../../../../web/images/blank.gif"/></td>
+                                                <td class="FieldGroupTitle"> </td>
+                                                <td class="FieldGroupTitle_Right"><img class="FieldGroupTitle_Right_bg" border="0" src="../../../../../web/images/blank.gif"/></td>
+                                                <td class="FieldGroupContent"/></td>
+                                            </tr>
+                                            <tr class="FieldGroup_BottomMargin"/> </tr>
+                                        </tbody>
+                                    </table>
+                                </td>
+                            </tr>
+                            <!-- parameter element area -->
+                            <tr>
+                                <td class="TitleCell"></td>
+                                <td class="TitleCell"></td>
+                                <td class="Button_CenterAlign_ContentCell">
+                                    <div>
+                                        <button type="button"
+                                                id="buttonAction"
+                                                class="ButtonLink"
+                                                onclick="submitCommandForm('OK', true, null, null, null, true);return false;"
+                                                onfocus="buttonEvent('onfocus', this); window.status='Synhronize This Record'; return true;"
+                                                onblur="buttonEvent('onblur', this);"
+                                                onkeyup="buttonEvent('onkeyup', this);"
+                                                onkeydown="buttonEvent('onkeydown', this);"
+                                                onkeypress="buttonEvent('onkeypress', this);"
+                                                onmouseup="buttonEvent('onmouseup', this);"
+                                                onmousedown="buttonEvent('onmousedown', this);" T
+                                                onmouseover="buttonEvent('onmouseover', this); window.status='Synhronize This Record'; return true;"
+                                                onmouseout="buttonEvent('onmouseout', this);">i
+                                            <table class="Button">
+                                                <tr>
+                                                    <td class="Button_left"><img class="Button_Icon Button_Icon_html" alt="Synhronize user with cootrack" title="Synhronize user with cootrack" src="../../../../../web/images/blank.gif" border="0" /></td>
+                                                    <td class="Button_text Button_width">OK</td>
+                                                    <td class="Button_right"></td>
+                                                </tr>
+                                            </table>
+                                        </button>
+                                    </div>
+                                </td>
+                                
+                                <td class="Button_CenterAlign_ContentCell">
+                                    <div>
+                                        <button type="button"
+                                                id="buttonCancel"
+                                                class="ButtonLink"
+                                                onclick="closeThisPage();return false;"
+                                                onfocus="buttonEvent('onfocus', this); window.status='Cancel'; return true;"
+                                                onblur="buttonEvent('onblur', this);"
+                                                onkeyup="buttonEvent('onkeyup', this);"
+                                                onkeydown="buttonEvent('onkeydown', this);"
+                                                onkeypress="buttonEvent('onkeypress', this);"
+                                                onmouseup="buttonEvent('onmouseup', this);"
+                                                onmousedown="buttonEvent('onmousedown', this);"
+                                                onmouseover="buttonEvent('onmouseover', this); window.status='Cancel'; return true;"
+                                                onmouseout="buttonEvent('onmouseout', this);">
+                                            <table class="Button">
+                                                <tr>
+                                                    <td class="Button_left"><img class="Button_Icon Button_Icon_cancel" alt="Cancel" title="Cancel" src="../../../../../web/images/blank.gif" border="0" /></td>
+                                                    <td class="Button_text Button_width">Cancel</td>
+                                                    <td class="Button_right"></td>
+                                                </tr>
+                                            </table>
+                                        </button>
+                                    </div>
+                                </td>
+                                
+                                <td class="ContentCell">
+                                </td>
+                                <td class="TitleCell"></td>
+                                <td class="ContentCell"></td>
+                                <td class="ContentCell"></td>
+                            </tr>
+                        </table>
+                        
+                        <!-- end test -->
+                    </td>
+                </tr>
+                <!--  end group button -->
+                
+                <!-- foo : nama proses [] -->
+                <!-- fooNama : judul window [] -->
+                <!-- fooParam : backParam-->
+                <!-- fooGroup : group param -->
+                <!-- fooParamArea : section parameter-->
+            </table>
+        </form>
+    </body>
+</html>
