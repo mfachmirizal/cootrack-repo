@@ -92,7 +92,13 @@ public class OpenApiUtils {
     
     JSONObject hasil = new JSONObject(jsonResponse);
     
+    //System.out.println("Hasil return : "+hasil.get("ret").toString());
     //auto get token yg expired belum di tambahkan
+    if ((hasil.get("ret").toString()).equals("10005") || (hasil.get("ret").toString()).equals("10006") )   { //token error / not existed 
+        System.out.println("Token Habis : "+hasil.get("ret").toString());
+        deleteToken();
+        requestData(action,param);
+    }
     
     if ((hasil.get("ret").toString()).equals("10101")) { // 10101 : ip limit
       JSONObject hasilRetry;
