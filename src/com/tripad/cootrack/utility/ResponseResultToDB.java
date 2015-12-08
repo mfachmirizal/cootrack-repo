@@ -278,7 +278,8 @@ public class ResponseResultToDB {
         OBDal.getInstance().commitAndClose();
         */
       ArrayList<String> tempIdDataServer = new ArrayList<String>();
-      ArrayList<String> tempImeiServer = new ArrayList<String>();      
+      ArrayList<String> tempImeiServer = new ArrayList<String>();
+      ArrayList<JSONObject> tempChildJsonObject = new ArrayList<JSONObject>();
       JSONArray childList = null;
       
       System.out.println("Awal : "+hasilRetrieve.toString());
@@ -442,10 +443,8 @@ public class ResponseResultToDB {
           try {
             JSONArray childListChild = (JSONArray) hasilTarget.get("children");
             if (childListChild.length() > 0) {
-            //if (hasilTarget.has("children")) {
-              System.out.println("hasilTarget : "+hasilTarget.toString());
-              System.out.println("Nama : "+name);
-              validateBPList(hasilTarget);
+              //validateBPList(hasilTarget);s
+              tempChildJsonObject.add(hasilTarget);
             }
           } catch (JSONException jex) {
             //skip, berarti tidak punya anak
@@ -489,7 +488,22 @@ public class ResponseResultToDB {
           OBDal.getInstance().flush();
       }
       
-      //OBDal.getInstance().commitAndClose();
+      //get child from child
+      try {
+        //JSONArray childListChild = (JSONArray) hasilTarget.get("children");
+        for (JSONObject jObject : tempChildJsonObject) {
+          System.out.println("hasilTarget : "+jObject.toString());
+          validateBPList(jObject);
+        }
+      } catch (JSONException jex) {
+        //skip, berarti tidak punya anak
+        System.out.println("Jex : "+jex.getMessage());
+      } catch (Throwable t) {
+        //skip, berarti tidak punya anak
+        System.out.println("Err : "+t.getMessage());
+      }
+      
+      OBDal.getInstance().commitAndClose();
     }
     
     public void validateCarStatusList(String header_id, JSONObject hasilRetrieve)
