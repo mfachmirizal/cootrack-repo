@@ -12,6 +12,7 @@ import java.util.List;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
+import org.hibernate.Query;
 import org.hibernate.criterion.Restrictions;
 import org.openbravo.base.exception.OBException;
 import org.openbravo.base.provider.OBProvider;
@@ -92,6 +93,7 @@ public class ResponseResultToDB {
     }
     
     public void validateBPList(JSONObject hasilRetrieve) throws Exception, OBException {
+      System.out.println("terpanggil");
         /*ArrayList<String> tempIdDataServer = new ArrayList<String>();
         ArrayList<String> tempImeiServer = new ArrayList<String>();
         JSONArray childList = (JSONArray) hasilRetrieve.get("children");
@@ -276,8 +278,16 @@ public class ResponseResultToDB {
         OBDal.getInstance().commitAndClose();
         */
       ArrayList<String> tempIdDataServer = new ArrayList<String>();
-      ArrayList<String> tempImeiServer = new ArrayList<String>();
-      JSONArray childList = (JSONArray) hasilRetrieve.get("children");
+      ArrayList<String> tempImeiServer = new ArrayList<String>();      
+      JSONArray childList = null;
+      
+      System.out.println("Awal : "+hasilRetrieve.toString());
+      
+      try {
+        childList = (JSONArray) hasilRetrieve.get("children");
+      } catch(JSONException jex) {
+        return;
+      }
       OpenApiUtils utils = new OpenApiUtils();
       String rslt = "";
       OBCriteria<BusinessPartner> tmcListChildAcc = null;
@@ -428,15 +438,29 @@ public class ResponseResultToDB {
           tempIdDataServer.add(id);
 
           
-          // cek apakah dia punya anak ?
+          // cek apakah dia punya anak lagi ?          
           try {
             JSONArray childListChild = (JSONArray) hasilTarget.get("children");
-            validateBPList(hasilTarget);
-          }catch (JSONException jex) {
+            if (childListChild.length() > 0) {
+            //if (hasilTarget.has("children")) {
+              System.out.println("hasilTarget : "+hasilTarget.toString());
+              System.out.println("Nama : "+name);
+              validateBPList(hasilTarget);
+            }
+          } catch (JSONException jex) {
             //skip, berarti tidak punya anak
-          }          
+            System.out.println("Jex : "+jex.getMessage());
+          } catch (Throwable t) {
+            //skip, berarti tidak punya anak
+            System.out.println("Err : "+t.getMessage());
+          }
+          
+          //Though, mungkin setiap JSONObject (hasilTarget) yg memiliki children, di simpan dulu
+          //di ArrayList, lalu di eksekusi setelah tahap adegan menghapus record
+          
       }//end loop utama
-      
+     
+      System.out.println("End akhir : ");
       
       // adegan menghapus record yg ada di local tapi tidak ada di server open api ||Jangan LUPA
       // DELETE LINENYA DULU
@@ -465,7 +489,7 @@ public class ResponseResultToDB {
           OBDal.getInstance().flush();
       }
       
-      OBDal.getInstance().commitAndClose();
+      //OBDal.getInstance().commitAndClose();
     }
     
     public void validateCarStatusList(String header_id, JSONObject hasilRetrieve)
