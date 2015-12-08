@@ -31,6 +31,7 @@ public class RefreshListBPFromOA extends BaseActionHandler {
                 hasil = hasilRetrieve.get("msg").toString();
                 
                 if (hasil.length() == 0) {
+                    //check, bila punya children maka tampung dlu
                     // Retrieve seluruh Data dari OpenAPi Ke BP
                     new ResponseResultToDB().validateBPList(hasilRetrieve);
                     
