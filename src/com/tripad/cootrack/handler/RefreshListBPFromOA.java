@@ -32,14 +32,8 @@ public class RefreshListBPFromOA extends BaseActionHandler {
                 
                 if (hasil.length() == 0) {
                     // Retrieve seluruh Data dari OpenAPi Ke BP
-                    new ResponseResultToDB().validateBPList(hasilRetrieve);
-                    
-                    // JSONArray dataList = (JSONArray) hasilRetrieve.get("children");
-                    
+                    new ResponseResultToDB().validateBPList(hasilRetrieve);   
                 }
-                // new CustomJsonErrorResponse("5555", "Fatal protocol violation :
-                // "+e.getMessage()).getErrResponse();
-                
                 json.put("jawaban", hasil);
                 
             } else {
