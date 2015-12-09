@@ -44,6 +44,8 @@ public class RefreshListChildAccount extends BaseActionHandler {
             
         } catch (JSONException e) {
             json.put("jawaban", e.getMessage());
+        } catch (Throwable t) {
+            json.put("jawaban", t.getMessage());
         }finally {
             return json;
         }

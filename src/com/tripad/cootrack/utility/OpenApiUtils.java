@@ -97,14 +97,15 @@ public class OpenApiUtils {
     if ((hasil.get("ret").toString()).equals("10005") || (hasil.get("ret").toString()).equals("10006") )   { //token error / not existed 
         System.out.println("Token Habis : "+hasil.get("ret").toString());
         deleteToken();
-        requestData(action,param);
+        hasil = requestData(action,param);
     }
+    //System.out.println("Lewat Pengecekan Token : "+hasil.get("ret").toString());
     
     if ((hasil.get("ret").toString()).equals("10101")) { // 10101 : ip limit
       JSONObject hasilRetry;
       do {
         try {
-          Thread.sleep(91);
+          Thread.sleep(85);
         } catch (InterruptedException e) {
           return new CustomJsonErrorResponse("5151", "Thread Error : "+e.getMessage()).getJSONErrResponse();
         }
@@ -426,32 +427,36 @@ public class OpenApiUtils {
    * @return interval dalam int, dari 2 parameter yg di inputkan
    */
   public int getIntervalFromUnix(long param1, long param2, String get) {
-    int hasil = 0;
-    // Interval interval = new Interval( ((long)param1*1000), ((long)param2*1000) );
-    Interval interval = new Interval((param1 * 1000L), (param2 * 1000L));
-    get = get.toLowerCase();
-
-    // if ("years".equals(get)) {
-    // hasil = interval.toPeriod().getYears();
-    // }else if ("months".equals(get)) {
-    // hasil = interval.toPeriod().getMonths();
-    // }else if ("weeks".equals(get)) {
-    // hasil = interval.toPeriod().getWeeks();
-    // }
-    if ("days".equals(get)) {
-      // hasil = interval.toPeriod().getDays();
-      hasil = interval.toDuration().toStandardDays().getDays();
-    } else if ("hours".equals(get)) {
-      hasil = interval.toDuration().toStandardHours().getHours();
-    } else if ("minutes".equals(get)) {
-      hasil = interval.toDuration().toStandardMinutes().getMinutes();
-    } else if ("seconds".equals(get)) {
-      hasil = interval.toDuration().toStandardSeconds().getSeconds();
-
-    } else {
-      throw new OBException(get + " bukan parameter yg tepat untuk method : +getIntervalFromUnix");
-    }
-    return hasil;
+      int hasil = 0;
+      try {
+          // Interval interval = new Interval( ((long)param1*1000), ((long)param2*1000) );
+          Interval interval = new Interval((param1 * 1000L), (param2 * 1000L));
+          get = get.toLowerCase();
+          
+          // if ("years".equals(get)) {
+          // hasil = interval.toPeriod().getYears();
+          // }else if ("months".equals(get)) {
+          // hasil = interval.toPeriod().getMonths();
+          // }else if ("weeks".equals(get)) {
+          // hasil = interval.toPeriod().getWeeks();
+          // }
+          if ("days".equals(get)) {
+              // hasil = interval.toPeriod().getDays();
+              hasil = interval.toDuration().toStandardDays().getDays();
+          } else if ("hours".equals(get)) {
+              hasil = interval.toDuration().toStandardHours().getHours();
+          } else if ("minutes".equals(get)) {
+              hasil = interval.toDuration().toStandardMinutes().getMinutes();
+          } else if ("seconds".equals(get)) {
+              hasil = interval.toDuration().toStandardSeconds().getSeconds();
+              
+          } else {
+              throw new OBException(get + " bukan parameter yg tepat untuk method : +getIntervalFromUnix");
+          }
+      } catch(Exception e) {
+          hasil = 0;
+      }
+      return hasil;
   }
 
   // public String debugTanggal(long param1) {

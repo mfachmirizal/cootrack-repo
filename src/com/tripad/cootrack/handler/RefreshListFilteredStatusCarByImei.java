@@ -97,6 +97,8 @@ public class RefreshListFilteredStatusCarByImei extends BaseActionHandler {
         } catch (JSONException e) {
             System.out.println("HASIL : EXCEPTION");
             json.put("jawaban", e.getMessage());
+        }catch (Throwable t) {
+            json.put("jawaban", t.getMessage());
         }finally {
             return json;
         }
