@@ -581,6 +581,8 @@ public class ResponseResultToDB {
     
     private ArrayList<String> validateCar(JSONObject hasilTarget,BusinessPartner bp) throws JSONException{
         ArrayList<String> tempImeiServer = new ArrayList<String>();
+        
+        System.out.println("TEST cetak hasil target : "+hasilTarget.toString());
         JSONArray carList = (JSONArray) hasilTarget.get("data");
         
         for (int c = 0; c < carList.length(); c++) {
