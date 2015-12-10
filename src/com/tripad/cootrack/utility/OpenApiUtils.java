@@ -59,7 +59,7 @@ public class OpenApiUtils {
     }
   }
   */
-  private JSONObject requestData(String action,String... param) throws JSONException {
+  private JSONObject requestData(String action,String... param) throws JSONException,Throwable {
       String commonParam = "";
       TmcToken token = getToken();
       if (token == null) {
@@ -112,6 +112,11 @@ public class OpenApiUtils {
         hasilRetry = retryRequest(url);
       } while (hasilRetry.get("ret").toString().equals("10101"));
       //return hasilRetry;
+    }
+    
+    if (hasil.get("ret").toString().equals("5555")) {
+      System.out.println("Masuk 5555");
+      throw new Throwable(hasil.get("msg").toString());
     }
 
     return hasil;
@@ -282,7 +287,7 @@ public class OpenApiUtils {
     return checkAndProcessStatusResponse(jsonData, getListChildAccountUrl);
   }
 */
-  public JSONObject requestListChildAccount(String target) throws JSONException {
+  public JSONObject requestListChildAccount(String target) throws JSONException,Throwable{
     JSONObject jsonData;
     jsonData = requestData("info",target);
     
@@ -324,7 +329,7 @@ public class OpenApiUtils {
   }
 
 */
-  public JSONObject requestStatusFilteredCarByImei(String imeis) throws JSONException {
+  public JSONObject requestStatusFilteredCarByImei(String imeis) throws JSONException,Throwable {
     JSONObject jsonData;
     jsonData = requestData("tracking",imeis);
     

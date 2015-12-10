@@ -8,10 +8,19 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
-import org.apache.commons.httpclient.HttpClient;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.httpclient.methods.GetMethod;
+import org.apache.commons.io.IOUtils;
+import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.params.HttpParams;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.commons.io.*;
 
 //ganti methodnya dengan ini : http://stackoverflow.com/questions/5769717/how-can-i-get-an-http-response-body-as-a-string-in-java
@@ -25,7 +34,7 @@ String body = IOUtils.toString(in, encoding);
 System.out.println(body);
 */
 
-import org.apache.commons.io.IOUtils;
+
 public class CootrackHttpClient {
     
     public CootrackHttpClient() {
@@ -37,36 +46,46 @@ public class CootrackHttpClient {
     public String post(String url) {
         String result ="";
         // Create an instance of HttpClient.
-        HttpClient client = new HttpClient();
+        final HttpParams httpParams = new BasicHttpParams();
+        HttpConnectionParams.setConnectionTimeout(httpParams, 60000);
+        //client = new DefaultHttpClient(httpParams);
+        
+        HttpClient client = new DefaultHttpClient(httpParams);
+        //client.setConnectionTimeout(1000*63);
         
         // Create a method instance.
-        GetMethod method = new GetMethod(url);
-        
+        //GetMethod method = new GetMethod(url);
+        HttpUriRequest request = new HttpGet(url);
       
         // Provide custom retry handler is necessary
 //        method.getParams().setParameter(HttpMethodParams.RETRY_HANDLER,
 //                new DefaultHttpMethodRetryHandler(1, false));
-        
+        HttpResponse response = null;
         try {
             // Execute the method.
-            int statusCode = client.executeMethod(method);
+            //int statusCode = client.execute(request);
+          response = client.execute(request);
             
-            if (statusCode != HttpStatus.SC_OK) {
+            if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
                 //System.err.println("Method failed: " + method.getStatusLine());
                 //throw new OBException("Error !, status code : " + statusCode
-                result = new CustomJsonErrorResponse("5555", "Error !, status : ("+statusCode+") "+HttpStatus.getStatusText(statusCode)).getStringErrResponse();
+                result = new CustomJsonErrorResponse("5555", "Error !, status : ("+response.getStatusLine().getStatusCode()+") "+HttpStatus.getStatusText(response.getStatusLine().getStatusCode())).getStringErrResponse();
                         /* "{\"ret\": 55555, " +                        
                 "    \"msg\": \"Error !, status : ("+statusCode+") "+HttpStatus.getStatusText(statusCode)+" \"}"; */
                 return result;
             }
             
             // Read the response body.
-            byte[] responseBody = method.getResponseBody();
+            //byte[] responseBody = method.getResponseBody();
             
             // Deal with the response.
             // Use caution: ensure correct character encoding and is not binary data
-            result = new String(responseBody);
+            result = response.toString();//new String(responseBody);
             //System.out.println(result);
+            
+            if( response.getEntity() != null ) {
+              response.getEntity().consumeContent();
+            }
             
         } catch (HttpException e) {
             //System.err.println("Fatal protocol violation: " + e.getMessage());
@@ -81,10 +100,11 @@ public class CootrackHttpClient {
             result = new CustomJsonErrorResponse("5555", "Gagal Terhubung dengan server,Harap Cek Koneksi internet anda. Target : "+e.getMessage() ).getStringErrResponse(); 
                     /* "{\"ret\": 55555, " +
                         "    \"msg\": \"Gagal Terhubung dengan server,Harap Cek Koneksi internet anda. Target : "+e.getMessage()+" \"}"; */
-        } finally {
+        } //finally {
             // Release the connection.
-            method.releaseConnection();
-        }
+            //method.releaseConnection();
+          
+        //}
         return (result);
     }
     
