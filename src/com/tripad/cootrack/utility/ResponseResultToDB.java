@@ -540,9 +540,9 @@ public class ResponseResultToDB {
     private ArrayList<String> validateCar(JSONObject hasilTarget,BusinessPartner bp) throws JSONException,Throwable{
         ArrayList<String> tempImeiServer = new ArrayList<String>();
         
-        if (hasilTarget.get("ret").toString().equals("5555")) {
-         throw new Throwable(hasilTarget.get("msg").toString());
-        }
+//        if (hasilTarget.get("ret").toString().equals("5555")) {
+//         throw new Throwable(hasilTarget.get("msg").toString());
+//        }
         System.out.println("TEST cetak hasil target : "+hasilTarget.toString());
         JSONArray carList = (JSONArray) hasilTarget.get("data");
         
@@ -587,7 +587,8 @@ public class ResponseResultToDB {
     }
     
     private boolean validateRootBP(JSONObject hasilTarget) throws Throwable {
-//        if (hasilTarget.get("ret").toString().equals("5555")) {
+      System.out.println("buat root bp");
+//               if (hasilTarget.get("ret").toString().equals("5555")) { 
 //          new Throwable(hasilTarget.get("msg").toString());
 //        }
         try {
@@ -646,6 +647,7 @@ public class ResponseResultToDB {
             } //end check jumlah banyaknya line
           }
         } catch(Throwable xe) {
+          System.out.println("Error Buat Root BP : "+xe.getMessage());
           xe.printStackTrace();
           return false;
         }

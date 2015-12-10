@@ -113,12 +113,13 @@ public class OpenApiUtils {
       } while (hasilRetry.get("ret").toString().equals("10101"));
       //return hasilRetry;
     }
-    
+    /*
+     * ini alur exception yg belum beres
     if (hasil.get("ret").toString().equals("5555")) {
       System.out.println("Masuk 5555");
       throw new Throwable(hasil.get("msg").toString());
     }
-
+*/
     return hasil;
   }
 
