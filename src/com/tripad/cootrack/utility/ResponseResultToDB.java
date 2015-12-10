@@ -110,7 +110,7 @@ public class ResponseResultToDB {
         if (tempIdDataServerParam == null) {
             tempIdDataServer = new ArrayList<String>();
             //bila null / pemanggilan pertama pada method ini, inialisasi BP untuk root user
-            if (!validateRootBP(hasilRetrieve)) throw new Throwable("Error Validate Root BP");
+            if (validateRootBP(hasilRetrieve) == null) throw new Throwable("Error Validate Root BP");
         }else {
             tempIdDataServer = tempIdDataServerParam;
         }
@@ -586,7 +586,8 @@ public class ResponseResultToDB {
         return tempImeiServer;
     }
     
-    private boolean validateRootBP(JSONObject hasilTarget) throws Throwable {
+    private BusinessPartner validateRootBP(JSONObject hasilTarget) throws Throwable {
+      BusinessPartner result = null;
       System.out.println("buat root bp");
 //               if (hasilTarget.get("ret").toString().equals("5555")) { 
 //          new Throwable(hasilTarget.get("msg").toString());
@@ -618,6 +619,7 @@ public class ResponseResultToDB {
             
             // get car list
             tempImeiServer = validateCar(hasilTarget, newBusinessPartner);
+            result = newBusinessPartner;
           } else {
               listBP.list().get(0).setSearchKey(id);
               listBP.list().get(0).setName(COOTRACK_USER.getName());
@@ -645,13 +647,15 @@ public class ResponseResultToDB {
                     OBDal.getInstance().flush();
                 }
             } //end check jumlah banyaknya line
+            
+            result = listBP.list().get(0);
           }
         } catch(Throwable xe) {
           System.out.println("Error Buat Root BP : "+xe.getMessage());
           xe.printStackTrace();
-          return false;
+          return null;
         }
       
-      return true;
+      return result;
     }
 }
