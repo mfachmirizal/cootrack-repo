@@ -110,9 +110,6 @@ public class ResponseResultToDB {
         //cek apakah hasil pemanggilan rekursif?, bila iya maka set variable arraylist berdasarkan nilai sebelumnya
         if (tempIdDataServerParam == null) {
             tempIdDataServer = new ArrayList<String>();
-            //bila null / pemanggilan pertama pada method ini, inialisasi BP untuk root user
-            rootBP = validateRootBP(hasilRetrieve);
-            if (rootBP == null) throw new Throwable("Error Validate Root BP");
         }else {
             tempIdDataServer = tempIdDataServerParam;
         }
@@ -123,10 +120,17 @@ public class ResponseResultToDB {
             tempImeiServer = tempImeiServerParam;
         }
         
-        
+        //bila null / pemanggilan pertama pada method ini, inialisasi BP untuk root user
+        rootBP = validateRootBP(hasilRetrieve);
+        if (rootBP == null) throw new Throwable("Error Validate Root BP");
+            
         ArrayList<HashMap<JSONObject,Category>> tempChildJsonObject = new ArrayList<HashMap<JSONObject,Category>>();
         // JSONArray childList = null;
         
+        //debug 
+        if (bpCatParam != null) {
+            System.out.println("Parent : "+bpCatParam.getName());
+        }
         System.out.println("Awal : "+hasilRetrieve.toString());
         
         JSONArray childList = (JSONArray) hasilRetrieve.get("children");
@@ -178,8 +182,9 @@ public class ResponseResultToDB {
                 
                 // get car list
                 hasilTarget = utils.requestListChildAccount(name);
-                tempImeiServer = validateCar(hasilTarget, newBusinessPartner);
-//////////////////////////////////////////////////////////////////// MULAI 1 //////////////////////////////////////////////////////////////
+                //di rubah jadi pakai method
+                tempImeiServer = validateCar(hasilTarget, newBusinessPartner);          
+                //////////////////////////////////////////////////////////////////// MULAI 1 //////////////////////////////////////////////////////////////
 //                try {
 //                    // System.out.println(hasilTarget.toString());
 //                    carList = (JSONArray) hasilTarget.get("data");
@@ -202,7 +207,7 @@ public class ResponseResultToDB {
 //                } catch (JSONException jex) {
 //                    // do nothing, 'data' tidak ada
 //                }
-//////////////////////////////////////////////////////////////////// END 1 /////////////////////////////////////////////////////////////                
+//////////////////////////////////////////////////////////////////// END 1 /////////////////////////////////////////////////////////////      
             } else { // bila BP SUdah adaa, maka edit
                 
                 // tmcListChildAcc.list().get(0).setTmcOpenapiUser(name);
@@ -249,16 +254,18 @@ public class ResponseResultToDB {
                     // System.out.println("ANAK : "+hasilTarget.toString());
                     HashMap<JSONObject,Category> map = new HashMap<JSONObject,Category>();
                     Category passingCategory = getBPCategory(showname);
+                    System.out.println("CAT : "+passingCategory.getName());
                     map.put(hasilTarget, passingCategory);
                     tempChildJsonObject.add(map);
                 }
             } catch (JSONException jex) {
+                System.out.println("Jex1 : "+hasilTarget.toString());
                 //skip, berarti tidak punya anak
-                System.out.println("Jex : "+jex.getMessage());
-            } catch (Throwable t) {
+                System.out.println("Jex1 : "+jex.getMessage());
+            } /*catch (Throwable t) {
                 //skip, berarti tidak punya anak
-                System.out.println("Err : "+t.getMessage());
-            }
+                System.out.println("Err1 : "+t.getMessage());
+            }*/
             
             //Though, mungkin setiap JSONObject (hasilTarget) yg memiliki children, di simpan dulu
             //di ArrayList, lalu di eksekusi setelah tahap adegan menghapus record
@@ -325,11 +332,12 @@ public class ResponseResultToDB {
             
         } catch (JSONException jex) {
             //skip, berarti tidak punya anak
-            System.out.println("Jex : "+jex.getMessage());  /* */
-        } catch (Throwable t) {
+            //System.out.println("Jex2 : "+hasilTarget.toString());
+            System.out.println("Jex2 : "+jex.getMessage());  /* */
+        } /*catch (Throwable t) {
             //skip, berarti tidak punya anak
-            System.out.println("Err : "+t.getMessage());
-        }
+            System.out.println("Err2 : "+t.getMessage());
+        }*/
         
         OBDal.getInstance().commitAndClose();
         
@@ -524,7 +532,7 @@ public class ResponseResultToDB {
     private Category getBPCategory(String showname) {
         //System.out.println(showname);
         OBCriteria<Category> bpCrit = OBDal.getInstance().createCriteria(Category.class);
-        bpCrit.add(Restrictions.eq(Category.PROPERTY_CREATEDBY, COOTRACK_USER));
+        //bpCrit.add(Restrictions.eq(Category.PROPERTY_CREATEDBY, COOTRACK_USER));
         bpCrit.add(Restrictions.eq(Category.PROPERTY_SEARCHKEY, showname));
         if (bpCrit.list().isEmpty()) {
             Category newBpCat = OBProvider.getInstance().get(Category.class);
