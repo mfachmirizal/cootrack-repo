@@ -54,6 +54,10 @@
   <!--Param Password -->
   <PARAMETER id="paramPasswd" name="passwd" attribute="value"/>
   
+  <!--Param Status Text -->
+  <PARAMETER id="statusText" name="statustext"/>
+  
+  <PARAMETER id="statusText" name="statustextstyle" attribute="style" replace="xyx" default="red"/>
 
 
 </REPORT>
