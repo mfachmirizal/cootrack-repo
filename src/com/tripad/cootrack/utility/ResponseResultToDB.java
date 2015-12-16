@@ -116,6 +116,7 @@ public class ResponseResultToDB {
             if (rootBP == null) throw new Throwable("Error Validate Root BP");
             
             tempIdDataServer.add(rootBP.getTmcOpenapiIdent()); 
+            //end c1
         }else {
             tempIdDataServer = tempIdDataServerParam;
         }
@@ -149,7 +150,7 @@ public class ResponseResultToDB {
         JSONObject hasilTarget;
         JSONArray carList;
         
-        //tempIdDataServer.add(rootBP.getTmcOpenapiIdent()); 
+        //tempIdDataServer.add(rootBP.getTmcOpenapiIdent());  //asal
         
         for (int i = 0; i < childList.length(); i++) {
             String id = childList.getJSONObject(i).get("id").toString();
