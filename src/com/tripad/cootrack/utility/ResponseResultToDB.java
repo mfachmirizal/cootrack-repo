@@ -110,6 +110,12 @@ public class ResponseResultToDB {
         //cek apakah hasil pemanggilan rekursif?, bila iya maka set variable arraylist berdasarkan nilai sebelumnya
         if (tempIdDataServerParam == null) {
             tempIdDataServer = new ArrayList<String>();
+            
+            //bila null / pemanggilan pertama pada method ini, inialisasi BP untuk root user
+            rootBP = validateRootBP(hasilRetrieve);
+            if (rootBP == null) throw new Throwable("Error Validate Root BP");
+            
+            tempIdDataServer.add(rootBP.getTmcOpenapiIdent()); 
         }else {
             tempIdDataServer = tempIdDataServerParam;
         }
@@ -120,9 +126,9 @@ public class ResponseResultToDB {
             tempImeiServer = tempImeiServerParam;
         }
         
-        //bila null / pemanggilan pertama pada method ini, inialisasi BP untuk root user
-        rootBP = validateRootBP(hasilRetrieve);
-        if (rootBP == null) throw new Throwable("Error Validate Root BP");
+//        //bila null / pemanggilan pertama pada method ini, inialisasi BP untuk root user
+//        rootBP = validateRootBP(hasilRetrieve);
+//        if (rootBP == null) throw new Throwable("Error Validate Root BP");
             
         ArrayList<HashMap<JSONObject,Category>> tempChildJsonObject = new ArrayList<HashMap<JSONObject,Category>>();
         // JSONArray childList = null;
@@ -143,7 +149,7 @@ public class ResponseResultToDB {
         JSONObject hasilTarget;
         JSONArray carList;
         
-        tempIdDataServer.add(rootBP.getTmcOpenapiIdent()); 
+        //tempIdDataServer.add(rootBP.getTmcOpenapiIdent()); 
         
         for (int i = 0; i < childList.length(); i++) {
             String id = childList.getJSONObject(i).get("id").toString();
