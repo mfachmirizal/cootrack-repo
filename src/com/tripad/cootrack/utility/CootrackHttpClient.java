@@ -15,9 +15,11 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpUriRequest;
-import org.apache.commons.httpclient.HttpException;
-import org.apache.commons.httpclient.HttpStatus;
+//import org.apache.commons.httpclient.HttpException;
+//import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.io.IOUtils;
+import org.apache.http.HttpException;
+import org.apache.http.HttpStatus;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
@@ -74,7 +76,7 @@ public class CootrackHttpClient {
             if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
                 //System.err.println("Method failed: " + method.getStatusLine());
                 //throw new OBException("Error !, status code : " + statusCode
-                result = new CustomJsonErrorResponse("5555", "Error !, status : ("+response.getStatusLine().getStatusCode()+") "+HttpStatus.getStatusText(response.getStatusLine().getStatusCode())).getStringErrResponse();
+                result = new CustomJsonErrorResponse("5555", "Error !, status : ("+response.getStatusLine().getStatusCode()+") "+response.getStatusLine().getReasonPhrase()).getStringErrResponse();
                         /* "{\"ret\": 55555, " +                        
                 "    \"msg\": \"Error !, status : ("+statusCode+") "+HttpStatus.getStatusText(statusCode)+" \"}"; */
                 return result;
@@ -99,9 +101,6 @@ public class CootrackHttpClient {
                 client.getConnectionManager().shutdown();
             }
             
-        } catch (HttpException e) {
-            inProcess = false;
-            result = new CustomJsonErrorResponse("5555", "Fatal protocol violation : "+e.getMessage()).getStringErrResponse(); 
         } catch (IOException e) {
             inProcess = false;
             result = new CustomJsonErrorResponse("5555", "Gagal Terhubung dengan server,Harap Cek Koneksi internet anda. Target : "+e.getMessage() ).getStringErrResponse(); 
