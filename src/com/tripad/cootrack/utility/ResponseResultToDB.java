@@ -514,13 +514,17 @@ public class ResponseResultToDB {
         // offline 1 ~ 59 days
         else if ((device_info.equals("3")) && (dayInterval < 60) /* && (speed.equals("0")) */ ) {
             hasil = "Offline 1 Days";
+        } else {
+            hasil = null;
         }
-        // offline 60 days ++
-        else if ((device_info.equals("3")) && (dayInterval >= 60) /* && (speed.equals("0")) */ ) {
+        
+        
+        // offline Expired Payment
+        if ( (nearExpired >= 0) && (nearExpired <= 7) /* && (speed.equals("0")) */ ) {
             hasil = "Expired Payment";
         }
         // Arrear Payment
-        else if ((device_info.equals("2")) /* && (speed.equals("0")) */ ) {
+        else if (nearExpired > 7) {
             hasil = "Arrear Payment";
         } else {
             hasil = null;
