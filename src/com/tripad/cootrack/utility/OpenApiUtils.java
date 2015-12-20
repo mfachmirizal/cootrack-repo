@@ -294,7 +294,7 @@ public class OpenApiUtils {
                 throw new OBException(get + " bukan parameter yg tepat untuk method : +getIntervalFromUnix");
             }
         } catch(Exception e) {
-            hasil = 0;
+            hasil = -1;
         }
         return hasil;
     }

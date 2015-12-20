@@ -525,7 +525,7 @@ public class ResponseResultToDB {
             hasil = "Expired Payment";
         }
         // Arrear Payment
-        else if (nearExpired > 7) {
+        else if (nearExpired < 0) {
             hasil = "Arrear Payment";
         } else {
             hasil = null;
