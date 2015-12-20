@@ -36,14 +36,14 @@ import java.util.Map;
  */
 public class ResponseResultToDB {
     private User COOTRACK_USER = OBContext.getOBContext().getUser();
-    
+
     public ResponseResultToDB() {
     }
-    
+
     public void validateChildList(JSONObject hasilRetrieve) throws Exception, OBException,JSONException ,Throwable{
         ArrayList<String> tempIdDataServer = new ArrayList<String>();
         JSONArray childList = (JSONArray) hasilRetrieve.get("children");
-        
+
         String rslt = "";
         OBCriteria<TmcListChildAcc> tmcListChildAcc = null;
         // OBCriteria<TmcListChildAcc> tmcNotExsListChildAcc = null;
@@ -51,35 +51,35 @@ public class ResponseResultToDB {
             String id = childList.getJSONObject(i).get("id").toString();
             String name = childList.getJSONObject(i).get("name").toString();
             String showname = childList.getJSONObject(i).get("showname").toString();
-            
+
             tmcListChildAcc = OBDal.getInstance().createCriteria(TmcListChildAcc.class);
             tmcListChildAcc.add(Restrictions.eq(TmcListChildAcc.PROPERTY_VALUE, id));
             tmcListChildAcc.add(Restrictions.eq(TmcListChildAcc.PROPERTY_CREATEDBY, COOTRACK_USER));
-            
+
             if (tmcListChildAcc.count() == 0) { // bila tidak ada maka insert
                 TmcListChildAcc newTmcListChildAcc = OBProvider.getInstance().get(TmcListChildAcc.class);
-                
+
                 newTmcListChildAcc.setActive(true);
                 newTmcListChildAcc.setValue(id);
                 newTmcListChildAcc.setName(name);
                 newTmcListChildAcc.setShowname(showname);
-                
+
                 OBDal.getInstance().save(newTmcListChildAcc);
                 OBDal.getInstance().flush();
-                
+
             } else { // bila adaa edit
-                
+
                 tmcListChildAcc.list().get(0).setName(name);
                 tmcListChildAcc.list().get(0).setShowname(showname);
-                
+
                 OBDal.getInstance().save(tmcListChildAcc.list().get(0));
                 OBDal.getInstance().flush();
             }
-            
+
             tempIdDataServer.add(id);
-            
+
         }
-        
+
         // adegan menghapus record yg ada di local tapi tidak ada di server open api
         tmcListChildAcc = OBDal.getInstance().createCriteria(TmcListChildAcc.class);
         tmcListChildAcc
@@ -88,60 +88,60 @@ public class ResponseResultToDB {
         // TmcListChildAcc notExistsTmcListChildAcc = ;
         for (TmcListChildAcc removeRecord : tmcListChildAcc.list()) {
             OBDal.getInstance().remove(removeRecord);
-            OBDal.getInstance().flush();        
+            OBDal.getInstance().flush();
 
         }
-        
+
         OBDal.getInstance().commitAndClose();
     }
-    
+
     public void validateBPList(JSONObject hasilRetrieve) throws Exception, OBException ,JSONException,Throwable{
         validateBPList(hasilRetrieve,null,null,null);
     }
-    
+
     public void validateBPList(JSONObject hasilRetrieve,Category bpCatParam,ArrayList<String> tempIdDataServerParam,ArrayList<String> tempImeiServerParam)
             throws Exception, OBException, JSONException,Throwable {
         //System.out.println("terpanggil");
         ArrayList<String> tempIdDataServer = null;
         ArrayList<String> tempImeiServer = null;
         Category bpCat = null;
-        BusinessPartner rootBP = null; 
+        BusinessPartner rootBP = null;
         ArrayList<BusinessPartner> validBP = null;
         //cek apakah hasil pemanggilan rekursif?, bila iya maka set variable arraylist berdasarkan nilai sebelumnya
         if (tempIdDataServerParam == null) {
             tempIdDataServer = new ArrayList<String>();
-            
+
             //bila null / pemanggilan pertama pada method ini, inialisasi BP untuk root user
             rootBP = validateRootBP(hasilRetrieve);
             if (rootBP == null) throw new Throwable("Error Validate Root BP");
-            
-            tempIdDataServer.add(rootBP.getTmcOpenapiIdent()); 
+
+            tempIdDataServer.add(rootBP.getTmcOpenapiIdent());
             //end c1
         }else {
             tempIdDataServer = tempIdDataServerParam;
         }
-        
+
         if (tempImeiServerParam == null) {
             tempImeiServer = new ArrayList<String>();
         }else {
             tempImeiServer = tempImeiServerParam;
         }
-        
+
 //        //bila null / pemanggilan pertama pada method ini, inialisasi BP untuk root user
 //        rootBP = validateRootBP(hasilRetrieve);
 //        if (rootBP == null) throw new Throwable("Error Validate Root BP");
-            
+
         ArrayList<HashMap<JSONObject,Category>> tempChildJsonObject = new ArrayList<HashMap<JSONObject,Category>>();
         // JSONArray childList = null;
-        
-        //debug 
+
+        //debug
         if (bpCatParam != null) {
             System.out.println("Parent : "+bpCatParam.getName());
         }
         System.out.println("Awal : "+hasilRetrieve.toString());
-        
+
         JSONArray childList = (JSONArray) hasilRetrieve.get("children");
-        
+
         OpenApiUtils utils = new OpenApiUtils();
         String rslt = "";
         OBCriteria<BusinessPartner> tmcListChildAcc = null;
@@ -149,18 +149,18 @@ public class ResponseResultToDB {
         // var mobil
         JSONObject hasilTarget;
         JSONArray carList;
-        
+
         //tempIdDataServer.add(rootBP.getTmcOpenapiIdent());  //asal
-        
+
         for (int i = 0; i < childList.length(); i++) {
             String id = childList.getJSONObject(i).get("id").toString();
             String name = childList.getJSONObject(i).get("name").toString();
             String showname = childList.getJSONObject(i).get("showname").toString();
-            
+
             tmcListChildAcc = OBDal.getInstance().createCriteria(BusinessPartner.class);
             tmcListChildAcc.add(Restrictions.eq(BusinessPartner.PROPERTY_TMCOPENAPIIDENT, id));
             tmcListChildAcc.add(Restrictions.eq(BusinessPartner.PROPERTY_CREATEDBY, COOTRACK_USER));
-            
+
             //Pembuatan Business Partner Criteria
             if (bpCatParam == null) {
                 //pakai nama dari AD_User
@@ -171,10 +171,10 @@ public class ResponseResultToDB {
             else {
                 bpCat = bpCatParam;
             }
-            
+
             if (tmcListChildAcc.list().isEmpty()) { // bila tidak ada maka insert
                 BusinessPartner newBusinessPartner = OBProvider.getInstance().get(BusinessPartner.class);
-                
+
                 newBusinessPartner.setActive(true);
                 newBusinessPartner.setTmcOpenapiIdent(id);
                 // newBusinessPartner.setTmcOpenapiUser(name);
@@ -183,14 +183,14 @@ public class ResponseResultToDB {
                 newBusinessPartner.setConsumptionDays(Long.getLong("0"));
                 newBusinessPartner.setCreditLimit(BigDecimal.ZERO);
                 newBusinessPartner.setBusinessPartnerCategory(bpCat);
-                
+
                 OBDal.getInstance().save(newBusinessPartner);
                 OBDal.getInstance().flush();
-                
+
                 // get car list
                 hasilTarget = utils.requestListChildAccount(name);
                 //di rubah jadi pakai method
-                tempImeiServer = validateCar(hasilTarget, newBusinessPartner);          
+                tempImeiServer = validateCar(hasilTarget, newBusinessPartner);
                 //////////////////////////////////////////////////////////////////// MULAI 1 //////////////////////////////////////////////////////////////
 //                try {
 //                    // System.out.println(hasilTarget.toString());
@@ -206,7 +206,7 @@ public class ResponseResultToDB {
 //                        newTmcCar.setTelephone(carList.getJSONObject(c).get("phone").toString());
 //                        newTmcCar.setTime(Long.valueOf(carList.getJSONObject(c).get("in_time").toString()));
 //                        newTmcCar.setOUTTime(Long.valueOf(carList.getJSONObject(c).get("out_time").toString()));
-//                        
+//
 //                        OBDal.getInstance().save(newTmcCar);
 //                        OBDal.getInstance().flush();
 //                        // newTmcCar.set
@@ -214,18 +214,18 @@ public class ResponseResultToDB {
 //                } catch (JSONException jex) {
 //                    // do nothing, 'data' tidak ada
 //                }
-//////////////////////////////////////////////////////////////////// END 1 /////////////////////////////////////////////////////////////      
+//////////////////////////////////////////////////////////////////// END 1 /////////////////////////////////////////////////////////////
             } else { // bila BP SUdah adaa, maka edit
-                
+
                 // tmcListChildAcc.list().get(0).setTmcOpenapiUser(name);
-                
+
                 tmcListChildAcc.list().get(0).setSearchKey(name);
                 tmcListChildAcc.list().get(0).setName(showname);
                 tmcListChildAcc.list().get(0).setBusinessPartnerCategory(bpCat);
-                
+
                 OBDal.getInstance().save(tmcListChildAcc.list().get(0));
                 OBDal.getInstance().flush();
-                
+
                 // edit line
                 hasilTarget = utils.requestListChildAccount(name);
                 //di rubah jadi pakai method
@@ -237,7 +237,7 @@ public class ResponseResultToDB {
                     tmcListCarRemove.add(Restrictions.eq(TmcCar.PROPERTY_BPARTNER, tmcListChildAcc.list().get(0)));
                     tmcListCarRemove.add(Restrictions.eq(TmcCar.PROPERTY_CREATEDBY, COOTRACK_USER));
                     tmcListCarRemove.add(Restrictions.not(Restrictions.in(TmcCar.PROPERTY_IMEI, tempImeiServer)));
-                    
+
                     for (TmcCar removeRecord : tmcListCarRemove.list()) {
                         for (TmcDocumentUpdateLine tmcListChildCar : removeRecord.getTmcDocumentUpdateLineList()) {
                             OBDal.getInstance().remove(tmcListChildCar);
@@ -247,12 +247,12 @@ public class ResponseResultToDB {
                         OBDal.getInstance().flush();
                     }
                 } //end check jumlah banyaknya line
-                
+
             }
-            
+
             tempIdDataServer.add(id);
-            
-            
+
+
             // cek apakah dia punya anak lagi ?
             try {
                 JSONArray childListChild = (JSONArray) hasilTarget.get("children");
@@ -273,27 +273,27 @@ public class ResponseResultToDB {
                 //skip, berarti tidak punya anak
                 System.out.println("Err1 : "+t.getMessage());
             }*/
-            
+
             //Though, mungkin setiap JSONObject (hasilTarget) yg memiliki children, di simpan dulu
             //di ArrayList, lalu di eksekusi setelah tahap adegan menghapus record
-            
+
         }//end loop utama
-        
+
         System.out.println("End akhir : ");
-        
-        
-        
+
+
+
         int indx = 0;
-        //debug bp 
+        //debug bp
         for (BusinessPartner bp :tmcListChildAcc.list()) {
-                    
+
         }
         //debug temp imei server
         for (String tm : tempImeiServer) {
             System.out.println("Hasil tempImeiServer ["+indx+"]: "+tm);
             indx++;
         }
-        
+
         // adegan menghapus record yg ada di local tapi tidak ada di server open api ||Jangan LUPA
         // DELETE LINENYA DULU
         // header
@@ -302,7 +302,7 @@ public class ResponseResultToDB {
                 .not(Restrictions.in(BusinessPartner.PROPERTY_TMCOPENAPIIDENT, tempIdDataServer))); //
         tmcListChildAcc.add(Restrictions.eq(BusinessPartner.PROPERTY_CREATEDBY, COOTRACK_USER));
         tmcListChildAcc.add(Restrictions.eq(BusinessPartner.PROPERTY_ACTIVE, true));
-        
+
 //        OBCriteria<Category> bpCrit = OBDal.getInstance().createCriteria(Category.class);
 //        bpCrit.add(Restrictions.eq(Category.PROPERTY_SEARCHKEY, bpCat));
 //
@@ -311,8 +311,8 @@ public class ResponseResultToDB {
 //
         tmcListChildAcc.add(
                 Restrictions.eq(BusinessPartner.PROPERTY_BUSINESSPARTNERCATEGORY, bpCat));
-        
-        
+
+
         for (BusinessPartner removeRecord : tmcListChildAcc.list()) {
             for (TmcCar removeLine : removeRecord.getTmcCarList()) {
                 for (TmcDocumentUpdateLine tmcListChildCar : removeLine.getTmcDocumentUpdateLineList()) {
@@ -325,7 +325,7 @@ public class ResponseResultToDB {
             OBDal.getInstance().remove(removeRecord);
             OBDal.getInstance().flush();
         }
-        
+
         //get child from child
         try {
             //JSONArray childListChild = (JSONArray) hasilTarget.get("children");
@@ -336,7 +336,7 @@ public class ResponseResultToDB {
                     validateBPList(entry.getKey(),entry.getValue(),tempIdDataServer,tempImeiServer);
                 }
             }
-            
+
         } catch (JSONException jex) {
             //skip, berarti tidak punya anak
             //System.out.println("Jex2 : "+hasilTarget.toString());
@@ -345,11 +345,11 @@ public class ResponseResultToDB {
             //skip, berarti tidak punya anak
             System.out.println("Err2 : "+t.getMessage());
         }*/
-        
+
         OBDal.getInstance().commitAndClose();
-        
+
     }
-    
+
     public void validateCarStatusList(String header_id, JSONObject hasilRetrieve)
             throws Exception, OBException ,JSONException,Throwable{
         List<String> tempValidDocumentUpdateLine = new ArrayList<String>();
@@ -369,11 +369,11 @@ public class ResponseResultToDB {
             // String acc = carList.getJSONObject(i).get("acc").toString();
             // String acc_seconds = carList.getJSONObject(i).get("acc_seconds").toString();
             // String seconds = carList.getJSONObject(i).get("seconds").toString();
-            
+
             OBCriteria<TmcCar> tmcCarCriteria = OBDal.getInstance().createCriteria(TmcCar.class);
             tmcCarCriteria.add(Restrictions.eq(TmcCar.PROPERTY_IMEI, imei));
             tmcCarCriteria.add(Restrictions.eq(TmcCar.PROPERTY_CREATEDBY, COOTRACK_USER));
-            
+
             if (tmcCarCriteria.count() > 0) { // bila ada maka data tersebut sinkron, tinggal tentukan
                 // update atau insert
                 // perhitungan status disini
@@ -384,13 +384,14 @@ public class ResponseResultToDB {
 //                        Long.parseLong(server_time.trim()), "minutes");
                 int dayInterval = new OpenApiUtils().getIntervalFromUnix(Long.parseLong(sys_time.trim()),
                         Long.parseLong(server_time.trim()), "days");
-                
+
                 int nearExpired = new OpenApiUtils().getIntervalFromUnix(Long.parseLong(server_time.trim()),tmcCarCriteria.list().get(0).getOUTTime(), "days");
-                
+
+                System.out.println("IMEI & Expired : "+imei+" & "+nearExpired);
                 statusCategory = getStatusCategory(device_info, dayInterval, hourInterval, speed , nearExpired);
-                
+
                 // if (statusCategory != null ) {
-                
+
                 OBCriteria<TmcDocumentUpdateLine> tmcDocumentUpdateLine = OBDal.getInstance()
                         .createCriteria(TmcDocumentUpdateLine.class);
                 // filter header nya [ok]
@@ -401,24 +402,24 @@ public class ResponseResultToDB {
                         .add(Restrictions.eq(TmcDocumentUpdateLine.PROPERTY_CREATEDBY, COOTRACK_USER));
                 tmcDocumentUpdateLine.add(
                         Restrictions.eq(TmcDocumentUpdateLine.PROPERTY_TMCCAR, tmcCarCriteria.list().get(0)));
-                
+
                 if (tmcDocumentUpdateLine.list().isEmpty()) { // data belum ada
                     // ini insert
                     TmcDocumentUpdateLine newTmcDocumentUpdateLine = OBProvider.getInstance()
                             .get(TmcDocumentUpdateLine.class);
-                    
+
                     newTmcDocumentUpdateLine.setActive(true);
                     newTmcDocumentUpdateLine.setTMCDocumentupdate(header);// set header nya
                     newTmcDocumentUpdateLine.setCustomerName(tmcCarCriteria.list().get(0).getBpartner());
                     newTmcDocumentUpdateLine.setTMCCar(tmcCarCriteria.list().get(0));
                     // temporary
                     // newTmcDocumentUpdateLine.setKeterangan("Near Exp - " + nearExpired);
-                    
+
                     newTmcDocumentUpdateLine.setStatus(statusCategory);
-                    
+
                     OBDal.getInstance().save(newTmcDocumentUpdateLine);
                     OBDal.getInstance().flush();
-                    
+
                     tempValidDocumentUpdateLine.add(newTmcDocumentUpdateLine.getId()); // untuk data yg
                     // sinkron berdasar
                     // static 8 jam, dll
@@ -430,12 +431,12 @@ public class ResponseResultToDB {
                     tmcDocumentUpdateLine.list().get(0).setTMCCar(tmcCarCriteria.list().get(0));
                     // temporary
                     // tmcDocumentUpdateLine.list().get(0).setKeterangan("Near Exp - " + nearExpired);
-                    
+
                     tmcDocumentUpdateLine.list().get(0).setStatus(statusCategory);
-                    
+
                     OBDal.getInstance().save(tmcDocumentUpdateLine.list().get(0));
                     OBDal.getInstance().flush();
-                    
+
                     tempValidDocumentUpdateLine.add(tmcDocumentUpdateLine.list().get(0).getId()); // untuk
                     // data yg
                     // sinkron
@@ -445,30 +446,30 @@ public class ResponseResultToDB {
                     // dan ada
                 }
                 // } //end record perlu di masukan berdasar status yg ditentukan
-                
+
             }
         }
-        
+
         TmcDocumentUpdate header = getHeaderInstance(header_id);
         //
         // adegan menghapus record yg tidak valid berdasarkan status yg ditentukan
         OBCriteria<TmcDocumentUpdateLine> delNotinCritTmcDocumentUpdateLine = OBDal.getInstance()
                 .createCriteria(TmcDocumentUpdateLine.class);
-        
+
         delNotinCritTmcDocumentUpdateLine
                 .add(Restrictions.eq(TmcDocumentUpdateLine.PROPERTY_TMCDOCUMENTUPDATE, header));
         delNotinCritTmcDocumentUpdateLine
                 .add(Restrictions.eq(TmcDocumentUpdateLine.PROPERTY_CREATEDBY, COOTRACK_USER));
-        
+
         delNotinCritTmcDocumentUpdateLine
                 .add(Restrictions.isNull(TmcDocumentUpdateLine.PROPERTY_STATUS));
-        
+
         for (TmcDocumentUpdateLine removeTmcDocumentUpdateLine : delNotinCritTmcDocumentUpdateLine
                 .list()) {
             OBDal.getInstance().remove(removeTmcDocumentUpdateLine);
             OBDal.getInstance().flush();
         }
-        
+
         // adegan menghapus record yg ada table TMC_DocumentUpdateLine tapi tidak ada di TMC_Car
         OBCriteria<TmcDocumentUpdateLine> delTmcDocumentUpdateLine = OBDal.getInstance()
                 .createCriteria(TmcDocumentUpdateLine.class);
@@ -477,31 +478,31 @@ public class ResponseResultToDB {
                 .add(Restrictions.eq(TmcDocumentUpdateLine.PROPERTY_TMCDOCUMENTUPDATE, header));
         delTmcDocumentUpdateLine
                 .add(Restrictions.eq(TmcDocumentUpdateLine.PROPERTY_CREATEDBY, COOTRACK_USER));
-        
+
         OBCriteria<TmcCar> seluruhMobilDiTmcCar = OBDal.getInstance().createCriteria(TmcCar.class);
         seluruhMobilDiTmcCar.add(Restrictions.eq(TmcCar.PROPERTY_CREATEDBY, COOTRACK_USER));
-        
+
         delTmcDocumentUpdateLine.add(Restrictions
                 .not(Restrictions.in(TmcDocumentUpdateLine.PROPERTY_TMCCAR, seluruhMobilDiTmcCar.list()))); //
         for (TmcDocumentUpdateLine removeTmcDocumentUpdateLine : delTmcDocumentUpdateLine.list()) {
             OBDal.getInstance().remove(removeTmcDocumentUpdateLine);
             OBDal.getInstance().flush();
         }
-        
+
         OBDal.getInstance().commitAndClose();
     }
-    
+
     private TmcDocumentUpdate getHeaderInstance(String header_id) {
         TmcDocumentUpdate header = OBDal.getInstance().get(TmcDocumentUpdate.class, header_id);
         return header;
     }
-    
+
     private String getStatusCategory(String device_info, int dayInterval, int hourInterval,
             String speed
             , int nearExpired
     ) {
         String hasil = "";
-        
+
         // static 8 hours ++
         if ((device_info.equals("0")) && (hourInterval >= 8)
                 && (dayInterval == 0) /* && (speed.equals("0")) */ ) {
@@ -514,13 +515,13 @@ public class ResponseResultToDB {
         // offline 1 ~ 59 days
         else if ((device_info.equals("3")) && (dayInterval < 60) /* && (speed.equals("0")) */ ) {
             hasil = "Offline 1 Days";
-        } else {
+        } /*else {
             hasil = null;
-        }
-        
-        
+        }*/
+
+
         // offline Expired Payment
-        if ( (nearExpired >= 0) && (nearExpired <= 7) /* && (speed.equals("0")) */ ) {
+        else if ( (nearExpired >= 0) && (nearExpired <= 7) /* && (speed.equals("0")) */ ) {
             hasil = "Expired Payment";
         }
         // Arrear Payment
@@ -529,17 +530,17 @@ public class ResponseResultToDB {
         } else {
             hasil = null;
         }
-        
+
         /*
         * if ( (device_info.equals("0")) && (hourInterval >= 8) && (dayInterval == 0) /*&&
         * (speed.equals("0")) ) { hasil = "Static 8 Hours"; }
         */
-        
+
         // Expired Payment
         // Arrear Payment
         return hasil;
     }
-    
+
     private Category getBPCategory(String showname) {
         //System.out.println(showname);
         OBCriteria<Category> bpCrit = OBDal.getInstance().createCriteria(Category.class);
@@ -551,32 +552,32 @@ public class ResponseResultToDB {
             newBpCat.setName(showname);
             newBpCat.setSearchKey(showname);
             newBpCat.setDescription("Business Partner Category : "+showname);
-            
+
             OBDal.getInstance().save(newBpCat);
             OBDal.getInstance().flush();
-            
+
             return newBpCat;
         } else {
             return bpCrit.list().get(0);
         }
     }
-    
+
     private ArrayList<String> validateCar(JSONObject hasilTarget,BusinessPartner bp) throws JSONException,Throwable{
         ArrayList<String> tempImeiServer = new ArrayList<String>();
-        
+
 //        if (hasilTarget.get("ret").toString().equals("5555")) {
 //         throw new Throwable(hasilTarget.get("msg").toString());
 //        }
         System.out.println("TEST cetak hasil target : "+hasilTarget.toString());
         JSONArray carList = (JSONArray) hasilTarget.get("data");
-        
+
         for (int c = 0; c < carList.length(); c++) {
             // carList.getJSONObject(i).get("imei").toString()
             OBCriteria<TmcCar> tmcListCar = OBDal.getInstance().createCriteria(TmcCar.class);
             tmcListCar.add(Restrictions.eq(TmcCar.PROPERTY_BPARTNER, bp));
             tmcListCar.add(Restrictions.eq(TmcCar.PROPERTY_CREATEDBY, COOTRACK_USER));
             tmcListCar.add(Restrictions.eq(TmcCar.PROPERTY_IMEI, carList.getJSONObject(c).get("imei").toString()));
-            
+
             if (tmcListCar.list().isEmpty()) {
                 TmcCar newTmcCar = OBProvider.getInstance().get(TmcCar.class);
                 newTmcCar.setActive(true);
@@ -587,7 +588,7 @@ public class ResponseResultToDB {
                 newTmcCar.setTelephone(carList.getJSONObject(c).get("phone").toString());
                 newTmcCar.setTime(Long.valueOf(carList.getJSONObject(c).get("in_time").toString()));
                 newTmcCar.setOUTTime(Long.valueOf(carList.getJSONObject(c).get("out_time").toString()));
-                
+
                 OBDal.getInstance().save(newTmcCar);
                 OBDal.getInstance().flush();
             } else {
@@ -599,21 +600,21 @@ public class ResponseResultToDB {
                         .setTime(Long.valueOf(carList.getJSONObject(c).get("in_time").toString()));
                 tmcListCar.list().get(0)
                         .setOUTTime(Long.valueOf(carList.getJSONObject(c).get("out_time").toString()));
-                
+
                 OBDal.getInstance().save(tmcListCar.list().get(0));
                 OBDal.getInstance().flush();
             }
-            
+
             tempImeiServer.add(carList.getJSONObject(c).get("imei").toString());
-            
+
         }
         return tempImeiServer;
     }
-    
+
     private BusinessPartner validateRootBP(JSONObject hasilTarget) throws Throwable {
       BusinessPartner result = null;
       System.out.println("buat root bp");
-//               if (hasilTarget.get("ret").toString().equals("5555")) { 
+//               if (hasilTarget.get("ret").toString().equals("5555")) {
 //          new Throwable(hasilTarget.get("msg").toString());
 //        }
         try {
@@ -625,10 +626,10 @@ public class ResponseResultToDB {
           }
           listBP.add(Restrictions.eq(BusinessPartner.PROPERTY_TMCOPENAPIIDENT, id));
           listBP.add(Restrictions.eq(BusinessPartner.PROPERTY_CREATEDBY, COOTRACK_USER));
-          
+
           if (listBP.list().isEmpty()) { // Kosong, maka Insert
             BusinessPartner newBusinessPartner = OBProvider.getInstance().get(BusinessPartner.class);
-            
+
             newBusinessPartner.setActive(true);
             newBusinessPartner.setTmcOpenapiIdent(id);
             // newBusinessPartner.setTmcOpenapiUser(name);
@@ -637,10 +638,10 @@ public class ResponseResultToDB {
             newBusinessPartner.setConsumptionDays(Long.getLong("0"));
             newBusinessPartner.setCreditLimit(BigDecimal.ZERO);
             newBusinessPartner.setBusinessPartnerCategory(getBPCategory(COOTRACK_USER.getName()));
-            
+
             OBDal.getInstance().save(newBusinessPartner);
             OBDal.getInstance().flush();
-            
+
             // get car list
             tempImeiServer = validateCar(hasilTarget, newBusinessPartner);
             result = newBusinessPartner;
@@ -648,20 +649,20 @@ public class ResponseResultToDB {
               listBP.list().get(0).setSearchKey(id);
               listBP.list().get(0).setName(COOTRACK_USER.getName());
               listBP.list().get(0).setBusinessPartnerCategory(getBPCategory(COOTRACK_USER.getName()));
-              
+
               OBDal.getInstance().save(listBP.list().get(0));
               OBDal.getInstance().flush();
-              
+
               // edit line
               //di rubah jadi pakai method
               tempImeiServer = validateCar(hasilTarget, listBP.list().get(0));
-              
+
             if (tempImeiServer.size() > 0) {
                 OBCriteria<TmcCar> tmcListCarRemove = OBDal.getInstance().createCriteria(TmcCar.class);
                 tmcListCarRemove.add(Restrictions.eq(TmcCar.PROPERTY_BPARTNER, listBP.list().get(0)));
                 tmcListCarRemove.add(Restrictions.eq(TmcCar.PROPERTY_CREATEDBY, COOTRACK_USER));
                 tmcListCarRemove.add(Restrictions.not(Restrictions.in(TmcCar.PROPERTY_IMEI, tempImeiServer)));
-                
+
                 for (TmcCar removeRecord : tmcListCarRemove.list()) {
                     for (TmcDocumentUpdateLine tmcListChildCar : removeRecord.getTmcDocumentUpdateLineList()) {
                         OBDal.getInstance().remove(tmcListChildCar);
@@ -671,7 +672,7 @@ public class ResponseResultToDB {
                     OBDal.getInstance().flush();
                 }
             } //end check jumlah banyaknya line
-            
+
             result = listBP.list().get(0);
           }
         } catch(Throwable xe) {
@@ -679,7 +680,7 @@ public class ResponseResultToDB {
           xe.printStackTrace();
           return null;
         }
-      
+
       return result;
     }
 }
