@@ -65,7 +65,7 @@ public class ResponseResultToDB {
                 newTmcListChildAcc.setShowname(showname);
 
                 OBDal.getInstance().save(newTmcListChildAcc);
-                OBDal.getInstance().flush();
+                //OBDal.getInstance().flush();
 
             } else { // bila adaa edit
 
@@ -73,13 +73,14 @@ public class ResponseResultToDB {
                 tmcListChildAcc.list().get(0).setShowname(showname);
 
                 OBDal.getInstance().save(tmcListChildAcc.list().get(0));
-                OBDal.getInstance().flush();
+                //OBDal.getInstance().flush();
             }
 
             tempIdDataServer.add(id);
 
         }
-
+        //mungkin ini OBDal.getInstance().flush();
+        
         // adegan menghapus record yg ada di local tapi tidak ada di server open api
         tmcListChildAcc = OBDal.getInstance().createCriteria(TmcListChildAcc.class);
         tmcListChildAcc
@@ -88,9 +89,9 @@ public class ResponseResultToDB {
         // TmcListChildAcc notExistsTmcListChildAcc = ;
         for (TmcListChildAcc removeRecord : tmcListChildAcc.list()) {
             OBDal.getInstance().remove(removeRecord);
-            OBDal.getInstance().flush();
-
+            //OBDal.getInstance().flush();
         }
+        OBDal.getInstance().flush();
 
         OBDal.getInstance().commitAndClose();
     }
@@ -185,46 +186,19 @@ public class ResponseResultToDB {
                 newBusinessPartner.setBusinessPartnerCategory(bpCat);
 
                 OBDal.getInstance().save(newBusinessPartner);
-                OBDal.getInstance().flush();
+                //OBDal.getInstance().flush();
 
                 // get car list
                 hasilTarget = utils.requestListChildAccount(name);
                 //di rubah jadi pakai method
                 tempImeiServer = validateCar(hasilTarget, newBusinessPartner);
-                //////////////////////////////////////////////////////////////////// MULAI 1 //////////////////////////////////////////////////////////////
-//                try {
-//                    // System.out.println(hasilTarget.toString());
-//                    carList = (JSONArray) hasilTarget.get("data");
-//                    // loop car
-//                    for (int c = 0; c < carList.length(); c++) {
-//                        TmcCar newTmcCar = OBProvider.getInstance().get(TmcCar.class);
-//                        newTmcCar.setActive(true);
-//                        newTmcCar.setBpartner(newBusinessPartner);
-//                        newTmcCar.setImei(carList.getJSONObject(c).get("imei").toString());
-//                        newTmcCar.setName(carList.getJSONObject(c).get("name").toString());
-//                        newTmcCar.setPlateNo(carList.getJSONObject(c).get("number").toString());
-//                        newTmcCar.setTelephone(carList.getJSONObject(c).get("phone").toString());
-//                        newTmcCar.setTime(Long.valueOf(carList.getJSONObject(c).get("in_time").toString()));
-//                        newTmcCar.setOUTTime(Long.valueOf(carList.getJSONObject(c).get("out_time").toString()));
-//
-//                        OBDal.getInstance().save(newTmcCar);
-//                        OBDal.getInstance().flush();
-//                        // newTmcCar.set
-//                    }
-//                } catch (JSONException jex) {
-//                    // do nothing, 'data' tidak ada
-//                }
-//////////////////////////////////////////////////////////////////// END 1 /////////////////////////////////////////////////////////////
             } else { // bila BP SUdah adaa, maka edit
-
-                // tmcListChildAcc.list().get(0).setTmcOpenapiUser(name);
-
                 tmcListChildAcc.list().get(0).setSearchKey(name);
                 tmcListChildAcc.list().get(0).setName(showname);
                 tmcListChildAcc.list().get(0).setBusinessPartnerCategory(bpCat);
 
                 OBDal.getInstance().save(tmcListChildAcc.list().get(0));
-                OBDal.getInstance().flush();
+                //OBDal.getInstance().flush();
 
                 // edit line
                 hasilTarget = utils.requestListChildAccount(name);
@@ -241,10 +215,10 @@ public class ResponseResultToDB {
                     for (TmcCar removeRecord : tmcListCarRemove.list()) {
                         for (TmcDocumentUpdateLine tmcListChildCar : removeRecord.getTmcDocumentUpdateLineList()) {
                             OBDal.getInstance().remove(tmcListChildCar);
-                            OBDal.getInstance().flush();
+                            //OBDal.getInstance().flush();
                         }
                         OBDal.getInstance().remove(removeRecord);
-                        OBDal.getInstance().flush();
+                        //OBDal.getInstance().flush();
                     }
                 } //end check jumlah banyaknya line
 
@@ -278,7 +252,7 @@ public class ResponseResultToDB {
             //di ArrayList, lalu di eksekusi setelah tahap adegan menghapus record
 
         }//end loop utama
-
+        //end flush mungkin OBDal.getInstance().flush();
         System.out.println("End akhir : ");
 
 
@@ -317,15 +291,15 @@ public class ResponseResultToDB {
             for (TmcCar removeLine : removeRecord.getTmcCarList()) {
                 for (TmcDocumentUpdateLine tmcListChildCar : removeLine.getTmcDocumentUpdateLineList()) {
                     OBDal.getInstance().remove(tmcListChildCar);
-                    OBDal.getInstance().flush();
+                    //OBDal.getInstance().flush();
                 }
                 OBDal.getInstance().remove(removeLine);
-                OBDal.getInstance().flush();
+                //OBDal.getInstance().flush();
             }
             OBDal.getInstance().remove(removeRecord);
-            OBDal.getInstance().flush();
+            //OBDal.getInstance().flush();
         }
-
+        //mungkin ini OBDal.getInstance().flush();
         //get child from child
         try {
             //JSONArray childListChild = (JSONArray) hasilTarget.get("children");
@@ -345,7 +319,7 @@ public class ResponseResultToDB {
             //skip, berarti tidak punya anak
             System.out.println("Err2 : "+t.getMessage());
         }*/
-
+        OBDal.getInstance().flush();
         OBDal.getInstance().commitAndClose();
 
     }
@@ -418,7 +392,7 @@ public class ResponseResultToDB {
                     newTmcDocumentUpdateLine.setStatus(statusCategory);
 
                     OBDal.getInstance().save(newTmcDocumentUpdateLine);
-                    OBDal.getInstance().flush();
+                    //OBDal.getInstance().flush();
 
                     tempValidDocumentUpdateLine.add(newTmcDocumentUpdateLine.getId()); // untuk data yg
                     // sinkron berdasar
@@ -435,7 +409,7 @@ public class ResponseResultToDB {
                     tmcDocumentUpdateLine.list().get(0).setStatus(statusCategory);
 
                     OBDal.getInstance().save(tmcDocumentUpdateLine.list().get(0));
-                    OBDal.getInstance().flush();
+                    //OBDal.getInstance().flush();
 
                     tempValidDocumentUpdateLine.add(tmcDocumentUpdateLine.list().get(0).getId()); // untuk
                     // data yg
@@ -467,7 +441,7 @@ public class ResponseResultToDB {
         for (TmcDocumentUpdateLine removeTmcDocumentUpdateLine : delNotinCritTmcDocumentUpdateLine
                 .list()) {
             OBDal.getInstance().remove(removeTmcDocumentUpdateLine);
-            OBDal.getInstance().flush();
+            //OBDal.getInstance().flush();
         }
 
         // adegan menghapus record yg ada table TMC_DocumentUpdateLine tapi tidak ada di TMC_Car
@@ -486,9 +460,10 @@ public class ResponseResultToDB {
                 .not(Restrictions.in(TmcDocumentUpdateLine.PROPERTY_TMCCAR, seluruhMobilDiTmcCar.list()))); //
         for (TmcDocumentUpdateLine removeTmcDocumentUpdateLine : delTmcDocumentUpdateLine.list()) {
             OBDal.getInstance().remove(removeTmcDocumentUpdateLine);
-            OBDal.getInstance().flush();
+            //BDal.getInstance().flush();
         }
-
+        
+        OBDal.getInstance().flush();
         OBDal.getInstance().commitAndClose();
     }
 
@@ -590,7 +565,7 @@ public class ResponseResultToDB {
                 newTmcCar.setOUTTime(Long.valueOf(carList.getJSONObject(c).get("out_time").toString()));
 
                 OBDal.getInstance().save(newTmcCar);
-                OBDal.getInstance().flush();
+                //OBDal.getInstance().flush();
             } else {
                 tmcListCar.list().get(0).setImei(carList.getJSONObject(c).get("imei").toString());
                 tmcListCar.list().get(0).setName(carList.getJSONObject(c).get("name").toString());
@@ -602,12 +577,13 @@ public class ResponseResultToDB {
                         .setOUTTime(Long.valueOf(carList.getJSONObject(c).get("out_time").toString()));
 
                 OBDal.getInstance().save(tmcListCar.list().get(0));
-                OBDal.getInstance().flush();
+                //OBDal.getInstance().flush();
             }
 
             tempImeiServer.add(carList.getJSONObject(c).get("imei").toString());
 
         }
+        OBDal.getInstance().flush();
         return tempImeiServer;
     }
 
@@ -640,7 +616,7 @@ public class ResponseResultToDB {
             newBusinessPartner.setBusinessPartnerCategory(getBPCategory(COOTRACK_USER.getName()));
 
             OBDal.getInstance().save(newBusinessPartner);
-            OBDal.getInstance().flush();
+            //OBDal.getInstance().flush();
 
             // get car list
             tempImeiServer = validateCar(hasilTarget, newBusinessPartner);
@@ -651,7 +627,7 @@ public class ResponseResultToDB {
               listBP.list().get(0).setBusinessPartnerCategory(getBPCategory(COOTRACK_USER.getName()));
 
               OBDal.getInstance().save(listBP.list().get(0));
-              OBDal.getInstance().flush();
+              //OBDal.getInstance().flush();
 
               // edit line
               //di rubah jadi pakai method
@@ -666,15 +642,16 @@ public class ResponseResultToDB {
                 for (TmcCar removeRecord : tmcListCarRemove.list()) {
                     for (TmcDocumentUpdateLine tmcListChildCar : removeRecord.getTmcDocumentUpdateLineList()) {
                         OBDal.getInstance().remove(tmcListChildCar);
-                        OBDal.getInstance().flush();
+                        //OBDal.getInstance().flush();
                     }
                     OBDal.getInstance().remove(removeRecord);
-                    OBDal.getInstance().flush();
+                    //OBDal.getInstance().flush();
                 }
             } //end check jumlah banyaknya line
 
             result = listBP.list().get(0);
           }
+          OBDal.getInstance().flush();
         } catch(Throwable xe) {
           System.out.println("Error Buat Root BP : "+xe.getMessage());
           xe.printStackTrace();
