@@ -39,7 +39,7 @@ public class ResponseResultToDB {
 
     public ResponseResultToDB() {
     }
-
+/*
     public void validateChildList(JSONObject hasilRetrieve) throws Exception, OBException,JSONException ,Throwable{
         ArrayList<String> tempIdDataServer = new ArrayList<String>();
         JSONArray childList = (JSONArray) hasilRetrieve.get("children");
@@ -95,7 +95,7 @@ public class ResponseResultToDB {
 
         OBDal.getInstance().commitAndClose();
     }
-
+*/
     public void validateBPList(JSONObject hasilRetrieve) throws Exception, OBException ,JSONException,Throwable{
         validateBPList(hasilRetrieve,null,null,null);
     }

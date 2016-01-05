@@ -31,11 +31,12 @@ public class RefreshListChildAccount extends BaseActionHandler {
 //debug            hasil = hasilRetrieve.toString();
                 hasil = hasilRetrieve.get("msg").toString();
                 if (hasil.length() == 0) {
-                    new ResponseResultToDB().validateChildList(hasilRetrieve);
+                    //new ResponseResultToDB().validateChildList(hasilRetrieve);
                 }
                 
                 
-                json.put("jawaban", hasil);
+                //json.put("jawaban", hasil);
+                json.put("jawaban", "Fitur ini tidak digunakan !"); //hardcoded bahwa fitur ini tidak digunakan
                 
             } else {
                 json.put("jawaban", "This Openbravo user not synchronized with OpenAPI !");
