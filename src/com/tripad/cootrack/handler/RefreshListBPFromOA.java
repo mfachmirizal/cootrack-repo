@@ -46,7 +46,7 @@ public class RefreshListBPFromOA extends BaseActionHandler {
             json.put("jawaban", e.getMessage());
         }catch (Throwable t) {
             System.out.println("MASUK Throwable");
-            t.printStackTrace();
+            //t.printStackTrace();
             json.put("jawaban", t.getMessage());
         } finally {
             return json;

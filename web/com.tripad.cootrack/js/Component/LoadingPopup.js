@@ -109,14 +109,9 @@ isc.TMC_LoadingPopup.addProperties({
       isc.say(hasilCallback)
     }
    // console.log(pop);
+   //pop.closeClick();
+   rpcRequest.clientContext.popup.closeClick();
    
-   pop.closeClick();
-   /* 
-	if(typeof pop.params.button !== 'undefined'){
-		.contextView.viewGrid
-	}
-	*/
-	
     if(typeof pop.view.viewGrid !== 'undefined'){
       pop.view.viewGrid.refreshGrid();
     };
@@ -124,11 +119,7 @@ isc.TMC_LoadingPopup.addProperties({
     if(typeof pop.params.button !== 'undefined'){
       pop.params.button.contextView.viewGrid.refreshGrid();
     };
-    
 
-    
-
-    //rpcRequest.clientContext.pop.closeClick();
   }
   OB.RemoteCallManager.call(this.actionHandler, {
     headers: this.headers,
