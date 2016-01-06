@@ -113,11 +113,13 @@ isc.TMC_LoadingPopup.addProperties({
    rpcRequest.clientContext.popup.closeClick();
    
     if(typeof pop.view.viewGrid !== 'undefined'){
-      pop.view.viewGrid.refreshGrid();
+      //pop.view.viewGrid.refreshGrid();
+      rpcRequest.clientContext.popup.view.viewGrid.refreshGrid();
     };
 	
     if(typeof pop.params.button !== 'undefined'){
-      pop.params.button.contextView.viewGrid.refreshGrid();
+      //pop.params.button.contextView.viewGrid.refreshGrid();
+      rpcRequest.clientContext.popup.params.button.contextView.viewGrid.refreshGrid();
     };
 
   }
