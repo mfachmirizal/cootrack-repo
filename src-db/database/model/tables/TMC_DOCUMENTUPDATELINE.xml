@@ -41,10 +41,6 @@
         <default/>
         <onCreateDefault/>
       </column>
-      <column name="SALESDATE" primaryKey="false" required="true" type="TIMESTAMP" size="7" autoIncrement="false">
-        <default><![CDATA[SYSDATE]]></default>
-        <onCreateDefault/>
-      </column>
       <column name="STATUS" primaryKey="false" required="false" type="VARCHAR" size="60" autoIncrement="false">
         <default/>
         <onCreateDefault/>
@@ -97,34 +93,6 @@
         <default/>
         <onCreateDefault/>
       </column>
-      <column name="TYPEOFSERVICE" primaryKey="false" required="false" type="VARCHAR" size="60" autoIncrement="false">
-        <default/>
-        <onCreateDefault/>
-      </column>
-      <column name="TMC_TEKNISI_ID" primaryKey="false" required="false" type="VARCHAR" size="32" autoIncrement="false">
-        <default/>
-        <onCreateDefault/>
-      </column>
-      <column name="DATESERVICE" primaryKey="false" required="false" type="TIMESTAMP" size="7" autoIncrement="false">
-        <default/>
-        <onCreateDefault/>
-      </column>
-      <column name="BONGKARPASANGSATU" primaryKey="false" required="false" type="VARCHAR" size="60" autoIncrement="false">
-        <default/>
-        <onCreateDefault/>
-      </column>
-      <column name="BONGKARPASANGDUA" primaryKey="false" required="false" type="VARCHAR" size="60" autoIncrement="false">
-        <default/>
-        <onCreateDefault/>
-      </column>
-      <column name="TANGGALPERPANJANGAN" primaryKey="false" required="false" type="TIMESTAMP" size="7" autoIncrement="false">
-        <default/>
-        <onCreateDefault/>
-      </column>
-      <column name="TYPEPERPANJANGAN" primaryKey="false" required="false" type="VARCHAR" size="60" autoIncrement="false">
-        <default/>
-        <onCreateDefault/>
-      </column>
       <column name="TMC_CAR_ID" primaryKey="false" required="true" type="VARCHAR" size="32" autoIncrement="false">
         <default/>
         <onCreateDefault/>
@@ -151,9 +119,6 @@
       </foreign-key>
       <foreign-key foreignTable="TMC_DOCUMENTUPDATE" name="TMC_DOCUMENTLINE_HEADER">
         <reference local="TMC_DOCUMENTUPDATE_ID" foreign="TMC_DOCUMENTUPDATE_ID"/>
-      </foreign-key>
-      <foreign-key foreignTable="TMC_TEKNISI" name="TMC_DOCUMENTLINE_TEKNISI">
-        <reference local="TMC_TEKNISI_ID" foreign="TMC_TEKNISI_ID"/>
       </foreign-key>
     </table>
   </database>
