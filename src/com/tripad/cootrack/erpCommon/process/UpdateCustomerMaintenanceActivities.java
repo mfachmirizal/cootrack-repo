@@ -8,49 +8,51 @@ import org.openbravo.scheduling.ProcessBundle;
 import org.openbravo.service.db.DalBaseProcess;
 
 public class UpdateCustomerMaintenanceActivities extends DalBaseProcess {
- 
-  public void doExecute(ProcessBundle bundle) throws Exception {
-    try {
- 
-      // retrieve the parameters from the bundle
-      /*final String strTmcDocumentUpdateLineId = (String) bundle.getParams().get("cBpartnerId");
-      final String organizationId = (String) bundle.getParams().get("adOrgId");
-      final String tabId = (String) bundle.getParams().get("tabId"); 
- 
-      final String myString = (String) bundle.getParams().get("mystring");
- */
-      // implement your process here
- 
-      // Show a result
-      final StringBuilder sb = new StringBuilder();
-      sb.append("Read information:<br/>");
-      sb.append(bundle.getParamsDeflated());
-   /*   if (bPartnerId != null) {
-        final TmcDocumentUpdateLine tmcDocumentUpdateLine = OBDal.getInstance().get(TmcDocumentUpdateLine.class, bPartnerId);
-        sb.append("tmcDocumentUpdateLine : " + tmcDocumentUpdateLine.getIdentifier() + "<br/>");
-      }
-      if (organizationId != null) {
-        final Organization organization = OBDal.getInstance().get(Organization.class,
-            organizationId);
-        sb.append("Organization: " + organization.getIdentifier() + "<br/>");
-      }
-      sb.append("MyString: " + myString + "<br/>");
- */
-      // OBError is also used for successful results
-      final OBError msg = new OBError();
-      msg.setType("Success");
-      msg.setTitle("Read parameters!");
-      msg.setMessage(sb.toString());
- 
-      bundle.setResult(msg);
- 
-    } catch (final Exception e) {
-      e.printStackTrace(System.err);
-      final OBError msg = new OBError();
-      msg.setType("Error");
-      msg.setMessage(e.getMessage());
-      msg.setTitle("Error occurred");
-      bundle.setResult(msg);
+    
+    public void doExecute(ProcessBundle bundle) throws Exception {
+        try {
+            
+            // retrieve the parameters from the bundle
+            final String strRecordId = (String) bundle.getParams().get("cBpartnerId");
+            final String organizationId = (String) bundle.getParams().get("adOrgId");
+            final String tabId = (String) bundle.getParams().get("tabId");
+            
+            final String p_gps_ditelpon = (String) bundle.getParams().get("p_gps_ditelpon");
+            final String p_gps_disms = (String) bundle.getParams().get("p_gps_disms");
+            final String p_masa_aktif = (String) bundle.getParams().get("p_masa_aktif");
+            final String p_sisa_pulsa = (String) bundle.getParams().get("p_sisa_pulsa");
+            final String p_sisa_quota = (String) bundle.getParams().get("p_sisa_quota");
+            final String p_analisa_problem = (String) bundle.getParams().get("p_analisa_problem");
+            final String p_solving_bysystem = (String) bundle.getParams().get("p_solving_bysystem");
+            final String p_result = (String) bundle.getParams().get("p_result");
+            final String p_by_phone = (String) bundle.getParams().get("p_by_phone");
+            final String p_by_sms = (String) bundle.getParams().get("p_by_sms");
+            final String p_jawaban_customer = (String) bundle.getParams().get("p_jawaban_customer");
+            final String p_keterangan = (String) bundle.getParams().get("p_keterangan");
+            
+            // implement your process here
+            
+            // Show a result
+            final StringBuilder sb = new StringBuilder();
+            sb.append("Read information:<br/>");
+            sb.append(bundle.getParamsDeflated());
+            
+            
+            // OBError is also used for successful results
+            final OBError msg = new OBError();
+            msg.setType("Success");
+            msg.setTitle("Read parameters!");
+            msg.setMessage(sb.toString());
+            
+            bundle.setResult(msg);
+            
+        } catch (final Exception e) {
+            e.printStackTrace(System.err);
+            final OBError msg = new OBError();
+            msg.setType("Error");
+            msg.setMessage(e.getMessage());
+            msg.setTitle("Error occurred");
+            bundle.setResult(msg);
+        }
     }
-  }
 }
