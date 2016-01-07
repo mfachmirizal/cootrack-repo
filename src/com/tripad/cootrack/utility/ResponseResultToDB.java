@@ -26,7 +26,7 @@ import org.openbravo.model.common.businesspartner.Category;
 import com.tripad.cootrack.data.TmcCar;
 import com.tripad.cootrack.data.TmcDocumentUpdate;
 import com.tripad.cootrack.data.TmcDocumentUpdateLine;
-import com.tripad.cootrack.data.TmcListChildAcc;
+//import com.tripad.cootrack.data.TmcListChildAcc;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -386,8 +386,6 @@ public class ResponseResultToDB {
                     newTmcDocumentUpdateLine.setTMCDocumentupdate(header);// set header nya
                     newTmcDocumentUpdateLine.setCustomerName(tmcCarCriteria.list().get(0).getBpartner());
                     newTmcDocumentUpdateLine.setTMCCar(tmcCarCriteria.list().get(0));
-                    // temporary
-                    // newTmcDocumentUpdateLine.setKeterangan("Near Exp - " + nearExpired);
 
                     newTmcDocumentUpdateLine.setStatus(statusCategory);
 
@@ -409,7 +407,7 @@ public class ResponseResultToDB {
                     tmcDocumentUpdateLine.list().get(0).setStatus(statusCategory);
 
                     OBDal.getInstance().save(tmcDocumentUpdateLine.list().get(0));
-                    //OBDal.getInstance().flush();
+                    OBDal.getInstance().flush();
 
                     tempValidDocumentUpdateLine.add(tmcDocumentUpdateLine.list().get(0).getId()); // untuk
                     // data yg
@@ -460,7 +458,7 @@ public class ResponseResultToDB {
                 .not(Restrictions.in(TmcDocumentUpdateLine.PROPERTY_TMCCAR, seluruhMobilDiTmcCar.list()))); //
         for (TmcDocumentUpdateLine removeTmcDocumentUpdateLine : delTmcDocumentUpdateLine.list()) {
             OBDal.getInstance().remove(removeTmcDocumentUpdateLine);
-            //BDal.getInstance().flush();
+            //OBDal.getInstance().flush();
         }
         
         OBDal.getInstance().flush();
