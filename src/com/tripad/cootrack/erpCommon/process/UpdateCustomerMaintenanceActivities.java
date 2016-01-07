@@ -2,9 +2,14 @@ package com.tripad.cootrack.erpCommon.process;
 
 import com.tripad.cootrack.data.TmcDocumentUpdate;
 import com.tripad.cootrack.data.TmcDocumentUpdateLine;
+import java.util.ArrayList;
+import java.util.List;
+import org.openbravo.dal.core.DalUtil;
+import org.openbravo.dal.core.OBContext;
 import org.openbravo.dal.service.OBDal;
 import org.openbravo.erpCommon.utility.OBError;
 import org.openbravo.scheduling.ProcessBundle;
+import org.openbravo.service.db.CallStoredProcedure;
 import org.openbravo.service.db.DalBaseProcess;
 
 public class UpdateCustomerMaintenanceActivities extends DalBaseProcess {
@@ -31,7 +36,9 @@ public class UpdateCustomerMaintenanceActivities extends DalBaseProcess {
             final String p_keterangan = (String) bundle.getParams().get("p_keterangan");
             
             // implement your process here
-            
+            List<Object> params = new ArrayList<Object>();
+            params.add((String) DalUtil.getId(OBContext.getOBContext().getUser()));
+            CallStoredProcedure.getInstance().call("tmc_maintenanceprocess", params, null, true, false);
             // Show a result
             final StringBuilder sb = new StringBuilder();
             sb.append("Read information:<br/>");
