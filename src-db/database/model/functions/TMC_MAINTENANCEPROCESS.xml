@@ -86,13 +86,13 @@
     
   BEGIN
     --  Update AD_PInstance
-    DBMS_OUTPUT.PUT_LINE('Updating PInstance - Processing ' || p_PInstance_ID) ;
+    /*DBMS_OUTPUT.PUT_LINE('Updating PInstance - Processing ' || p_PInstance_ID) ;
     v_ResultStr:='PInstanceNotFound';
-    AD_UPDATE_PINSTANCE(p_PInstance_ID, NULL, 'Y', NULL, NULL) ;
+    AD_UPDATE_PINSTANCE(p_PInstance_ID, NULL, 'Y', NULL, NULL) ;*/
   BEGIN --BODY
     
 
-    IF(NOT FINISH_PROCESS) THEN
+    --IF(NOT FINISH_PROCESS) THEN
 
          UPDATE TMC_DOCUMENTUPDATELINE SET gpsditelp = p_gps_ditelpon,
 					   gpsdisms = p_gps_disms, 
@@ -110,15 +110,17 @@
 					   keterangan = p_keterangan
 
 				      WHERE Tmc_DocumentDateLine_ID = p_id;
-     
-    END IF;--FINISH_PROCESS
-    IF(NOT FINISH_PROCESS) THEN
-      v_Message:='@Created@=' || v_Created;
-    END IF; --FINISH_PROCESS
+     EXCEPTION
+WHEN OTHERS THEN
+  v_ResultStr:= '@ERROR=' || SQLERRM;
+   -- END IF;--FINISH_PROCESS
+    --IF(NOT FINISH_PROCESS) THEN
+    --  v_Message:='@Created@=' || v_Created;
+    --END IF; --FINISH_PROCESS
     --<<FINISH_PROCESS>>
     --  Update AD_PInstance
-    DBMS_OUTPUT.PUT_LINE('Updating PInstance - Finished ' || v_Message) ;
-    AD_UPDATE_PINSTANCE(p_PInstance_ID, NULL, 'N', v_Result, v_Message) ;
+ --   RAISE NOTICE '%','Updating PInstance - Finished ' || v_Message ;
+ --   PERFORM AD_UPDATE_PINSTANCE(p_PInstance_ID, NULL, 'N', v_Result, v_Message) ;
     RETURN;
   END; --BODY
 EXCEPTION
@@ -126,7 +128,7 @@ WHEN OTHERS THEN
   v_ResultStr:= '@ERROR=' || SQLERRM;
   DBMS_OUTPUT.PUT_LINE(v_ResultStr) ;
   ROLLBACK;
-  AD_UPDATE_PINSTANCE(p_PInstance_ID, NULL, 'N', 0, v_ResultStr) ;
+--  PERFORM AD_UPDATE_PINSTANCE(p_PInstance_ID, NULL, 'N', 0, v_ResultStr) ;
   RETURN;
 END TMC_MAINTENANCEPROCESS
 ]]></body>
