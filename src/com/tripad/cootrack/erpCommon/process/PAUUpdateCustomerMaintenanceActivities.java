@@ -88,105 +88,107 @@ public class PAUUpdateCustomerMaintenanceActivities extends BaseProcessActionHan
                 
                 TmcDocumentUpdateLine tmcDocumentUpdateLine = OBDal.getInstance().get(TmcDocumentUpdateLine.class,id);
                 
-                try {
-                    if (!selection.getJSONObject(i).get("gPSDiTelepon").toString().equals("null")) {
-                        tmcDocumentUpdateLine.setGPSDiTelepon(selection.getJSONObject(i).get("gPSDiTelepon").toString());
-                    }
-                } catch (NullPointerException n) {
-                    p_gps_ditelpon = null;
+                
+                if (!selection.getJSONObject(i).get("gPSDiTelepon").toString().equals("null")) {
+                    tmcDocumentUpdateLine.setGPSDiTelepon(selection.getJSONObject(i).get("gPSDiTelepon").toString());
+                } else {
+                    tmcDocumentUpdateLine.setGPSDiTelepon(null);
                 }
-                try {
-                    //p_gps_disms = (String) selection.getJSONObject(i).get("gPSDiSMS");
-                    if (!selection.getJSONObject(i).get("gPSDiSMS").toString().equals("null")) {
-                        tmcDocumentUpdateLine.setGPSDiSMS(selection.getJSONObject(i).get("gPSDiSMS").toString());
-                    }
-                } catch (NullPointerException n) {
-                    p_gps_disms = null;
+                
+                if (!selection.getJSONObject(i).get("gPSDiSMS").toString().equals("null")) {
+                    tmcDocumentUpdateLine.setGPSDiSMS(selection.getJSONObject(i).get("gPSDiSMS").toString());
+                } else {
+                    tmcDocumentUpdateLine.setGPSDiSMS(null);
                 }
-                try {
-                    if (!selection.getJSONObject(i).get("masaAktif").toString().equals("null")) {
-                        tmcDocumentUpdateLine.setMasaAktif(new SimpleDateFormat("yyyy-MM-dd").parse(selection.getJSONObject(i).get("masaAktif").toString())); //2016-01-07
-                    }
-                } catch (NullPointerException n) {
-                    p_masa_aktif = null;
+                
+                
+                if (!selection.getJSONObject(i).get("masaAktif").toString().equals("null")) {
+                    tmcDocumentUpdateLine.setMasaAktif(new SimpleDateFormat("yyyy-MM-dd").parse(selection.getJSONObject(i).get("masaAktif").toString())); //2016-01-07
+                } else {
+                    tmcDocumentUpdateLine.setMasaAktif(null);
                 }
-                try {
-                    if (!selection.getJSONObject(i).get("sisaPulsa").toString().equals("null")) {
-                        tmcDocumentUpdateLine.setSisaPulsa(new BigDecimal(selection.getJSONObject(i).get("sisaPulsa").toString()));
-                    }
-                } catch (NullPointerException n) {
-                    //p_sisa_pulsa = BigDecimal.ZERO;
+                
+                
+                if (!selection.getJSONObject(i).get("sisaPulsa").toString().equals("null")) {
+                    tmcDocumentUpdateLine.setSisaPulsa(new BigDecimal(selection.getJSONObject(i).get("sisaPulsa").toString()));
+                } else {
+                    tmcDocumentUpdateLine.setSisaPulsa(null);
                 }
-                try {
-                    if (!selection.getJSONObject(i).get("sisaQuota").toString().equals("null")) {
-                        tmcDocumentUpdateLine.setSisaQuota(new Long(selection.getJSONObject(i).get("sisaQuota").toString()));
-                    }
-                } catch (NullPointerException n) {
-                    p_sisa_quota = "0";
+                
+                
+                if (!selection.getJSONObject(i).get("sisaQuota").toString().equals("null")) {
+                    tmcDocumentUpdateLine.setSisaQuota(new Long(selection.getJSONObject(i).get("sisaQuota").toString()));
+                } else {
+                    tmcDocumentUpdateLine.setSisaQuota(null);
                 }
-                try {
-                    if (!selection.getJSONObject(i).get("analisaProblem").toString().equals("null")) {
-                        tmcDocumentUpdateLine.setAnalisaProblem(selection.getJSONObject(i).get("analisaProblem").toString());
-                    }
-                } catch (NullPointerException n) {
-                    p_analisa_problem = null;
+                
+                
+                if (!selection.getJSONObject(i).get("analisaProblem").toString().equals("null")) {
+                    tmcDocumentUpdateLine.setAnalisaProblem(selection.getJSONObject(i).get("analisaProblem").toString());
+                } else {
+                    tmcDocumentUpdateLine.setAnalisaProblem(null);
                 }
-                try {
-                    if (!selection.getJSONObject(i).get("solvingBySystem").toString().equals("null")) {
-                        tmcDocumentUpdateLine.setSolvingBySystem(selection.getJSONObject(i).get("solvingBySystem").toString());
-                    }
-                } catch (NullPointerException n) {
-                    p_solving_bysystem = null;
+                
+                
+                if (!selection.getJSONObject(i).get("solvingBySystem").toString().equals("null")) {
+                    tmcDocumentUpdateLine.setSolvingBySystem(selection.getJSONObject(i).get("solvingBySystem").toString());
+                } else {
+                    tmcDocumentUpdateLine.setSolvingBySystem(null);
                 }
-                try {
-                    if (!selection.getJSONObject(i).get("result").toString().equals("null")) {
-                        tmcDocumentUpdateLine.setResult(selection.getJSONObject(i).get("result").toString());
-                    }
-                } catch (NullPointerException n) {
-                    p_result = null;
+                
+                
+                if (!selection.getJSONObject(i).get("result").toString().equals("null")) {
+                    tmcDocumentUpdateLine.setResult(selection.getJSONObject(i).get("result").toString());
+                } else {
+                    tmcDocumentUpdateLine.setResult(null);
                 }
-                try {
-                    if (!selection.getJSONObject(i).get("byPhone").toString().equals("null")) {
-                        tmcDocumentUpdateLine.setByPhone(selection.getJSONObject(i).get("byPhone").equals("Y") ? true : false);
-                    }
-                } catch (NullPointerException n) {
-                    tmcDocumentUpdateLine.setByPhone(false);
+                
+                
+                
+                if (!selection.getJSONObject(i).get("byPhone").toString().equals("null")) {
+                    tmcDocumentUpdateLine.setByPhone(selection.getJSONObject(i).get("byPhone").equals("Y") ? true : false);
+                } else {
+                    tmcDocumentUpdateLine.setByPhone(null);
                 }
-                try{
-                    if (!selection.getJSONObject(i).get("bySMS").toString().equals("null")) {
-                        tmcDocumentUpdateLine.setBySMS(selection.getJSONObject(i).get("bySMS").equals("Y") ? true : false);
-                    }
-                } catch (NullPointerException n) {
-                    tmcDocumentUpdateLine.setBySMS(false);
+                
+                
+                
+                if (!selection.getJSONObject(i).get("bySMS").toString().equals("null")) {
+                    tmcDocumentUpdateLine.setBySMS(selection.getJSONObject(i).get("bySMS").equals("Y") ? true : false);
+                } else {
+                    tmcDocumentUpdateLine.setBySMS(null);
                 }
-                try{
-                    if (!selection.getJSONObject(i).get("maintenanceDateFrom").toString().equals("null")) {
-                        tmcDocumentUpdateLine.setMaintenanceDateFrom( new SimpleDateFormat("yyyy-MM-dd").parse(selection.getJSONObject(i).get("maintenanceDateFrom").toString()));
-                    }
-                } catch (NullPointerException n) {
-                    p_maintenancedate_from = null;
+                
+                
+                if (!selection.getJSONObject(i).get("maintenanceDateFrom").toString().equals("null")) {
+                    tmcDocumentUpdateLine.setMaintenanceDateFrom( new SimpleDateFormat("yyyy-MM-dd").parse(selection.getJSONObject(i).get("maintenanceDateFrom").toString()));
+                } else {
+                    tmcDocumentUpdateLine.setMaintenanceDateFrom(null);
                 }
-                try{
-                    if (!selection.getJSONObject(i).get("maintenanceDateTo").toString().equals("null")) {
-                        tmcDocumentUpdateLine.setMaintenanceDateTo( new SimpleDateFormat("yyyy-MM-dd").parse(selection.getJSONObject(i).get("maintenanceDateTo").toString()));
-                    }
-                } catch (NullPointerException n) {
-                    p_maintenancedate_to = null;
+                
+                
+                
+                if (!selection.getJSONObject(i).get("maintenanceDateTo").toString().equals("null")) {
+                    tmcDocumentUpdateLine.setMaintenanceDateTo( new SimpleDateFormat("yyyy-MM-dd").parse(selection.getJSONObject(i).get("maintenanceDateTo").toString()));
+                } else {
+                    tmcDocumentUpdateLine.setMaintenanceDateTo( null );
                 }
-                try{
-                    if (!selection.getJSONObject(i).get("jawabanCustomer").toString().equals("null")) {
-                        tmcDocumentUpdateLine.setJawabanCustomer(selection.getJSONObject(i).get("jawabanCustomer").toString());
-                    }
-                } catch (NullPointerException n) {
-                    p_jawaban_customer = null;
+                
+                
+                
+                if (!selection.getJSONObject(i).get("jawabanCustomer").toString().equals("null")) {
+                    tmcDocumentUpdateLine.setJawabanCustomer(selection.getJSONObject(i).get("jawabanCustomer").toString());
+                } else {
+                    tmcDocumentUpdateLine.setJawabanCustomer(null);
                 }
-                try{
-                    if (!selection.getJSONObject(i).get("keterangan").toString().equals("null")) {
-                        tmcDocumentUpdateLine.setKeterangan(selection.getJSONObject(i).get("keterangan").toString());
-                    }
-                } catch (NullPointerException n) {
-                    p_keterangan = null;
+                
+                
+                if (!selection.getJSONObject(i).get("keterangan").toString().equals("null")) {
+                    tmcDocumentUpdateLine.setKeterangan(selection.getJSONObject(i).get("keterangan").toString());
+                } else {
+                    tmcDocumentUpdateLine.setKeterangan(null);
                 }
+                
                 
                 OBDal.getInstance().save(tmcDocumentUpdateLine);
                 OBDal.getInstance().flush();
@@ -221,11 +223,14 @@ public class PAUUpdateCustomerMaintenanceActivities extends BaseProcessActionHan
 //
 //            OBDal.getInstance().flush();
             OBDal.getInstance().commitAndClose();
+            
+            request.put("MESSAGE", "Sukses !");
             return request;
         } catch (Exception e) {
             log.error("Error processing request: " + e.getMessage(), e);
         }
         return new JSONObject();
     }
+    
 }
 
