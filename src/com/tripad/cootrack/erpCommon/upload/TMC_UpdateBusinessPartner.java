@@ -19,6 +19,7 @@ import org.openbravo.erpCommon.utility.Utility;
 import org.openbravo.module.idljava.proc.IdlServiceJava;
 import org.openbravo.dal.core.OBContext;
 import java.math.BigDecimal;
+import org.apache.commons.lang.WordUtils;
 import org.hibernate.criterion.Restrictions;
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
@@ -28,6 +29,7 @@ import org.openbravo.model.ad.access.User;
 import org.openbravo.model.common.businesspartner.BusinessPartner;
 import org.openbravo.model.common.businesspartner.Location;
 import org.openbravo.model.common.enterprise.Organization;
+import org.openbravo.model.common.geography.Country;
 import org.openbravo.model.financialmgmt.payment.FIN_FinancialAccount;
 import org.openbravo.model.financialmgmt.payment.PaymentTerm;
 import org.openbravo.model.pricing.pricelist.PriceList;
@@ -42,8 +44,9 @@ public class TMC_UpdateBusinessPartner extends IdlServiceJava {
     private static Logger log=Logger.getLogger(TMC_UpdateBusinessPartner.class);
     
     BusinessPartner businessPartnerData = null;
-    User dataUser = null;
-    Location locationData = null;
+    User contactData = null;
+    org.openbravo.model.common.geography.Location locationData = null;
+    Location locationBpartnerData = null;
     
     @Override
     public String getEntityName() {
@@ -68,8 +71,8 @@ public class TMC_UpdateBusinessPartner extends IdlServiceJava {
             new Parameter("FirstName", Parameter.STRING), //PembayaranCuti
             new Parameter("LastName", Parameter.STRING),
             new Parameter("Email", Parameter.STRING),
-            new Parameter("Phone", Parameter.STRING),
-            new Parameter("NewContact", Parameter.STRING)
+            new Parameter("Phone", Parameter.STRING)
+                //,new Parameter("NewContact", Parameter.STRING)
                 
         };
     }
@@ -92,7 +95,7 @@ public class TMC_UpdateBusinessPartner extends IdlServiceJava {
         validator.checkString(values[13],526); //LastName
         validator.checkString(values[14],526); //Email
         validator.checkString(values[15],526); //Phone
-        validator.checkString(values[16],526); //NewContact
+        //   validator.checkString(values[16],526); //NewContact
         return values;
     }
     
@@ -103,7 +106,8 @@ public class TMC_UpdateBusinessPartner extends IdlServiceJava {
                 (String) values[3], (String) values[4], (String) values[5],
                 (String) values[6], (String) values[7], (String) values[8],(String) values[9],
                 (String) values[10],(String) values[11],(String) values[12],(String) values[13],
-                (String) values[14],(String) values[15],(String) values[16]
+                (String) values[14],(String) values[15]
+                //,(String) values[16]
         );
     }
     
@@ -123,8 +127,8 @@ public class TMC_UpdateBusinessPartner extends IdlServiceJava {
             final String firstName,
             final String lastName,
             final String email,
-            final String phone,
-            final String newContact
+            final String phone
+            // , final String newContact
             
     )
             throws Exception {
@@ -138,35 +142,148 @@ public class TMC_UpdateBusinessPartner extends IdlServiceJava {
         final OBCriteria<BusinessPartner> businessPartnerCriteria = OBDal.getInstance()
                 .createCriteria(BusinessPartner.class);
         businessPartnerCriteria.add(Restrictions.eq(BusinessPartner.PROPERTY_SEARCHKEY, sKey));
-        businessPartnerCriteria.add(Restrictions.eq(BusinessPartner.PROPERTY_CLIENT, OBContext.getOBContext().getCurrentClient()));
+        //businessPartnerCriteria.add(Restrictions.eq(BusinessPartner.PROPERTY_CLIENT, OBContext.getOBContext().getCurrentClient()));
+        businessPartnerCriteria.add(Restrictions.eq(BusinessPartner.PROPERTY_CREATEDBY, OBContext.getOBContext().getUser()));
+        
         
         if (businessPartnerCriteria.list().isEmpty())  {
             throw new OBException("BusinessPartner Not Found ! ("+sKey+")");
         }
         
-        String docno ="";
         for (BusinessPartner businessPartner : businessPartnerCriteria.list()) {
             businessPartnerData = businessPartner;
             businessPartnerData.setName(commercialName);
             
             //Customer
-            PriceList priceListExist = findDALInstance(false, PriceList.class, new Value(PriceList.PROPERTY_NAME, priceList));
-            if (priceListExist == null) {
-                throw new OBException("Price List  \""+priceList+"\" doesn't exists");
+            if (isEdit(priceList)){
+                PriceList priceListExist = findDALInstance(false, PriceList.class, new Value(PriceList.PROPERTY_NAME, priceList));
+                if (priceListExist == null) {
+                    throw new OBException("Price List  \""+priceList+"\" doesn't exists");
+                }
+                businessPartnerData.setPriceList(priceListExist);
+            } else {
+                businessPartnerData.setPriceList(null);
             }
-            businessPartnerData.setPriceList(priceListExist);
             
-            PaymentTerm paymentTermExist = findDALInstance(false, PaymentTerm.class, new Value(PaymentTerm.PROPERTY_SEARCHKEY, paymentTerm));
-            if (paymentTermExist == null) {
-                throw new OBException("Payment Term  \""+paymentTerm+"\" doesn't exists");
+            if (isEdit(paymentTerm)){
+                PaymentTerm paymentTermExist = findDALInstance(false, PaymentTerm.class, new Value(PaymentTerm.PROPERTY_SEARCHKEY, paymentTerm));
+                if (paymentTermExist == null) {
+                    throw new OBException("Payment Term  \""+paymentTerm+"\" doesn't exists");
+                }
+                businessPartnerData.setPaymentTerms(paymentTermExist);
+            } else {
+                businessPartnerData.setPaymentTerms(null);
             }
-            businessPartnerData.setPaymentTerms(paymentTermExist);
             
-            FIN_FinancialAccount accountExist = findDALInstance(false, FIN_FinancialAccount.class, new Value(FIN_FinancialAccount.PROPERTY_NAME, financialAccount));
-            if (accountExist == null) {
-                throw new OBException("Financial Account  \""+financialAccount+"\" doesn't exists");
+            if (isEdit(financialAccount)){
+                FIN_FinancialAccount accountExist = findDALInstance(false, FIN_FinancialAccount.class, new Value(FIN_FinancialAccount.PROPERTY_NAME, financialAccount));
+                if (accountExist == null) {
+                    throw new OBException("Financial Account  \""+financialAccount+"\" doesn't exists");
+                }
+                businessPartnerData.setAccount(accountExist);
+            } else {
+                businessPartnerData.setAccount(null);
             }
-            businessPartnerData.setAccount(accountExist);
+            
+            //Country countryExist = null;
+            
+            Country countryExist = findDALInstance(false, Country.class, new Value(Country.PROPERTY_NAME, WordUtils.capitalizeFully(negara.trim())));
+            if (countryExist == null) {
+                throw new OBException("Country  \""+negara.trim()+"\" doesn't exists");
+            }
+            //}
+            
+            
+            
+            OBCriteria<Location> locationBpCrit = OBDal.getInstance()
+                    .createCriteria(Location.class);
+            locationBpCrit.add(Restrictions.eq(Location.PROPERTY_CREATEDBY, OBContext.getOBContext().getUser()));
+            locationBpCrit.add(Restrictions.eq(Location.PROPERTY_NAME, getBPLocationName(kota.trim(),alamat.trim())));
+            locationBpCrit.add(Restrictions.eq(Location.PROPERTY_BUSINESSPARTNER, businessPartnerData));
+            
+            if (locationBpCrit.list().isEmpty()) { //check apakah Bisnis Partner location dengan nama yg sama sudah ada ? samakan yg alama dengan excel : buat baru
+                locationBpartnerData = OBProvider.getInstance().get(Location.class);
+                locationBpartnerData.setActive(true);
+                OBCriteria<org.openbravo.model.common.geography.Location> locationCrit = OBDal.getInstance()
+                        .createCriteria(org.openbravo.model.common.geography.Location.class);
+                locationCrit.add(Restrictions.eq(org.openbravo.model.common.geography.Location.PROPERTY_CREATEDBY, OBContext.getOBContext().getUser()));
+                locationCrit.add(Restrictions.sqlRestriction("UPPER(TRIM(address1)) = UPPER(TRIM('"+alamat.trim()+"'))"));//eq(org.openbravo.model.common.geography.Location.PROPERTY_ADDRESSLINE1, alamat));
+                locationCrit.add(Restrictions.sqlRestriction("UPPER(TRIM(city)) = UPPER(TRIM('"+kota.trim()+"'))"));//locationCrit.add(Restrictions.eq(org.openbravo.model.common.geography.Location.PROPERTY_CITYNAME, kota));
+                locationCrit.add(Restrictions.sqlRestriction("UPPER(TRIM(postal)) = UPPER(TRIM('"+kodePos.trim()+"'))"));
+                locationCrit.add(Restrictions.eq(org.openbravo.model.common.geography.Location.PROPERTY_COUNTRY, countryExist));
+                if (locationCrit.list().isEmpty()) { //check apakah Location dengan alamat di atas sudah ada ? : update yg lama, samakan dengan excel : buat baru
+                    locationData = OBProvider.getInstance().get(org.openbravo.model.common.geography.Location.class);
+                    locationData.setActive(true);
+                    locationData.setAddressLine1(alamat.trim());
+                    locationData.setCityName(kota.trim());
+                    locationData.setCountry(countryExist);
+                    locationData.setPostalCode(kodePos.trim());
+                    OBDal.getInstance().save(locationData);
+                } else {
+                    locationData = locationCrit.list().get(0);
+                    locationData.setAddressLine1(alamat.trim());
+                    locationData.setCityName(kota.trim());
+                    locationData.setCountry(countryExist);
+                    locationData.setPostalCode(kodePos.trim());
+                }
+                if (locationData != null) {
+                    locationBpartnerData.setLocationAddress(locationData);
+                } else {
+                    throw new OBException("Error : locationData variable is null");
+                }
+                locationBpartnerData.setBusinessPartner(businessPartnerData);
+                locationBpartnerData.setName(getBPLocationName(kota.trim(),alamat.trim()));
+                locationBpartnerData.setPhone(phoneCompany);
+                locationBpartnerData.setFax(fax);
+                OBDal.getInstance().save(locationBpartnerData);
+            } else {
+                for (Location locBPExisting : locationBpCrit.list()) {
+                    
+                    //for (org.openbravo.model.common.geography.Location locExisting : locBPExisting.getLocationAddress().getBusinessPartnerLocationList()) {
+                    locBPExisting.getLocationAddress().setAddressLine1(alamat.trim());
+                    locBPExisting.getLocationAddress().setCityName(kota.trim());
+                    locBPExisting.getLocationAddress().setCountry(countryExist);
+                    locBPExisting.getLocationAddress().setPostalCode(kodePos.trim());
+                    
+                    //locBPExisting.setBusinessPartner(businessPartnerData);
+                    locBPExisting.setName(getBPLocationName(kota.trim(),alamat.trim()));
+                    locBPExisting.setPhone(phoneCompany);
+                    locBPExisting.setFax(fax);
+                    OBDal.getInstance().save(locBPExisting);
+                    //}
+                }
+            }
+            
+            //Contact
+            OBCriteria<User> contactCrit = OBDal.getInstance()
+                    .createCriteria(User.class);
+            contactCrit.add(Restrictions.eq(User.PROPERTY_CREATEDBY, OBContext.getOBContext().getUser()));
+            contactCrit.add(Restrictions.eq(User.PROPERTY_BUSINESSPARTNER, businessPartnerData));
+            contactCrit.add(Restrictions.sqlRestriction("UPPER(TRIM(firstname)) = UPPER(TRIM('"+firstName.trim()+"'))"));
+            contactCrit.add(Restrictions.sqlRestriction("UPPER(TRIM(lastname)) = UPPER(TRIM('"+lastName.trim()+"'))"));
+            contactCrit.add(Restrictions.sqlRestriction("UPPER(TRIM(email)) = UPPER(TRIM('"+email.trim()+"'))"));
+            contactCrit.add(Restrictions.sqlRestriction("UPPER(TRIM(phone)) = UPPER(TRIM('"+phone.trim()+"'))"));
+            
+            if (contactCrit.list().isEmpty()) { //bila kosong / blm ada sebelumnya ? buat baru : edit yg lama, sesuaikan dengan excel
+                contactData = OBProvider.getInstance().get(User.class);
+                contactData.setActive(true);
+                contactData.setFirstName(firstName.trim());
+                contactData.setLastName(lastName.trim());
+                contactData.setEmail(email.trim());
+                contactData.setPhone(phone.trim());
+                contactData.setName(firstName.trim()+" "+lastName.trim());
+                contactData.setBusinessPartner(businessPartnerData);
+                OBDal.getInstance().save(contactData);
+            } else {
+                for (User existingUser : contactCrit.list()) {
+                    existingUser.setFirstName(firstName.trim());
+                    existingUser.setLastName(lastName.trim());
+                    existingUser.setEmail(email.trim());
+                    existingUser.setPhone(phone.trim());
+                    existingUser.setName(firstName.trim()+" "+lastName.trim());
+                    OBDal.getInstance().save(existingUser);
+                }
+            }
             
             
             //sHRLeaveEncash = OBProvider.getInstance().get(SHRLeaveEncash.class);
@@ -177,5 +294,19 @@ public class TMC_UpdateBusinessPartner extends IdlServiceJava {
         }
         
         return businessPartnerData;
+    }
+    
+    private boolean isEdit(String param) {
+        if (param != null) {
+            if (!param.equals("")) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    
+    private String getBPLocationName(String city,String addr1) {
+        return city+", "+addr1;
     }
 }
