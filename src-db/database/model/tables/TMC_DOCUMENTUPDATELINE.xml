@@ -54,7 +54,7 @@
         <onCreateDefault/>
       </column>
       <column name="MASAAKTIF" primaryKey="false" required="false" type="TIMESTAMP" size="7" autoIncrement="false">
-        <default><![CDATA[SYSDATE]]></default>
+        <default/>
         <onCreateDefault/>
       </column>
       <column name="SISAPULSA" primaryKey="false" required="true" type="DECIMAL" autoIncrement="false">
@@ -110,6 +110,10 @@
         <onCreateDefault/>
       </column>
       <column name="MAINTENANCEDATETO" primaryKey="false" required="false" type="TIMESTAMP" size="7" autoIncrement="false">
+        <default/>
+        <onCreateDefault/>
+      </column>
+      <column name="ACC" primaryKey="false" required="false" type="VARCHAR" size="60" autoIncrement="false">
         <default/>
         <onCreateDefault/>
       </column>

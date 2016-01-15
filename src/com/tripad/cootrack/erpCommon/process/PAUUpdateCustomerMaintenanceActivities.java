@@ -189,6 +189,7 @@ public class PAUUpdateCustomerMaintenanceActivities extends BaseProcessActionHan
                     tmcDocumentUpdateLine.setKeterangan(null);
                 }
                 
+				tmcDocumentUpdateLine.setProcess(true);
                 
                 OBDal.getInstance().save(tmcDocumentUpdateLine);
                 OBDal.getInstance().flush();
