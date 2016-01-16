@@ -32,6 +32,7 @@ import org.openbravo.model.common.enterprise.Organization;
 import org.openbravo.model.common.geography.Country;
 import org.openbravo.model.financialmgmt.payment.FIN_FinancialAccount;
 import org.openbravo.model.financialmgmt.payment.PaymentTerm;
+import org.openbravo.model.financialmgmt.payment.FIN_PaymentMethod;
 import org.openbravo.model.pricing.pricelist.PriceList;
 import org.openbravo.service.db.DalConnectionProvider;
 /**
@@ -60,19 +61,20 @@ public class TMC_UpdateBusinessPartner extends IdlServiceJava {
             new Parameter("SearchKey", Parameter.STRING), //Search Key BP
             new Parameter("CommercialName", Parameter.STRING), // Nama
             new Parameter("Alamat", Parameter.STRING), //
-            new Parameter("Kota", Parameter.STRING), //Ketersediaan cuti
-            new Parameter("Negara", Parameter.STRING), //Gaji Pokok
-            new Parameter("KodePos", Parameter.STRING), //Tunjangan Pasutri
-            new Parameter("PhoneCompany", Parameter.STRING), //Tunjangan Anak
-            new Parameter("Fax", Parameter.STRING), //Tunjangan Operasional
-            new Parameter("PriceList", Parameter.STRING), //Tunjangan Jabtan
-            new Parameter("PatmentTerm", Parameter.STRING), //PPH
-            new Parameter("FinancialAccount", Parameter.STRING), //tkb
-            new Parameter("FirstName", Parameter.STRING), //PembayaranCuti
-            new Parameter("LastName", Parameter.STRING),
+            new Parameter("Kota", Parameter.STRING), //Kota
+            new Parameter("Negara", Parameter.STRING), //Negara
+            new Parameter("KodePos", Parameter.STRING), //KodePos
+            new Parameter("PhoneCompany", Parameter.STRING), //Phone Company
+            new Parameter("Fax", Parameter.STRING), //Fax
+            new Parameter("PriceList", Parameter.STRING), //Price List
+            new Parameter("PaymentMethod", Parameter.STRING),
+            new Parameter("PaymentTerm", Parameter.STRING), //Payment Term
+            new Parameter("FinancialAccount", Parameter.STRING), //Financial Account
+            new Parameter("FirstName", Parameter.STRING), //FirstName
+            new Parameter("LastName", Parameter.STRING),//LastName
             new Parameter("Email", Parameter.STRING),
             new Parameter("Phone", Parameter.STRING)
-                //,new Parameter("NewContact", Parameter.STRING)
+              //,new Parameter("NewContact", Parameter.STRING)
                 
         };
     }
@@ -86,15 +88,16 @@ public class TMC_UpdateBusinessPartner extends IdlServiceJava {
         validator.checkString(values[4],526); //Kota
         validator.checkString(values[5],526); //Negara
         validator.checkString(values[6],526); //KodePos
-        validator.checkString(values[7],526); //PhoneCompany
+        validator.checkString(values[7],526); //Phone Company
         validator.checkString(values[8],526); //Fax
         validator.checkString(values[9],526); //PriceList
         validator.checkString(values[10],526); //PatmentTerm
-        validator.checkString(values[11],526); //FinancialAccount
-        validator.checkString(values[12],526); //FirstName
-        validator.checkString(values[13],526); //LastName
-        validator.checkString(values[14],526); //Email
-        validator.checkString(values[15],526); //Phone
+        validator.checkString(values[11],526); //Patment Method
+        validator.checkString(values[12],526); //Financial Account
+        validator.checkString(values[13],526); //FirstName
+        validator.checkString(values[14],526); //LastName
+        validator.checkString(values[15],526); //Email
+        validator.checkString(values[16],526); //Phone
         //   validator.checkString(values[16],526); //NewContact
         return values;
     }
@@ -106,7 +109,7 @@ public class TMC_UpdateBusinessPartner extends IdlServiceJava {
                 (String) values[3], (String) values[4], (String) values[5],
                 (String) values[6], (String) values[7], (String) values[8],(String) values[9],
                 (String) values[10],(String) values[11],(String) values[12],(String) values[13],
-                (String) values[14],(String) values[15]
+                (String) values[14],(String) values[15],(String) values[16]
                 //,(String) values[16]
         );
     }
@@ -122,13 +125,14 @@ public class TMC_UpdateBusinessPartner extends IdlServiceJava {
             final String phoneCompany,
             final String fax,
             final String priceList,
+            final String paymentmethod,
             final String paymentTerm,
             final String financialAccount,
             final String firstName,
             final String lastName,
             final String email,
             final String phone
-            // , final String newContact
+    
             
     )
             throws Exception {
@@ -163,6 +167,16 @@ public class TMC_UpdateBusinessPartner extends IdlServiceJava {
                 businessPartnerData.setPriceList(priceListExist);
             } else {
                 businessPartnerData.setPriceList(null);
+            }
+
+            if (isEdit(paymentmethod)){
+                FIN_PaymentMethod paymentmethodExist = findDALInstance(false, FIN_PaymentMethod.class, new Value(FIN_PaymentMethod.PROPERTY_NAME, paymentmethod));
+                if (paymentmethodExist == null) {
+                    throw new OBException("Payment Method  \""+paymentmethod+"\" doesn't exists");
+                }
+                businessPartnerData.setPaymentMethod(paymentmethodExist);
+            } else {
+                businessPartnerData.setPaymentMethod(null);
             }
             
             if (isEdit(paymentTerm)){
