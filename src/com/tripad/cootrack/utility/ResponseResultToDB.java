@@ -343,7 +343,16 @@ public class ResponseResultToDB {
             // String acc = carList.getJSONObject(i).get("acc").toString();
             // String acc_seconds = carList.getJSONObject(i).get("acc_seconds").toString();
             // String seconds = carList.getJSONObject(i).get("seconds").toString();
-
+            //ini ACC 0 = OFF, 1= ? , empty / -1  = Expired 
+            String aCC = "";
+            try {
+              if (carList.getJSONObject(i).has("acc")) {
+                aCC = carList.getJSONObject(i).get("acc").toString();
+              }
+            } catch (JSONException z) {
+              aCC = "";
+            }
+            
             OBCriteria<TmcCar> tmcCarCriteria = OBDal.getInstance().createCriteria(TmcCar.class);
             tmcCarCriteria.add(Restrictions.eq(TmcCar.PROPERTY_IMEI, imei));
             tmcCarCriteria.add(Restrictions.eq(TmcCar.PROPERTY_CREATEDBY, COOTRACK_USER));
@@ -361,8 +370,14 @@ public class ResponseResultToDB {
 
                 int nearExpired = new OpenApiUtils().getIntervalFromUnix(Long.parseLong(server_time.trim()),tmcCarCriteria.list().get(0).getOUTTime(), "days");
 
-                System.out.println("IMEI & Expired : "+imei+" & "+nearExpired);
+                //System.out.println("IMEI & Expired : "+imei+" & "+nearExpired);
                 statusCategory = getStatusCategory(device_info, dayInterval, hourInterval, speed , nearExpired);
+                
+                aCC = getStatusAcc(aCC);
+                //debug yg nilainya 1
+                /*if (aCC.equals("Active")) {
+                   System.out.println(aCC+" : "+imei);
+                }*/
 
                 // if (statusCategory != null ) {
 
@@ -386,17 +401,14 @@ public class ResponseResultToDB {
                     newTmcDocumentUpdateLine.setTMCDocumentupdate(header);// set header nya
                     newTmcDocumentUpdateLine.setCustomerName(tmcCarCriteria.list().get(0).getBpartner());
                     newTmcDocumentUpdateLine.setTMCCar(tmcCarCriteria.list().get(0));
-
                     newTmcDocumentUpdateLine.setStatus(statusCategory);
+                    newTmcDocumentUpdateLine.setACC(aCC);
 
                     OBDal.getInstance().save(newTmcDocumentUpdateLine);
                     //OBDal.getInstance().flush();
 
-                    tempValidDocumentUpdateLine.add(newTmcDocumentUpdateLine.getId()); // untuk data yg
-                    // sinkron berdasar
-                    // static 8 jam, dll
-                    // dan ada
-                    // end insert
+                    tempValidDocumentUpdateLine.add(newTmcDocumentUpdateLine.getId()); // untuk data yg sinkron berdasar static 8 jam, dll dan ada 
+                    //end insert
                 } else {
                     tmcDocumentUpdateLine.list().get(0)
                             .setCustomerName(tmcCarCriteria.list().get(0).getBpartner());
@@ -405,17 +417,12 @@ public class ResponseResultToDB {
                     // tmcDocumentUpdateLine.list().get(0).setKeterangan("Near Exp - " + nearExpired);
 
                     tmcDocumentUpdateLine.list().get(0).setStatus(statusCategory);
+                    tmcDocumentUpdateLine.list().get(0).setACC(aCC);
 
                     OBDal.getInstance().save(tmcDocumentUpdateLine.list().get(0));
                     OBDal.getInstance().flush();
 
-                    tempValidDocumentUpdateLine.add(tmcDocumentUpdateLine.list().get(0).getId()); // untuk
-                    // data yg
-                    // sinkron
-                    // berdasar
-                    // static 8
-                    // jam, dll
-                    // dan ada
+                    tempValidDocumentUpdateLine.add(tmcDocumentUpdateLine.list().get(0).getId()); // untuk data yg sinkron berdasar static 8 jam, dll dan ada
                 }
                 // } //end record perlu di masukan berdasar status yg ditentukan
 
@@ -512,6 +519,17 @@ public class ResponseResultToDB {
         // Expired Payment
         // Arrear Payment
         return hasil;
+    }
+    
+    private String getStatusAcc(String param) {
+      if (param.equals("") || param.equals("-1")) {
+        return "Expired";
+      } else if (param.equals("0")) {
+        return "OFF";
+      } else if (param.equals("1")) {
+        return "ON";
+      } 
+      return "unknown ("+param+")";
     }
 
     private Category getBPCategory(String showname) {

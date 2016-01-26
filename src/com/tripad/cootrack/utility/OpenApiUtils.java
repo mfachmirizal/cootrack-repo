@@ -85,7 +85,7 @@ public class OpenApiUtils {
             }
             url = COOTRACK_GET_TARGET_INFO + "=" + param[0] + "&" + commonParam;
             
-            System.out.println("URL : "+url);
+            //System.out.println("URL : "+url);
         }
         
         String jsonResponse = "";
