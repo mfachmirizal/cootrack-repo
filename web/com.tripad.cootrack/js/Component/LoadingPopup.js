@@ -104,6 +104,7 @@ isc.TMC_LoadingPopup.addProperties({
 
   //eksekusi di background
   var hasilCallback,pop = this;
+
   var callback = function(rpcResponse, data, rpcRequest) {
     //isc.say(OB.I18N.getLabel('OBEXAPP_SumResult', [data.total]));
     hasilCallback = data.jawaban;
@@ -127,11 +128,36 @@ isc.TMC_LoadingPopup.addProperties({
     };
 
   }
+  var errorcallback = function(rpcResponse, data, rpcRequest) {
+	    //isc.say(OB.I18N.getLabel('OBEXAPP_SumResult', [data.total]));
+	    hasilCallback = data.jawaban;
+	    if (hasilCallback != '') {
+	      isc.say(hasilCallback)
+	    }
+	   // console.log(pop);
+	   //pop.closeClick();
+	   //rpcRequest.clientContext.popup.closeClick();
+	    
+	    rpcRequest.clientContext.popup.close();
+	   
+	    if(typeof pop.view.viewGrid !== 'undefined'){
+	      //pop.view.viewGrid.refreshGrid();
+	      rpcRequest.clientContext.popup.view.viewGrid.refreshGrid();
+	    };
+		
+	    if(typeof pop.params.button !== 'undefined'){
+	      //pop.params.button.contextView.viewGrid.refreshGrid();
+	      rpcRequest.clientContext.popup.params.button.contextView.viewGrid.refreshGrid();
+	    };
+
+	  }
+  
   OB.RemoteCallManager.call(this.actionHandler, {
     headers: this.headers,
     action: this.params.action
     //,dateParam: this.popup.mainform.getField('Date').getValue(), //send the parameter to the server too
-  }, {}, callback, {popup: this});
+  }, {}, callback, {popup: this},/*errorcallback*/ callback);
+ 
 }
 
 });
