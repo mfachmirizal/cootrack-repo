@@ -6,7 +6,9 @@ isc.TMC_LoadingPopup.addProperties({
   title: null,
   showMinimizeButton: false,
   showMaximizeButton: false,
-
+  
+  showCloseButton : false,
+  
   view: null,
   params: null,
   actionHandler: null,
@@ -110,7 +112,9 @@ isc.TMC_LoadingPopup.addProperties({
     }
    // console.log(pop);
    //pop.closeClick();
-   rpcRequest.clientContext.popup.closeClick();
+   //rpcRequest.clientContext.popup.closeClick();
+    
+    rpcRequest.clientContext.popup.close();
    
     if(typeof pop.view.viewGrid !== 'undefined'){
       //pop.view.viewGrid.refreshGrid();
