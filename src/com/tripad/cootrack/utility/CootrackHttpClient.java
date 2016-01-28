@@ -17,7 +17,6 @@ import java.net.URLConnection;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -38,11 +37,12 @@ System.out.println(body);
 */
 
 public class CootrackHttpClient {
-  private HttpClient client = null;
+  //private HttpClient client = null;
+  private DefaultHttpClient client = null;
   private HttpUriRequest request = null;
   private HttpResponse response = null;
   private static boolean inProcess = false;
-  private final int LAMA_TIMEOUT = 17;
+  private final int LAMA_TIMEOUT = 25;
 
   public CootrackHttpClient() {
   }
@@ -59,7 +59,7 @@ public class CootrackHttpClient {
     // HttpConnectionParams.setConnectionTimeout(httpParams, 60000);
     // client = new DefaultHttpClient(httpParams);
     HttpConnectionParams.setConnectionTimeout(httpParams, (LAMA_TIMEOUT * 1000));
-    HttpConnectionParams.setSoTimeout(httpParams, (LAMA_TIMEOUT * 1000));
+    //HttpConnectionParams.setSoTimeout(httpParams, (LAMA_TIMEOUT * 1000));
 
     DefaultHttpClient defaultHttpClient = new DefaultHttpClient(httpParams);
     defaultHttpClient.setHttpRequestRetryHandler(new DefaultHttpRequestRetryHandler(0, false));
