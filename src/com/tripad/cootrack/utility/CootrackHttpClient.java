@@ -42,7 +42,7 @@ public class CootrackHttpClient {
   private HttpUriRequest request = null;
   private HttpResponse response = null;
   private static boolean inProcess = false;
-  private final int LAMA_TIMEOUT = 25;
+  private final int LAMA_TIMEOUT = 5;
 
   public CootrackHttpClient() {
   }
@@ -59,7 +59,7 @@ public class CootrackHttpClient {
     // HttpConnectionParams.setConnectionTimeout(httpParams, 60000);
     // client = new DefaultHttpClient(httpParams);
     HttpConnectionParams.setConnectionTimeout(httpParams, (LAMA_TIMEOUT * 1000));
-    //HttpConnectionParams.setSoTimeout(httpParams, (LAMA_TIMEOUT * 1000));
+    HttpConnectionParams.setSoTimeout(httpParams, (LAMA_TIMEOUT * 1000));
 
     DefaultHttpClient defaultHttpClient = new DefaultHttpClient(httpParams);
     defaultHttpClient.setHttpRequestRetryHandler(new DefaultHttpRequestRetryHandler(0, false));

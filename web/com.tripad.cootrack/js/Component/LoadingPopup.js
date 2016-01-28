@@ -107,10 +107,12 @@ isc.TMC_LoadingPopup.addProperties({
 
   
   var callback = function(rpcResponse, data, rpcRequest) {
+	var isSukses = true;
     //isc.say(OB.I18N.getLabel('OBEXAPP_SumResult', [data.total]));
     hasilCallback = data.jawaban;
     if (hasilCallback != '') {
-      isc.say(hasilCallback)
+    	isSukses = false;
+    	isc.say(hasilCallback)
     }
    // console.log(pop);
      pop.close();
@@ -121,19 +123,29 @@ isc.TMC_LoadingPopup.addProperties({
     if(typeof pop.view.viewGrid !== 'undefined'){
       pop.view.viewGrid.refreshGrid();
       //rpcRequest.clientContext.popup.view.viewGrid.refreshGrid();
-      pop.view.messageBar.setMessage(isc.OBMessageBar.TYPE_SUCCESS,'Success','Berhasil menarik data');
+      if (isSukses) {
+    	  pop.view.messageBar.setMessage(isc.OBMessageBar.TYPE_SUCCESS,'Success','Berhasil menarik data');
+      } else {
+    	  pop.view.messageBar.setMessage(isc.OBMessageBar.TYPE_ERROR,'Error','Data tidak tertarik sepenuhnya');
+      }
     };
 	
     if(typeof pop.params.button !== 'undefined'){
       pop.params.button.contextView.viewGrid.refreshGrid();
       //rpcRequest.clientContext.popup.params.button.contextView.viewGrid.refreshGrid();
-      pop.params.button.contextView.messageBar.setMessage(isc.OBMessageBar.TYPE_SUCCESS,'Success','Berhasil menarik data');
+      if (isSukses) {
+    	  pop.params.button.contextView.messageBar.setMessage(isc.OBMessageBar.TYPE_SUCCESS,'Success','Berhasil menarik data');
+      } else {
+    	  pop.params.button.contextView.messageBar.setMessage(isc.OBMessageBar.TYPE_ERROR,'Error','Data tidak tertarik sepenuhnya');
+      }
     };
   }
   
   //error callback
   	var callbackerror = function() {
-	  	pop.close();
+  		//do nothing??
+	  	/*
+  		pop.close();
 	    if(typeof pop.view.viewGrid !== 'undefined'){
 	      pop.view.viewGrid.refreshGrid();
 	      //rpcRequest.clientContext.popup.view.viewGrid.refreshGrid();
@@ -147,14 +159,16 @@ isc.TMC_LoadingPopup.addProperties({
 	      //rpcRequest.clientContext.popup.params.button.contextView.viewGrid.refreshGrid();
 	    };
 	    
-	    isc.say("Gagal Terhubung dengan server,Harap Cek Koneksi internet anda  : Read Timed out");
+	    isc.say("Gagal Terhubung dengan server,Harap Cek Koneksi internet anda  : Read Timed out"); */
 	  }
+  	//isc.RPCManager.defaultTimeout = 0;
+  	//isc.RPCManager.evalResult = false;
   	console.log(isc.RPCManager);
   OB.RemoteCallManager.call(this.actionHandler, {
     headers: this.headers,
     action: this.params.action
     //,dateParam: this.popup.mainform.getField('Date').getValue(), //send the parameter to the server too
-  }, {}, callback, {popup: this}/*, callbackerror*/);
+  }, {}, callback, {popup: this}, callbackerror);
  
 }
 
