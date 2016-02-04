@@ -51,7 +51,7 @@ public class RefreshListBPFromOA extends BaseActionHandler {
     } catch (Throwable t) {
       System.out.println("MASUK Throwable");
       //t.printStackTrace();
-      json.put("jawaban", t.getMessage());
+      json.put("jawaban", "Internal Error : "+t.getMessage());
     } finally {
       return json;
     }

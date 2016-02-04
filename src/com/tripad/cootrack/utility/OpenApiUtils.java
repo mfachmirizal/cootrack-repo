@@ -60,7 +60,7 @@ public class OpenApiUtils {
   }
   */
   private JSONObject requestData(String action, String... param)
-      throws JSONException, Throwable, CustomJsonErrorResponseException {
+      throws JSONException, CustomJsonErrorResponseException {
     String commonParam = "";
     TmcToken token = getToken();
     if (token == null) {
@@ -158,7 +158,7 @@ public class OpenApiUtils {
   }
 
   public JSONObject requestListChildAccount(String target)
-      throws JSONException, Throwable, CustomJsonErrorResponseException {
+      throws JSONException, CustomJsonErrorResponseException {
     JSONObject jsonData;
     System.out.println("Target : " + target);
     if (target != null) {
@@ -173,7 +173,7 @@ public class OpenApiUtils {
   }
 
   public JSONObject requestStatusFilteredCarByImei(String imeis)
-      throws JSONException, Throwable, CustomJsonErrorResponseException {
+      throws JSONException, CustomJsonErrorResponseException {
     JSONObject jsonData;
     jsonData = requestData("tracking", imeis);
 

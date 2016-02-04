@@ -26,6 +26,7 @@ import org.openbravo.model.common.businesspartner.Category;
 import com.tripad.cootrack.data.TmcCar;
 import com.tripad.cootrack.data.TmcDocumentUpdate;
 import com.tripad.cootrack.data.TmcDocumentUpdateLine;
+import com.tripad.cootrack.utility.exception.CustomJsonErrorResponseException;
 //import com.tripad.cootrack.data.TmcListChildAcc;
 import java.util.HashMap;
 import java.util.Map;
@@ -96,12 +97,12 @@ public class ResponseResultToDB {
         OBDal.getInstance().commitAndClose();
     }
 */
-    public void validateBPList(JSONObject hasilRetrieve) throws Exception, OBException ,JSONException,Throwable{
+    public void validateBPList(JSONObject hasilRetrieve) throws Exception, OBException ,JSONException,CustomJsonErrorResponseException,Throwable{
         validateBPList(hasilRetrieve,null,null,null);
     }
 
     public void validateBPList(JSONObject hasilRetrieve,Category bpCatParam,ArrayList<String> tempIdDataServerParam,ArrayList<String> tempImeiServerParam)
-            throws Exception, OBException, JSONException,Throwable {
+            throws Exception, OBException, JSONException,CustomJsonErrorResponseException,Throwable {
         //System.out.println("terpanggil");
         ArrayList<String> tempIdDataServer = null;
         ArrayList<String> tempImeiServer = null;
@@ -325,7 +326,7 @@ public class ResponseResultToDB {
     }
 
     public void validateCarStatusList(String header_id, JSONObject hasilRetrieve)
-            throws Exception, OBException ,JSONException,Throwable{
+            throws Exception, OBException ,JSONException,Throwable,CustomJsonErrorResponseException{
         List<String> tempValidDocumentUpdateLine = new ArrayList<String>();
         JSONArray carList = (JSONArray) hasilRetrieve.get("data");
         // OBCriteria<TmcListChildAcc> tmcNotExsListChildAcc = null;
@@ -553,7 +554,7 @@ public class ResponseResultToDB {
         }
     }
 
-    private ArrayList<String> validateCar(JSONObject hasilTarget,BusinessPartner bp) throws JSONException,Throwable{
+    private ArrayList<String> validateCar(JSONObject hasilTarget,BusinessPartner bp) throws JSONException,CustomJsonErrorResponseException,Throwable{
         ArrayList<String> tempImeiServer = new ArrayList<String>();
 
 //        if (hasilTarget.get("ret").toString().equals("5555")) {
@@ -603,7 +604,7 @@ public class ResponseResultToDB {
         return tempImeiServer;
     }
 
-    private BusinessPartner validateRootBP(JSONObject hasilTarget) throws Throwable {
+    private BusinessPartner validateRootBP(JSONObject hasilTarget) throws CustomJsonErrorResponseException,Throwable {
       BusinessPartner result = null;
       System.out.println("buat root bp");
 //               if (hasilTarget.get("ret").toString().equals("5555")) {
