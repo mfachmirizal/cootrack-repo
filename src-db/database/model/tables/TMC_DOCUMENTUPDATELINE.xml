@@ -54,7 +54,7 @@
         <onCreateDefault/>
       </column>
       <column name="MASAAKTIF" primaryKey="false" required="false" type="TIMESTAMP" size="7" autoIncrement="false">
-        <default/>
+        <default><![CDATA[SYSDATE]]></default>
         <onCreateDefault/>
       </column>
       <column name="SISAPULSA" primaryKey="false" required="true" type="DECIMAL" autoIncrement="false">
