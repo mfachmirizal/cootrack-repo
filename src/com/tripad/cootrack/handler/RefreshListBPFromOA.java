@@ -49,9 +49,10 @@ public class RefreshListBPFromOA extends BaseActionHandler {
       System.out.println("MASUK JSONEXCEPTION");
       json.put("jawaban", e.getMessage());
     } catch (Throwable t) {
-      System.out.println("MASUK Throwable");
+      System.out.print("MASUK Throwable : Internal Error :");
+      System.out.println(": " + t.getMessage());
       //t.printStackTrace();
-      json.put("jawaban", "Internal Error : "+t.getMessage());
+      json.put("jawaban", "Internal Error : " + t.getMessage());
     } finally {
       return json;
     }

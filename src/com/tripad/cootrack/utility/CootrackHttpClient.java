@@ -42,7 +42,7 @@ public class CootrackHttpClient {
   private HttpUriRequest request = null;
   private HttpResponse response = null;
   private static boolean inProcess = false;
-  private final int LAMA_TIMEOUT = 5;
+  private final int LAMA_TIMEOUT = 7;
 
   public CootrackHttpClient() {
   }
