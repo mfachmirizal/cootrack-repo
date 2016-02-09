@@ -40,26 +40,70 @@ isc.TMC_LoadingPopup.addProperties({
       popup: this,
       action: function () {
 
-        //isc.say('test : '+this.popup.headers[0]);
-        ///////////////
-        var hasilCallback;
-        var callback = function(rpcResponse, data, rpcRequest) {
-          //isc.say(OB.I18N.getLabel('OBEXAPP_SumResult', [data.total]));
-          hasilCallback = data.jawaban;
-          if (hasilCallback != '') {
-            isc.say(hasilCallback)
-          }
-          console.log('Hasil CB : '+hasilCallback);
-          rpcRequest.clientContext.popup.closeClick();
-        }
-        OB.RemoteCallManager.call(this.popup.actionHandler, {
-          headers: this.popup.headers,
+        /*
+    	    console.log(this.title);
+            console.log(this.popup.cancelButton.title);
+            console.log(this.popup.mainform.fields[0].value);
+            var pop = this.popup;
+            //this.disabled =true;
+            //this.popup.cancelButton.disabled = true;
+            pop.mainform.fields[0].value = 'HMM';
+
+            //pop.view.messageBar.setMessage(isc.OBMessageBar.TYPE_SUCCESS,'Success','Berhasil menarik data');
+            console.log(pop.items[0].members[1].members[0]);
+            pop.items[0].members[1].members[0].title = "EVOL";
+            pop.redraw();
+
           action: this.popup.params.action
           //,dateParam: this.popup.mainform.getField('Date').getValue(), //send the parameter to the server too
         }, {}, callback, {popup: this.popup});
         /////////////////////////////////////////////////////////////////////////////////////////////////////////
+	*/
+   //start
+    	  var hasilCallback,pop = this.popup;
+    	  var callback = function(rpcResponse, data, rpcRequest) {
+    			var isSukses = true;
+    		    //isc.say(OB.I18N.getLabel('OBEXAPP_SumResult', [data.total]));
+    		    hasilCallback = data.jawaban;
+    		    if (hasilCallback != '') {
+    		    	isSukses = false;
+    		    	isc.say(hasilCallback)
+    		    }
+    		   // console.log(pop);
+    		     pop.close();
+    		   //rpcRequest.clientContext.popup.closeClick();
+    		    
+    		    //rpcRequest.clientContext.popup.close();
+    		   
+    		    if(typeof pop.view.viewGrid !== 'undefined'){
+    		      pop.view.viewGrid.refreshGrid();
+    		      //rpcRequest.clientContext.popup.view.viewGrid.refreshGrid();
+    		      if (isSukses) {
+    		    	  pop.view.messageBar.setMessage(isc.OBMessageBar.TYPE_SUCCESS,'Success','Berhasil menarik data');
+    		      } else {
+    		    	  pop.view.messageBar.setMessage(isc.OBMessageBar.TYPE_ERROR,'Error','Data tidak tertarik sepenuhnya');
+    		      }
+    		    };
+    			
+    		    if(typeof pop.params.button !== 'undefined'){
+    		      pop.params.button.contextView.viewGrid.refreshGrid();
+    		      //rpcRequest.clientContext.popup.params.button.contextView.viewGrid.refreshGrid();
+    		      if (isSukses) {
+    		    	  pop.params.button.contextView.messageBar.setMessage(isc.OBMessageBar.TYPE_SUCCESS,'Success','Berhasil menarik data');
+    		      } else {
+    		    	  pop.params.button.contextView.messageBar.setMessage(isc.OBMessageBar.TYPE_ERROR,'Error','Data tidak tertarik sepenuhnya');
+    		      }
+    		    };
+    		  }
 
-
+    	  console.log('hheader : '+pop.params.headers);
+    	  console.log('action : '+pop.params.action)
+    		  OB.RemoteCallManager.call(pop.actionHandler, {
+    		    headers: pop.params.headers,
+    		    action: pop.params.action
+    		    //,dateParam: this.popup.mainform.getField('Date').getValue(), //send the parameter to the server too
+    		  }, {}, callback, {popup: this});
+//end
       }
     });
 
@@ -68,7 +112,7 @@ isc.TMC_LoadingPopup.addProperties({
       title: 'Cancel',
       popup: this,
       action: function () {
-        this.popup.closeClick();
+        this.popup.close();
       }
     });
 
@@ -88,20 +132,20 @@ isc.TMC_LoadingPopup.addProperties({
             membersMargin: 6,
             members: this.mainform
           })
-          /*,
+          ,
           isc.HLayout.create({
           defaultLayoutAlign: "center",
           align: "center",
           membersMargin: 10,
           members: [this.okButton, this.cancelButton]
         })
-        */
+        
       ]
     })
   ];
 
   this.Super('initWidget', arguments);
-
+/*
   //eksekusi di background
   var hasilCallback,pop = this;
 
@@ -141,35 +185,14 @@ isc.TMC_LoadingPopup.addProperties({
     };
   }
   
-  //error callback
-  	var callbackerror = function() {
-  		//do nothing??
-	  	/*
-  		pop.close();
-	    if(typeof pop.view.viewGrid !== 'undefined'){
-	      pop.view.viewGrid.refreshGrid();
-	      //rpcRequest.clientContext.popup.view.viewGrid.refreshGrid();
-
-	      pop.view.messageBar.setMessage(isc.OBMessageBar.TYPE_ERROR,'Error','Data tidak tertarik sepenuhnya');
-	    };
-	    if(typeof pop.params.button !== 'undefined'){
-	      pop.params.button.contextView.viewGrid.refreshGrid();
-	      
-	      pop.params.button.contextView.messageBar.setMessage(isc.OBMessageBar.TYPE_ERROR,'Error','Data tidak tertarik sepenuhnya');
-	      //rpcRequest.clientContext.popup.params.button.contextView.viewGrid.refreshGrid();
-	    };
-	    
-	    isc.say("Gagal Terhubung dengan server,Harap Cek Koneksi internet anda  : Read Timed out"); */
-	  }
-  	//isc.RPCManager.defaultTimeout = 0;
-  	//isc.RPCManager.evalResult = false;
-  	console.log(isc.RPCManager);
+  
   OB.RemoteCallManager.call(this.actionHandler, {
     headers: this.headers,
     action: this.params.action
     //,dateParam: this.popup.mainform.getField('Date').getValue(), //send the parameter to the server too
   }, {}, callback, {popup: this}, callbackerror);
- 
+ */
+  
 }
 
 });

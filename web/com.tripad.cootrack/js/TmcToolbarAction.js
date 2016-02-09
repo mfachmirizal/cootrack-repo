@@ -76,28 +76,13 @@
 
         var buttonRefreshListBPFromOA = {
         action: function(){
+        	
             var ids = [], i, view = this.view, grid = view.viewGrid, selectedRecords = grid.getSelectedRecords(), idtab = view.tabId ;
             var callback, headers = [], hasilCallback ='';
             var string_id="",postParams = [];
             var command = "";
             var baseContainer = this;
 
-            /*
-            baseContainer.setDisabled(true);
-            headers.push('iseng_di_isi');
-            callback = function(rpcResponse, data, rpcRequest) {
-                //isc.say(OB.I18N.getLabel('OBEXAPP_SumResult', [data.total]));
-                hasilCallback = data.jawaban;
-                if (hasilCallback != '') {
-                    isc.say(hasilCallback)
-                }
-                //isc.say('Token : '+hasilCallback);
-                console.log('Hasil CB : '+hasilCallback);
-                grid.refreshGrid();
-                baseContainer.setDisabled(false);
-            }
-            OB.RemoteCallManager.call('com.tripad.cootrack.handler.RefreshListBPFromOA', {headers: headers}, {}, callback);
-            */
             //postParams.action[0] = 'dari toolbar';
             var params = {action:'kosong'};
 
@@ -107,7 +92,14 @@
               params: params,
               actionHandler: 'com.tripad.cootrack.handler.RefreshListBPFromOA'
             }).show();
-
+		
+        	//test
+            /*var dialog = 
+            	OB.Utilities.createDialog('TEST');
+            	dialog.setContent(view); //form
+            	dialog.show();
+            	console.log(dialog);
+            	*/
         },
         buttonType: 'tmc_refreshlistbpfromoa',
         prompt: 'Refresh List Business Partner dari OpenApi',
