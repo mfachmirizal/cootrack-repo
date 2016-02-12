@@ -31,6 +31,7 @@ import com.tripad.cootrack.utility.exception.CustomJsonErrorResponseException;
 public class RefreshListFilteredStatusCarByImei extends BaseActionHandler {
   private User COOTRACK_USER = OBContext.getOBContext().getUser();
 
+  @SuppressWarnings("finally")
   protected JSONObject execute(Map<String, Object> parameters, String data) {
     JSONObject json = new JSONObject();
     String headerId = "";
@@ -71,7 +72,6 @@ public class RefreshListFilteredStatusCarByImei extends BaseActionHandler {
           count++;
         }
 
-        int cc = 0;
         for (String wave : waveList) {
           //String arr[] = utils.convertToArray(wave.substring(1), ",");
           // requestData disini
@@ -82,8 +82,7 @@ public class RefreshListFilteredStatusCarByImei extends BaseActionHandler {
           } else {
             new ResponseResultToDB().validateCarStatusList(headerId, hasilRetrieve);
           }
-          Thread.sleep(45);
-          cc++;
+          Thread.sleep(50);
         }
 
         json.put("jawaban", hasil);
@@ -99,7 +98,7 @@ public class RefreshListFilteredStatusCarByImei extends BaseActionHandler {
       System.out.println("HASIL : EXCEPTION");
       json.put("jawaban", e.getMessage());
     } catch (Throwable t) {
-      json.put("jawaban", "Internal Error : "+t.getMessage());
+      json.put("jawaban", "Internal Error : " + t.getMessage());
     } finally {
       return json;
     }

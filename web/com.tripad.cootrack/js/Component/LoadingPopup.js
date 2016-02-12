@@ -25,12 +25,12 @@ isc.TMC_LoadingPopup.addProperties({
       numCols: 1,
       fields: [{
         name: 'StatusText',
-        title: 'Status',
-        value:'Retrieving data, please wait...',
+        title: 'Confirmation',
+        value:'Retrieve data ?',
         disabled : true,
         height: 20,
         width: 200,
-        type: '_id_10' //Date reference
+        type: '_id_10' //String reference
       }]
     });
 
@@ -39,28 +39,26 @@ isc.TMC_LoadingPopup.addProperties({
       title: 'OK',
       popup: this,
       action: function () {
+    	  var pop = this.popup;
+    	  
+    	  var fieldParam = [{
+              name: 'StatusTextAfter',
+              title: 'Status',
+              value:'Retrieving data, please wait... Do not close / refresh browser.',
+              type: '_id_10',
+              disabled : true,
+              height: 20,
+              width: 350
+            }];
 
-        /*
-    	    console.log(this.title);
-            console.log(this.popup.cancelButton.title);
-            console.log(this.popup.mainform.fields[0].value);
-            var pop = this.popup;
-            //this.disabled =true;
-            //this.popup.cancelButton.disabled = true;
-            pop.mainform.fields[0].value = 'HMM';
-
-            //pop.view.messageBar.setMessage(isc.OBMessageBar.TYPE_SUCCESS,'Success','Berhasil menarik data');
-            console.log(pop.items[0].members[1].members[0]);
-            pop.items[0].members[1].members[0].title = "EVOL";
-            pop.redraw();
-
-          action: this.popup.params.action
-          //,dateParam: this.popup.mainform.getField('Date').getValue(), //send the parameter to the server too
-        }, {}, callback, {popup: this.popup});
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////
-	*/
+          pop.mainform.setFields(fieldParam);
+            
+    	  //pop.mainform.fields[0].title = 'Status';
+    	  //pop.mainform.fields[0].value = 'Retrieving data, please wait... Do not close / refresh';
+    	  pop.cancelButton.setDisabled(true);
+          this.setDisabled(true);
    //start
-    	  var hasilCallback,pop = this.popup;
+    	  var hasilCallback;
     	  var callback = function(rpcResponse, data, rpcRequest) {
     			var isSukses = true;
     		    //isc.say(OB.I18N.getLabel('OBEXAPP_SumResult', [data.total]));

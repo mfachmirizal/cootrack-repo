@@ -20,6 +20,7 @@ import com.tripad.cootrack.utility.exception.CustomJsonErrorResponseException;
  * @author mfachmirizal
  */
 public class RefreshListBPFromOA extends BaseActionHandler {
+  @SuppressWarnings("finally")
   protected JSONObject execute(Map<String, Object> parameters, String data) {
     String hasil = "";
     JSONObject json = new JSONObject();
@@ -51,7 +52,6 @@ public class RefreshListBPFromOA extends BaseActionHandler {
     } catch (Throwable t) {
       System.out.print("MASUK Throwable : Internal Error :");
       System.out.println(": " + t.getMessage());
-      //t.printStackTrace();
       json.put("jawaban", "Internal Error : " + t.getMessage());
     } finally {
       return json;

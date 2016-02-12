@@ -10,6 +10,7 @@ import com.tripad.cootrack.utility.OpenApiUtils;
 
 public class RefreshTokenHandler extends BaseActionHandler {
 
+  @SuppressWarnings("finally")
   protected JSONObject execute(Map<String, Object> parameters, String data) {
     String hasil = "";
     JSONObject json = new JSONObject();
