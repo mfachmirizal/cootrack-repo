@@ -5,6 +5,7 @@
 */
 package com.tripad.cootrack.handler;
 
+import com.tripad.cootrack.utility.CootrackHttpClient;
 import java.util.Map;
 
 import org.codehaus.jettison.json.JSONException;
@@ -14,17 +15,25 @@ import org.openbravo.client.kernel.BaseActionHandler;
 import com.tripad.cootrack.utility.OpenApiUtils;
 import com.tripad.cootrack.utility.ResponseResultToDB;
 import com.tripad.cootrack.utility.exception.CustomJsonErrorResponseException;
+import org.openbravo.dal.core.OBContext;
+import org.openbravo.model.ad.access.User;
 
 /**
  *
  * @author mfachmirizal
  */
 public class RefreshListBPFromOA extends BaseActionHandler {
+  static User COOTRACK_USER = OBContext.getOBContext().getUser();
+  
+  static CootrackHttpClient con = new CootrackHttpClient();
+  static OpenApiUtils utils = new OpenApiUtils(con,COOTRACK_USER);
+    
   @SuppressWarnings("finally")
   protected JSONObject execute(Map<String, Object> parameters, String data) {
     String hasil = "";
+    
     JSONObject json = new JSONObject();
-    OpenApiUtils utils = new OpenApiUtils();
+    
 
     // ArrayList<String> tempIdDataServer = new ArrayList<String>();
     try {
@@ -34,8 +43,10 @@ public class RefreshListBPFromOA extends BaseActionHandler {
 
         if (hasil.length() == 0) {
           // Retrieve seluruh Data dari OpenAPi Ke BP
-          new ResponseResultToDB().validateBPList(hasilRetrieve);
+          new ResponseResultToDB(utils).validateBPList(hasilRetrieve);
         }
+        
+        
         json.put("jawaban", hasil);
 
       } else {
@@ -46,14 +57,18 @@ public class RefreshListBPFromOA extends BaseActionHandler {
     } catch (CustomJsonErrorResponseException jre) {
       System.out.println("MASUK JSONEXCEPTION");
       json.put("jawaban", jre.getMessage());
+      return json;
     } catch (JSONException e) {
       System.out.println("MASUK JSONEXCEPTION");
       json.put("jawaban", e.getMessage());
-    } catch (Throwable t) {
+      return json;
+    } catch (Exception t) {
+      json.put("jawaban", "Internal Error : " + t.getMessage());
       System.out.print("MASUK Throwable : Internal Error :");
       System.out.println(": " + t.getMessage());
-      json.put("jawaban", "Internal Error : " + t.getMessage());
+      return json;
     } finally {
+      con.shutdown();
       return json;
     }
   }

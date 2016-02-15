@@ -12,7 +12,7 @@ public class RefreshTokenHandler extends BaseActionHandler {
 
   @SuppressWarnings("finally")
   protected JSONObject execute(Map<String, Object> parameters, String data) {
-    String hasil = "";
+   /* String hasil = "";
     JSONObject json = new JSONObject();
     OpenApiUtils utils = new OpenApiUtils();
     try {
@@ -47,5 +47,7 @@ public class RefreshTokenHandler extends BaseActionHandler {
     } finally {
       return json;
     }
+           */
+      return null;
   }
 }

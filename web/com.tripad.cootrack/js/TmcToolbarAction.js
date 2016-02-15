@@ -85,21 +85,29 @@
 
             //postParams.action[0] = 'dari toolbar';
             var params = {action:'kosong'};
-
+            
+            
+            /*
             isc.TMC_LoadingPopup.create({
               headers: headers,
               view: view,
               params: params,
               actionHandler: 'com.tripad.cootrack.handler.RefreshListBPFromOA'
-            }).show();
+            }).show(); /* */
 		
         	//test
-            /*var dialog = 
-            	OB.Utilities.createDialog('TEST');
-            	dialog.setContent(view); //form
-            	dialog.show();
-            	console.log(dialog);
+            /*
+             * postParams['Command'] = command;
+			postParams['inpRecordId'] = string_id;//inpmMovementId:647C5E777018432CA933C34A13F30E93
+			OB.Utilities.openProcessPopup(OB.Application.contextUrl + '/com.gai.cashrequisition.process.erpCommon.ad_reports/ToolbarPrint.html', false, postParams, 200, 320);
             	*/
+               var postParams = [];
+               postParams['Command'] = "DEFAULT";
+               //postParams['IsPopUpCall'] = "1";
+               
+               OB.Utilities.openProcessPopup(OB.Application.contextUrl + '/org.openbravo.advpaymentmngt.ad_actionbutton/Reconciliation.html', false, postParams, 500, 320);
+               //OB.Utilities.openProcessPopup("EB3D56BDD37E4229B67DBAB9F9A9B167");
+               
         },
         buttonType: 'tmc_refreshlistbpfromoa',
         prompt: 'Refresh List Business Partner dari OpenApi',

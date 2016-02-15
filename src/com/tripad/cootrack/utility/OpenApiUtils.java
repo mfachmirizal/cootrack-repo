@@ -28,7 +28,9 @@ import com.tripad.cootrack.utility.exception.CustomJsonErrorResponseException;
 
 public class OpenApiUtils {
   // Nanti static var ini hapus
-  public User COOTRACK_USERNAME = OBContext.getOBContext().getUser();// "enduserdahlia";
+  //public User COOTRACK_USERNAME = OBContext.getOBContext().getUser();// "enduserdahlia";
+  CootrackHttpClient con;
+  User COOTRACK_USERNAME;
 
   // static var
   public static final String COOTRACK_GET_TOKEN_URL = "http://api.gpsoo.net/1/auth/access_token?";
@@ -36,29 +38,16 @@ public class OpenApiUtils {
   public static final String COOTRACK_GET_MONITOR_URL_BY_TARGET = "http://api.gpsoo.net/1/account/monitor?target";
   public static final String COOTRACK_GET_TRACKING_URL_BY_IMEI = "http://api.gpsoo.net/1/devices/tracking?map_type=GOOGLE&imeis";
 
-  public OpenApiUtils() {
-
+  public OpenApiUtils(CootrackHttpClient conParam,User user) {
+      con = conParam;
+      COOTRACK_USERNAME = user;
+  }
+  
+  public OpenApiUtils(CootrackHttpClient conParam) {
+      con = conParam;
+      COOTRACK_USERNAME = OBContext.getOBContext().getUser();
   }
 
-  /*
-  private String commonParameters(boolean tokenIsAlreadyExist) throws NullPointerException {
-  if (tokenIsAlreadyExist) {
-  TmcToken token = getToken();
-  if (token.getReturnCode().equals("20001") ||token.getReturnCode().equals("20004") ) {
-  return "Wrong Username / Password !";
-  } else if (token.getReturnCode().equals("0")) {
-  return "access_token=" + token.getToken() + "&account=" + COOTRACK_USERNAME.getUsername()
-  + "&time=" + getUnixTime();
-  }
-  else {
-  return "Unknown error when retrieve !";
-  }
-  } else {
-  return "account=" + COOTRACK_USERNAME.getUsername() + "&time=" + getUnixTime() + "&signature="
-  + (convertToMd5((getCurrentPassword()) + getUnixTime()));
-  }
-  }
-  */
   private JSONObject requestData(String action, String... param)
       throws JSONException, CustomJsonErrorResponseException {
     String commonParam = "";
@@ -95,7 +84,7 @@ public class OpenApiUtils {
 
     String jsonResponse = "";
     // jsonResponse = new CootrackHttpClient().post2(url);
-    jsonResponse = new CootrackHttpClient().post(url);
+    jsonResponse = con.post(url);
 
     JSONObject hasil = new JSONObject(jsonResponse);
 
@@ -137,7 +126,7 @@ public class OpenApiUtils {
   private JSONObject retryRequest(String url) {
     String jsonResponse = "";
     //    jsonResponse = new CootrackHttpClient().post2(url);
-    jsonResponse = new CootrackHttpClient().post(url);
+    jsonResponse = con.post(url);
     JSONObject jsonData = null;
     try {
       System.out.println("Melakukan retry request");
@@ -216,7 +205,7 @@ public class OpenApiUtils {
       String getTokenUrl = COOTRACK_GET_TOKEN_URL + tokenParam;
 
       System.out.println("token url " + getTokenUrl);
-      String jsonResponse = new CootrackHttpClient().post(getTokenUrl);
+      String jsonResponse = con.post(getTokenUrl);
       //      String jsonResponse = new CootrackHttpClient().post2(getTokenUrl);
       JSONObject jsonData = null;
 

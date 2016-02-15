@@ -28,9 +28,11 @@ package com.tripad.cootrack.erpCommon.ad_form;
 
 import com.tripad.cootrack.data.TmcToken;
 import com.tripad.cootrack.data.TmcUserSync;
+import com.tripad.cootrack.utility.CootrackHttpClient;
 import com.tripad.cootrack.utility.OpenApiUtils;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.text.SimpleDateFormat;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -50,12 +52,16 @@ import org.openbravo.erpCommon.utility.LeftTabsBar;
 import org.openbravo.erpCommon.utility.NavigationBar;
 import org.openbravo.erpCommon.utility.OBError;
 import org.openbravo.erpCommon.utility.ToolBar;
+import org.openbravo.model.ad.access.User;
 import org.openbravo.xmlEngine.XmlDocument;
 //entitas
 //fooEntitas
 
 public class CootrackUserSynchronization extends HttpSecureAppServlet {
     private static final long serialVersionUID = 1L;
+    
+    static CootrackHttpClient con = new CootrackHttpClient();
+    
     
     
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException,
@@ -77,7 +83,7 @@ public class CootrackUserSynchronization extends HttpSecureAppServlet {
             
             String strStatusText = "";
             if (tmcuserSync != null) {
-                strStatusText = "This User is synchronized ! <p style=\"color:black\"> [last synchronized : "+tmcuserSync.getUpdated()+"] </p>";
+                strStatusText = "This User is synchronized ! <p style=\"color:black\"> [last synchronized : "+new SimpleDateFormat("dd-MM-yyyy").format(tmcuserSync.getUpdated())+"] </p>";
             } else {
                 strStatusText = "This User is not synchronized ! ";
             }
@@ -104,12 +110,8 @@ public class CootrackUserSynchronization extends HttpSecureAppServlet {
             VariablesSecureApp vars,String strWindowId, String strTabId,String strUserID,String strUser,String strPassword) throws IOException, ServletException {
         
         OBError myMessage = new OBError();
-        OpenApiUtils ou = new OpenApiUtils();
+        OpenApiUtils ou = new OpenApiUtils(con);
         
-        
-        
-        
-        //1. delete dlu token yg skrg
         ou.deleteToken();
         
         //2. delete record tmcUserSync untuk user ini
@@ -126,6 +128,11 @@ public class CootrackUserSynchronization extends HttpSecureAppServlet {
         OBDal.getInstance().flush();
         OBDal.getInstance().commitAndClose();
         
+        try {
+            con.shutdown();
+        } catch(Exception e) {
+            //do nothing
+        }
         //4. dapatkan token ke OpenAPi
         TmcToken token = ou.getToken();
         if (token.getReturnCode().equals("20001") || token.getReturnCode().equals("20004")) {
@@ -136,119 +143,12 @@ public class CootrackUserSynchronization extends HttpSecureAppServlet {
             myMessage.setMessage("Wrong Username / Password !");
             return myMessage;
         }
-        
-        /*
-        // BEGIN check for missing parameters and return in error in the case
-        if (strMProductId == null || strMProductId.equals("")) {
-        myMessage.setTitle("Error");
-        myMessage.setType("ERROR");
-        myMessage.setMessage(Utility.messageBD(this, "HT_NoProductsSelected", vars.getLanguage()));
-        return myMessage;
-        }
-        if (strNewProductCategory == null || strNewProductCategory.equals("")) {
-        myMessage.setTitle("Error");
-        myMessage.setType("ERROR");
-        myMessage.setMessage(Utility.messageBD(this, "HT_NoNewProductCategorySelected", vars
-        .getLanguage()));
-        return myMessage;
-        }
-        // END check for missing parameters and return in error in the case
-        
-        try {
-        // peform the actual processing - setting the new product category for the selected products
-        intUpdatedProducts = BatchSetProductCategoryData.process(this, strNewProductCategory,
-        strMProductId);
-        } catch (Exception e) {
-        myMessage.setTitle("Error");
-        myMessage.setType("ERROR");
-        myMessage.setMessage(Utility.messageBD(this, "HT_NewProductCategorySetError", vars
-        .getLanguage())
-        + e.toString());
-        return myMessage;
-        }
-        */
+
         myMessage.setTitle("Success");
         myMessage.setType("SUCCESS");
         myMessage.setMessage("User Synchronization Successfully !");
         return myMessage;
     }
-    
-    /*void process(HttpServletRequest request, HttpServletResponse response,
-    VariablesSecureApp vars,String strWindowId, String strTabId,String strUserID,String strUser,String strPassword) throws IOException, ServletException {
-    if (log4j.isDebugEnabled())
-    log4j.debug("Output: dataSheet");
-    
-    OBError myMessage = new OBError();
-    OBContext.setAdminMode();
-    vars.setMessage("CootrackUserSynchronization", null);
-    
-    /*
-    String strErrorMsg = "";
-    OBError myMessage = new OBError();
-    OBContext.setAdminMode();
-    strErrorMsg = myMessage.getMessage();
-    
-    String[] listId = convertToArray(strID);
-    
-    String dbgText = "("+listId.length+") "+"ID : "+strID+" <> strTab : "+strTabId+" <> strWindow "+strWindowId+
-    " <> strNoSuratIjinBelajar : "+strNoSuratIjinBelajar+" <> strTglSuratIjinBelajar : "+strTglSuratIjinBelajar+" <> strNomorSK:"+strNomorSK+" <> strTglSk :"+strTglSk;
-    if (false) {
-    throw new OBException(dbgText);
-    }
-    
-    //loop untuk menjalankan procedure tiap id yg di kirim
-    int count = 0;
-    for (String stringid : listId) {
-    try {
-    List<Object> params = new ArrayList<Object>();
-    params.add(stringid);
-    params.add((String) DalUtil.getId(OBContext.getOBContext().getUser()));
-    /*if(strTabId.equals("6344C616BEF849EE8551DA1E69FDA2BE")){
-    params.add(strNoSuratIjinBelajar);
-    params.add(strTglSuratIjinBelajar);
-    }
-    else {
-    
-    params.add("");
-    params.add("");
-    //}
-    params.add(strNomorSK);
-    params.add(strTglSk);
-    //params.add(strSenderCat);
-    
-    if(strTabId.equals("6344C616BEF849EE8551DA1E69FDA2BE")){
-    
-    CallStoredProcedure.getInstance().call("gib_tugas_proses_java", params, null, true, false);
-    
-    }else{
-    
-    CallStoredProcedure.getInstance().call("gib_ijin_proses_java", params, null, true, false);
-    }
-    //log4j.debug("lewat proses, tab : "+strTabId+" id : "+strID+" : "+(String) DalUtil.getId(OBContext.getOBContext().getUser())+"() ["+strDebug+"] = "+strGLItemId);
-    //log4j.debug("ID ke["+count+"] : "+stringid+"");
-    count=count+1;
-    
-    } catch (Exception e) {
-    //OBDal.getInstance().rollbackAndClose();
-    log4j.info(e.getMessage());
-    myMessage = Utility.translateError(this, vars, vars.getLanguage(), e.getMessage());
-    throw new IllegalStateException(e);
-    }
-    }
-    //end loop untuk menjalankan procedure tiap id yg di kirim
-    
-    
-    //OBDal.getInstance().commitAndClose();
-    
-    myMessage.setTitle("Success");
-    myMessage.setType("SUCCESS");
-    myMessage.setMessage(count+" List telah di proses");
-    
-    vars.setMessage(strTabId, myMessage); //D4EA5D16042D4E94889BCCDBB87F787A
-    
-    printPageClosePopUpAndRefreshParent(response, vars);
-    
-    }*/
     
     void printPageDataSheet(HttpServletResponse response, VariablesSecureApp vars,
             String strWindowId,String strTabId,String strUserID,String strUser,String strPassword,String strStatusText) throws IOException, ServletException {

@@ -36,8 +36,10 @@ import com.tripad.cootrack.utility.exception.CustomJsonErrorResponseException;
  */
 public class ResponseResultToDB {
   private User COOTRACK_USER = OBContext.getOBContext().getUser();
-
-  public ResponseResultToDB() {
+  OpenApiUtils utils;
+          
+  public ResponseResultToDB(OpenApiUtils utilsParam) {
+      utils = utilsParam;
   }
 
   public void validateBPList(JSONObject hasilRetrieve)
@@ -91,7 +93,7 @@ public class ResponseResultToDB {
 
     JSONArray childList = (JSONArray) hasilRetrieve.get("children");
 
-    OpenApiUtils utils = new OpenApiUtils();
+    
     String rslt = "";
     OBCriteria<BusinessPartner> tmcListChildAcc = null;
     // OBCriteria<TmcListChildAcc> tmcNotExsListChildAcc = null;
@@ -288,14 +290,14 @@ public class ResponseResultToDB {
         // update atau insert
         // perhitungan status disini
         String statusCategory = "";
-        int hourInterval = new OpenApiUtils().getIntervalFromUnix(Long.parseLong(sys_time.trim()),
+        int hourInterval = utils.getIntervalFromUnix(Long.parseLong(sys_time.trim()),
             Long.parseLong(server_time.trim()), "hours");
         //                int minInterval = new OpenApiUtils().getIntervalFromUnix(Long.parseLong(sys_time.trim()),
         //                        Long.parseLong(server_time.trim()), "minutes");
-        int dayInterval = new OpenApiUtils().getIntervalFromUnix(Long.parseLong(sys_time.trim()),
+        int dayInterval = utils.getIntervalFromUnix(Long.parseLong(sys_time.trim()),
             Long.parseLong(server_time.trim()), "days");
 
-        int nearExpired = new OpenApiUtils().getIntervalFromUnix(Long.parseLong(server_time.trim()),
+        int nearExpired = utils.getIntervalFromUnix(Long.parseLong(server_time.trim()),
             tmcCarCriteria.list().get(0).getOUTTime(), "days");
 
         //System.out.println("IMEI & Expired : "+imei+" & "+nearExpired);

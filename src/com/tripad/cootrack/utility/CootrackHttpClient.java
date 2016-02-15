@@ -11,6 +11,8 @@ import java.net.MalformedURLException;
 import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 //import org.apache.commons.httpclient.HttpException;
 //import org.apache.commons.httpclient.HttpStatus;
@@ -24,6 +26,7 @@ import org.apache.http.impl.client.DefaultHttpRequestRetryHandler;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
+import org.openbravo.base.exception.OBException;
 
 //ganti methodnya dengan ini : http://stackoverflow.com/questions/5769717/how-can-i-get-an-http-response-body-as-a-string-in-java
 /*
@@ -99,14 +102,9 @@ public class CootrackHttpClient {
       // Deal with the response.
       result = constructOutput.toString();// new String(responseBody);
 
-      System.out.println(result);
-      if (response.getEntity() != null) {
-        response.getEntity().consumeContent();
-      }
-      if (client != null) {
-        client.getConnectionManager().shutdown();
-      }
-
+      //System.out.println(result);
+      //asalnya is method shutdown ada disini
+      
     } catch (SocketTimeoutException z) {
       // handle timeouts
       inProcess = false;
@@ -124,6 +122,25 @@ public class CootrackHttpClient {
     }
     inProcess = false;
     return (result);
+  }
+  
+  public void shutdown() {
+      try {
+      if (response.getEntity() != null) {
+          try {
+              response.getEntity().consumeContent();
+          } catch (IOException ex) {
+              System.out.println("Masuk exception consumeContent : "+ex.getMessage());
+              Logger.getLogger(CootrackHttpClient.class.getName()).log(Level.SEVERE, null, ex);
+              throw new OBException("Error consumeContent ! : "+ex.getMessage());
+          }
+      }
+      if (client != null) {
+        client.getConnectionManager().shutdown();
+      }
+      } catch( Exception e) {
+          //do nothing
+      }
   }
 
   public void cancel() {
