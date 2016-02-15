@@ -59,48 +59,64 @@ isc.TMC_LoadingPopup.addProperties({
           this.setDisabled(true);
    //start
     	  var hasilCallback;
+    	  
     	  var callback = function(rpcResponse, data, rpcRequest) {
-    			var isSukses = true;
-    		    //isc.say(OB.I18N.getLabel('OBEXAPP_SumResult', [data.total]));
-    		    hasilCallback = data.jawaban;
-    		    if (hasilCallback != '') {
-    		    	isSukses = false;
-    		    	isc.say(hasilCallback)
-    		    }
-    		   // console.log(pop);
-    		     pop.close();
-    		   //rpcRequest.clientContext.popup.closeClick();
-    		    
-    		    //rpcRequest.clientContext.popup.close();
-    		   
-    		    if(typeof pop.view.viewGrid !== 'undefined'){
-    		      pop.view.viewGrid.refreshGrid();
-    		      //rpcRequest.clientContext.popup.view.viewGrid.refreshGrid();
-    		      if (isSukses) {
-    		    	  pop.view.messageBar.setMessage(isc.OBMessageBar.TYPE_SUCCESS,'Success','Berhasil menarik data');
-    		      } else {
-    		    	  pop.view.messageBar.setMessage(isc.OBMessageBar.TYPE_ERROR,'Error','Data tidak tertarik sepenuhnya');
-    		      }
-    		    };
-    			
-    		    if(typeof pop.params.button !== 'undefined'){
-    		      pop.params.button.contextView.viewGrid.refreshGrid();
-    		      //rpcRequest.clientContext.popup.params.button.contextView.viewGrid.refreshGrid();
-    		      if (isSukses) {
-    		    	  pop.params.button.contextView.messageBar.setMessage(isc.OBMessageBar.TYPE_SUCCESS,'Success','Berhasil menarik data');
-    		      } else {
-    		    	  pop.params.button.contextView.messageBar.setMessage(isc.OBMessageBar.TYPE_ERROR,'Error','Data tidak tertarik sepenuhnya');
-    		      }
-    		    };
-    		  }
-
-    	  console.log('hheader : '+pop.params.headers);
-    	  console.log('action : '+pop.params.action)
-    		  OB.RemoteCallManager.call(pop.actionHandler, {
+  			var isSukses = true;
+  		    //isc.say(OB.I18N.getLabel('OBEXAPP_SumResult', [data.total]));
+  		    hasilCallback = data.jawaban;
+  		    console.log("masuk callback, hasil : "+hasilCallback);
+  		    if (hasilCallback != '') {
+  		    	isSukses = false;
+  		    	isc.say(hasilCallback)
+  		    }
+  		   // console.log(pop);
+  		     pop.close();
+  		   //rpcRequest.clientContext.popup.closeClick();
+  		    
+  		    //rpcRequest.clientContext.popup.close();
+  		   
+  		    if(typeof pop.view.viewGrid !== 'undefined'){
+  		      pop.view.viewGrid.refreshGrid();
+  		      //rpcRequest.clientContext.popup.view.viewGrid.refreshGrid();
+  		      if (isSukses) {
+  		    	  pop.view.messageBar.setMessage(isc.OBMessageBar.TYPE_SUCCESS,'Success','Berhasil menarik data');
+  		      } else {
+  		    	  pop.view.messageBar.setMessage(isc.OBMessageBar.TYPE_ERROR,'Error','Data tidak tertarik sepenuhnya');
+  		      }
+  		    };
+  			
+  		    if(typeof pop.params.button !== 'undefined'){
+  		      pop.params.button.contextView.viewGrid.refreshGrid();
+  		      //rpcRequest.clientContext.popup.params.button.contextView.viewGrid.refreshGrid();
+  		      if (isSukses) {
+  		    	  pop.params.button.contextView.messageBar.setMessage(isc.OBMessageBar.TYPE_SUCCESS,'Success','Berhasil menarik data');
+  		      } else {
+  		    	  pop.params.button.contextView.messageBar.setMessage(isc.OBMessageBar.TYPE_ERROR,'Error','Data tidak tertarik sepenuhnya');
+  		      }
+  		    };
+  		  }
+    	  
+    	  var callbackerror = function() {
+    		  pop.close();
+    		  if(typeof pop.view.viewGrid !== 'undefined'){
+      		      pop.view.viewGrid.refreshGrid();
+      		      console.log("masuk callback ERROR, hasil : "+hasilCallback);
+      		      //rpcRequest.clientContext.popup.view.viewGrid.refreshGrid();
+      		    	  pop.view.messageBar.setMessage(isc.OBMessageBar.TYPE_ERROR,'Error','Terdapat Error !. Data tidak tertarik sepenuhnya');
+      		    };
+      			
+      		    if(typeof pop.params.button !== 'undefined'){
+      		      pop.params.button.contextView.viewGrid.refreshGrid();
+      		    	  pop.params.button.contextView.messageBar.setMessage(isc.OBMessageBar.TYPE_ERROR,'Error','Terdapat Error !. Data tidak tertarik sepenuhnya');
+      		    };
+    	  }
+    	  		
+    	  	  OB.RemoteCallManager.rpcRequest.setTimeout(0);
+    	      OB.RemoteCallManager.call(pop.actionHandler, {
     		    headers: pop.params.headers,
     		    action: pop.params.action
     		    //,dateParam: this.popup.mainform.getField('Date').getValue(), //send the parameter to the server too
-    		  }, {}, callback, {popup: this});
+    		  }, {}, callback, {popup: pop},callbackerror);
 //end
       }
     });
