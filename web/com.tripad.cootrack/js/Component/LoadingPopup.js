@@ -111,12 +111,15 @@ isc.TMC_LoadingPopup.addProperties({
       		    };
     	  }
     	  		
-    	  	  OB.RemoteCallManager.rpcRequest.setTimeout(0);
-    	      OB.RemoteCallManager.call(pop.actionHandler, {
+    	  	  //OB.RemoteCallManager.rpcRequest.setTimeout(0);
+    	  		isc.RPCManager.setDefaultTimeout(0);
+    	  		isc.RPCRequest.setTimeout(0);
+    	      /*OB.RemoteCallManager.call(pop.actionHandler, {
     		    headers: pop.params.headers,
     		    action: pop.params.action
     		    //,dateParam: this.popup.mainform.getField('Date').getValue(), //send the parameter to the server too
     		  }, {}, callback, {popup: pop},callbackerror);
+    		  */
 //end
       }
     });
