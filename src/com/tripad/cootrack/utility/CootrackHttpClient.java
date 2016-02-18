@@ -109,15 +109,14 @@ public class CootrackHttpClient {
       // handle timeouts
       inProcess = false;
       result = new CustomJsonErrorResponse("5555",
-          "Gagal Terhubung dengan server,Harap Cek Koneksi internet anda  : " + z.getMessage())
+          "Unable to connect to the server. Please check your Internet connection : " + z.getMessage())
               .getStringErrResponse();
-
       //throw new CustomJsonErrorResponseException(result);
 
     } catch (IOException e) {
       inProcess = false;
       result = new CustomJsonErrorResponse("5555",
-          "Gagal Terhubung dengan server,Harap Cek Koneksi internet anda. Target : "
+          "Unable to connect to the server. Please check your Internet connection. Target : "
               + e.getMessage()).getStringErrResponse();
     }
     inProcess = false;
@@ -149,6 +148,7 @@ public class CootrackHttpClient {
     }
   }
 
+  @Deprecated
   public String post2(String urlParam) {
     String result = "";
     try {
@@ -159,11 +159,11 @@ public class CootrackHttpClient {
       encoding = encoding == null ? "UTF-8" : encoding;
       result = IOUtils.toString(in, encoding);
     } catch (MalformedURLException ex) {
-      result = new CustomJsonErrorResponse("5555", "Url Server Tidak Valid. : " + ex.getMessage())
+      result = new CustomJsonErrorResponse("5555", "Server Url not valid. : " + ex.getMessage())
           .getStringErrResponse();
     } catch (IOException ioe) {
       result = new CustomJsonErrorResponse("5555",
-          "Gagal Terhubung dengan server,Harap Cek Koneksi internet anda. : " + ioe.getMessage())
+          "Unable to connect to the server. Please check your Internet connection. : " + ioe.getMessage())
               .getStringErrResponse();
     }
 

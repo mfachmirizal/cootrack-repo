@@ -247,7 +247,7 @@
                                           </tbody>
                                        </table>
                                        <!-- END MessageBox -->
-                                       <table class="Main_Client_TableEdition">
+                                       <table class="Main_Client_TableEdition" id="tableFormContent" style="visibility: xxs">
                                           <!-- BEGIN empty line -->
                                           <tr>
                                              <td class="TableEdition_OneCell_width"></td>
@@ -260,14 +260,29 @@
                                           <!-- END empty line -->
                                           <!-- BEGIN First line of filter fields -->
                                           <tr>
-                                             <td class="TitleCell"><span class="LabelText">TEsT</span></td>
-                                             <td class="Combo_ContentCell" colspan="2">
-                                                <input type="text" id="paramTest" value="" name="inpTest" class="dojoValidateValid_focus required_focus TextBox_TwoCells_width"/>
-                                             </td>
-                                             <td class="TitleCell"></td>
-                                             <td class="TitleCell"></td>
-                                             <td class="TitleCell"></td>
+                                             <td class="ContentCell" colspan="4"><span style="font-size:medium;color:green;" class="LabelText">This Process will retrieve Customer data from Cootrack server.</span></td>
                                           </tr>
+                                          <tr>
+                                              <td class="ContentCell" colspan="4"><span style="font-size:x-small;color:red;" class="LabelText">*Please do not refresh / close this browser when processing.</span></td>
+                                          </tr>
+                                         
+                                           <tr>
+                                              <td colspan="6">
+                                                  <table class="FieldGroup" cellspacing="0" cellpadding="0" border="0">
+                                                      <tbody>
+                                                          <tr class="FieldGroup_TopMargin"/>  </tr>
+                                                          <tr>
+                                                              <td class="FieldGroupTitle_Left"><img class="FieldGroupTitle_Left_bg" border="0" src="../../../../../web/images/blank.gif"/></td>
+                                                              <td class="FieldGroupTitle"> Confirm </td>
+                                                              <td class="FieldGroupTitle_Right"><img class="FieldGroupTitle_Right_bg" border="0" src="../../../../../web/images/blank.gif"/></td>
+                                                              <td class="FieldGroupContent"/></td>
+                                                          </tr>
+                                                          <tr class="FieldGroup_BottomMargin"/> </tr>
+                                                      </tbody>
+                                                  </table>
+                                              </td>
+                                          </tr>
+                                          
                                           <!--  Button -->
                                           <tr>
                                              <td class="TitleCell"></td>
@@ -296,7 +311,7 @@
                                                    </button>
                                                 </div>
                                              </td>
-                                             <td>
+<!--                                             <td>
                                                 <div>
                                                    <button type="button" 
                                                       id="buttonCancel" 
@@ -320,7 +335,7 @@
                                                       </table>
                                                    </button>
                                                 </div>
-                                             </td>
+                                             </td>-->
                                              <td class="ContentCell">
                                              </td>
                                              <td class="TitleCell"></td>

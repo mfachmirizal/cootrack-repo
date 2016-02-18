@@ -123,5 +123,5 @@
     //register button tmc_refreshlistbpfromoa
     OB.ToolbarRegistry.registerButton(buttonRefreshToken.buttonType, isc.OBToolbarIconButton, buttonRefreshToken, 100, ['2FE2C1A87557457E8CF5711190BCAF43']);
     OB.ToolbarRegistry.registerButton(buttonRefreshListAcc.buttonType, isc.OBToolbarIconButton, buttonRefreshListAcc, 100, ['F0AD6F9195E74AE695FAE4E242BBEF74']);
-    OB.ToolbarRegistry.registerButton(buttonRefreshListBPFromOA.buttonType, isc.OBToolbarIconButton, buttonRefreshListBPFromOA, 100, ['220','4EFDD39C475547118AE7570B06624959']);
+    //OB.ToolbarRegistry.registerButton(buttonRefreshListBPFromOA.buttonType, isc.OBToolbarIconButton, buttonRefreshListBPFromOA, 100, ['220','4EFDD39C475547118AE7570B06624959']);
 }());

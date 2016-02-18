@@ -64,7 +64,7 @@ isc.TMC_LoadingPopup.addProperties({
   			var isSukses = true;
   		    //isc.say(OB.I18N.getLabel('OBEXAPP_SumResult', [data.total]));
   		    hasilCallback = data.jawaban;
-  		    console.log("masuk callback, hasil : "+hasilCallback);
+  		    //console.log("masuk callback, hasil : "+hasilCallback);
   		    if (hasilCallback != '') {
   		    	isSukses = false;
   		    	isc.say(hasilCallback)
@@ -100,7 +100,7 @@ isc.TMC_LoadingPopup.addProperties({
     		  pop.close();
     		  if(typeof pop.view.viewGrid !== 'undefined'){
       		      pop.view.viewGrid.refreshGrid();
-      		      console.log("masuk callback ERROR, hasil : "+hasilCallback);
+      		      //console.log("masuk callback ERROR, hasil : "+hasilCallback);
       		      //rpcRequest.clientContext.popup.view.viewGrid.refreshGrid();
       		    	  pop.view.messageBar.setMessage(isc.OBMessageBar.TYPE_ERROR,'Error','Terdapat Error !. Data tidak tertarik sepenuhnya');
       		    };
@@ -112,14 +112,14 @@ isc.TMC_LoadingPopup.addProperties({
     	  }
     	  		
     	  	  //OB.RemoteCallManager.rpcRequest.setTimeout(0);
-    	  		isc.RPCManager.setDefaultTimeout(0);
-    	  		isc.RPCRequest.setTimeout(0);
-    	      /*OB.RemoteCallManager.call(pop.actionHandler, {
-    		    headers: pop.params.headers,
+//    	  		isc.RPCManager.setDefaultTimeout(0);
+//    	  		isc.RPCRequest.setTimeout(0);
+    	      OB.RemoteCallManager.call(pop.actionHandler, {
+    		    headers: pop.headers,
     		    action: pop.params.action
     		    //,dateParam: this.popup.mainform.getField('Date').getValue(), //send the parameter to the server too
     		  }, {}, callback, {popup: pop},callbackerror);
-    		  */
+    		  
 //end
       }
     });

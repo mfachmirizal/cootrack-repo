@@ -57,7 +57,10 @@
      -->
     <PARAMETER id="fieldOrg" name="orgId" attribute="value"/>
     <PARAMETER id="fieldWindowId" name="windowId" attribute="value"/>
-    <PARAMETER id="fieldTabId" name="tabId" attribute="value"/>\
+    <PARAMETER id="fieldTabId" name="tabId" attribute="value"/>
+    
+    <PARAMETER id="tableFormContent" name="formContent" attribute="style" replace="xxs" default="visible" />
+    
     <!-- 
     <PARAMETER id="fieldFinFinancialAccountId" name="finFinancialAccountId" attribute="value"/>
     
