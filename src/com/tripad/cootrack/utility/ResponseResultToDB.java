@@ -36,10 +36,11 @@ import com.tripad.cootrack.utility.exception.CustomJsonErrorResponseException;
  */
 public class ResponseResultToDB {
   private User COOTRACK_USER = OBContext.getOBContext().getUser();
+  static final boolean ISBYVALUE = true;
   OpenApiUtils utils;
-          
+
   public ResponseResultToDB(OpenApiUtils utilsParam) {
-      utils = utilsParam;
+    utils = utilsParam;
   }
 
   public void validateBPList(JSONObject hasilRetrieve)
@@ -93,7 +94,6 @@ public class ResponseResultToDB {
 
     JSONArray childList = (JSONArray) hasilRetrieve.get("children");
 
-    
     String rslt = "";
     OBCriteria<BusinessPartner> tmcListChildAcc = null;
     // OBCriteria<TmcListChildAcc> tmcNotExsListChildAcc = null;
@@ -109,7 +109,11 @@ public class ResponseResultToDB {
       String showname = childList.getJSONObject(i).get("showname").toString();
 
       tmcListChildAcc = OBDal.getInstance().createCriteria(BusinessPartner.class);
-      tmcListChildAcc.add(Restrictions.eq(BusinessPartner.PROPERTY_TMCOPENAPIIDENT, id));
+      if (ISBYVALUE) {
+        tmcListChildAcc.add(Restrictions.eq(BusinessPartner.PROPERTY_SEARCHKEY, name));
+      } else {
+        tmcListChildAcc.add(Restrictions.eq(BusinessPartner.PROPERTY_TMCOPENAPIIDENT, id));
+      }
       tmcListChildAcc.add(Restrictions.eq(BusinessPartner.PROPERTY_CREATEDBY, COOTRACK_USER));
 
       //Pembuatan Business Partner Criteria
