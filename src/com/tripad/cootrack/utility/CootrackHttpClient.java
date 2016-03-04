@@ -45,7 +45,7 @@ public class CootrackHttpClient {
   private HttpUriRequest request = null;
   private HttpResponse response = null;
   private static boolean inProcess = false;
-  private final int LAMA_TIMEOUT = 120;
+  private final int LAMA_TIMEOUT = 121;
 
   public CootrackHttpClient() {
   }
@@ -104,13 +104,13 @@ public class CootrackHttpClient {
 
       //System.out.println(result);
       //asalnya is method shutdown ada disini
-      
+
     } catch (SocketTimeoutException z) {
       // handle timeouts
       inProcess = false;
       result = new CustomJsonErrorResponse("5555",
-          "Unable to connect to the server. Please check your Internet connection : " + z.getMessage())
-              .getStringErrResponse();
+          "Unable to connect to the server. Please check your Internet connection : "
+              + z.getMessage()).getStringErrResponse();
       //throw new CustomJsonErrorResponseException(result);
 
     } catch (IOException e) {
@@ -122,24 +122,24 @@ public class CootrackHttpClient {
     inProcess = false;
     return (result);
   }
-  
+
   public void shutdown() {
-      try {
+    try {
       if (response.getEntity() != null) {
-          try {
-              response.getEntity().consumeContent();
-          } catch (IOException ex) {
-              System.out.println("Masuk exception consumeContent : "+ex.getMessage());
-              Logger.getLogger(CootrackHttpClient.class.getName()).log(Level.SEVERE, null, ex);
-              throw new OBException("Error consumeContent ! : "+ex.getMessage());
-          }
+        try {
+          response.getEntity().consumeContent();
+        } catch (IOException ex) {
+          System.out.println("Masuk exception consumeContent : " + ex.getMessage());
+          Logger.getLogger(CootrackHttpClient.class.getName()).log(Level.SEVERE, null, ex);
+          throw new OBException("Error consumeContent ! : " + ex.getMessage());
+        }
       }
       if (client != null) {
         client.getConnectionManager().shutdown();
       }
-      } catch( Exception e) {
-          //do nothing
-      }
+    } catch (Exception e) {
+      //do nothing
+    }
   }
 
   public void cancel() {
@@ -163,8 +163,8 @@ public class CootrackHttpClient {
           .getStringErrResponse();
     } catch (IOException ioe) {
       result = new CustomJsonErrorResponse("5555",
-          "Unable to connect to the server. Please check your Internet connection. : " + ioe.getMessage())
-              .getStringErrResponse();
+          "Unable to connect to the server. Please check your Internet connection. : "
+              + ioe.getMessage()).getStringErrResponse();
     }
 
     return result;

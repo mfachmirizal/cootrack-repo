@@ -5,66 +5,64 @@
  */
 package com.tripad.cootrack.utility;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
 /**
  *
- * @author mfachmirizal
+ * @author mfachmirizal @ Loginusa
  */
 public class CustomJsonErrorResponse {
-    private String ret;
-    private String msg;
+  private String ret;
+  private String msg;
 
-    /**
-     * Constructor untuk menginialisasi nilai return, dan message
-     * @param paramRet
-     * @param paramMsg 
-     */
-    public CustomJsonErrorResponse(String paramRet, String paramMsg) {
-        ret= paramRet;
-        msg= paramMsg; 
-    }
-    /**
-     * @return the ret
-     */
-    public String getRet() {
-        return ret;
-    }
+  /**
+   * Constructor untuk menginialisasi nilai return, dan message
+   * @param paramRet
+   * @param paramMsg 
+   */
+  public CustomJsonErrorResponse(String paramRet, String paramMsg) {
+    ret = paramRet;
+    msg = paramMsg;
+  }
 
-    /**
-     * @param ret the ret to set
-     */
-    public void setRet(String ret) {
-        this.ret = ret;
-    }
+  /**
+   * @return the ret
+   */
+  public String getRet() {
+    return ret;
+  }
 
-    /**
-     * @return the msg
-     */
-    public String getMsg() {
-        return msg;
-    }
+  /**
+   * @param ret the ret to set
+   */
+  public void setRet(String ret) {
+    this.ret = ret;
+  }
 
-    /**
-     * @param msg the msg to set
-     */
-    public void setMsg(String msg) {
-        this.msg = msg;
-    }
-    
-    /**
-     * 
-     * @return JSON String 
-     */
-    public String getStringErrResponse() {
-        return "{\"ret\": "+ret+"," +
-                        "\"msg\": \""+msg+"\"}";
-    }
-    
-    public JSONObject getJSONErrResponse() throws JSONException{
-        return new JSONObject("{\"ret\": "+ret+"," +"\"msg\": \""+msg+"\"}");
-    }
+  /**
+   * @return the msg
+   */
+  public String getMsg() {
+    return msg;
+  }
+
+  /**
+   * @param msg the msg to set
+   */
+  public void setMsg(String msg) {
+    this.msg = msg;
+  }
+
+  /**
+   * 
+   * @return JSON String 
+   */
+  public String getStringErrResponse() {
+    return "{\"ret\": " + ret + "," + "\"msg\": \"" + msg + "\"}";
+  }
+
+  public JSONObject getJSONErrResponse() throws JSONException {
+    return new JSONObject("{\"ret\": " + ret + "," + "\"msg\": \"" + msg + "\"}");
+  }
 }
