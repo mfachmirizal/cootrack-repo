@@ -38,14 +38,14 @@ public class OpenApiUtils {
   public static final String COOTRACK_GET_MONITOR_URL_BY_TARGET = "http://api.gpsoo.net/1/account/monitor?target";
   public static final String COOTRACK_GET_TRACKING_URL_BY_IMEI = "http://api.gpsoo.net/1/devices/tracking?map_type=GOOGLE&imeis";
 
-  public OpenApiUtils(CootrackHttpClient conParam,User user) {
-      con = conParam;
-      COOTRACK_USERNAME = user;
+  public OpenApiUtils(CootrackHttpClient conParam, User user) {
+    con = conParam;
+    COOTRACK_USERNAME = user;
   }
-  
+
   public OpenApiUtils(CootrackHttpClient conParam) {
-      con = conParam;
-      COOTRACK_USERNAME = OBContext.getOBContext().getUser();
+    con = conParam;
+    COOTRACK_USERNAME = OBContext.getOBContext().getUser();
   }
 
   private JSONObject requestData(String action, String... param)
@@ -102,7 +102,7 @@ public class OpenApiUtils {
       JSONObject hasilRetry;
       do {
         try {
-          Thread.sleep(1);
+          Thread.sleep(30);
         } catch (InterruptedException e) {
           //return new CustomJsonErrorResponse("5151", "Thread Error : "+e.getMessage()).getJSONErrResponse();
           String strErr = new CustomJsonErrorResponse("5151", "Thread Error : " + e.getMessage())
@@ -112,12 +112,18 @@ public class OpenApiUtils {
         hasilRetry = retryRequest(url);
       } while (hasilRetry.get("ret").toString().equals("10101"));
       //return hasilRetry;
+      hasil = hasilRetry;
     }
 
     // ini exception custom
     if (hasil.get("ret").toString().equals("5555")) {
       System.out.println("Masuk 5555 : " + hasil.get("msg").toString());
       throw new CustomJsonErrorResponseException(hasil.get("msg").toString());
+    }
+    if (hasil.get("ret").toString().equals("10101")) {
+      System.out.println("Masuk 10101 : " + hasil.get("msg").toString());
+      throw new CustomJsonErrorResponseException(
+          hasil.get("msg").toString() + ". Please retry again.");
     }
 
     return hasil;

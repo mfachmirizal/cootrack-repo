@@ -129,7 +129,13 @@ public class RefreshListBPFromOA extends HttpSecureAppServlet {
       JSONObject jObject = execute(utils);
       hasil = jObject.get("jawaban").toString();
       //            Thread.sleep(6003);
+
+      //simpan perubahan
+      OBDal.getInstance().flush();
+      OBDal.getInstance().commitAndClose();
+
     } catch (CustomJsonErrorResponseException jrr) {
+      OBDal.getInstance().rollbackAndClose();
       System.out.println("MASUK JSONEXCEPTION");
       vars.removeSessionValue("statusRetrieveCustomer");
       msg.setTitle("Error");
@@ -137,18 +143,21 @@ public class RefreshListBPFromOA extends HttpSecureAppServlet {
       msg.setMessage("Error : " + jrr.getMessage());
       return msg;
     } catch (JSONException jre) {
+      OBDal.getInstance().rollbackAndClose();
       vars.removeSessionValue("statusRetrieveCustomer");
       msg.setTitle("Error");
       msg.setType("ERROR");
       msg.setMessage("Error : " + jre.getMessage());
       return msg;
     } catch (Exception t) {
+      OBDal.getInstance().rollbackAndClose();
       vars.removeSessionValue("statusRetrieveCustomer");
       msg.setTitle("Error");
       msg.setType("ERROR");
       msg.setMessage("Error : " + t.getMessage());
       return msg;
     } catch (Throwable thr) {
+      OBDal.getInstance().rollbackAndClose();
       vars.removeSessionValue("statusRetrieveCustomer");
       msg.setTitle("Error");
       msg.setType("ERROR");

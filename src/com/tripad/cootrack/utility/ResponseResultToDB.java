@@ -247,8 +247,10 @@ public class ResponseResultToDB {
         //skip, berarti tidak punya anak
         System.out.println("Err2 : "+t.getMessage());
       }*/
-    OBDal.getInstance().flush();
-    OBDal.getInstance().commitAndClose();
+
+    //Revisi Commit pada get BPartner
+    //    OBDal.getInstance().flush();
+    //    OBDal.getInstance().commitAndClose();
 
   }
 
@@ -305,68 +307,72 @@ public class ResponseResultToDB {
 
         aCC = getStatusAcc(aCC);
 
-        //modify baru [Historical 2/3 ]
-        TmcDocumentUpdate header = getHeaderInstance(header_id);
-        OBCriteria<TmcDocumentUpdateLine> tmcDocumentUpdateLine = OBDal.getInstance()
-            .createCriteria(TmcDocumentUpdateLine.class);
-        tmcDocumentUpdateLine
-            .add(Restrictions.eq(TmcDocumentUpdateLine.PROPERTY_CREATEDBY, COOTRACK_USER));
-        tmcDocumentUpdateLine.add(
-            Restrictions.eq(TmcDocumentUpdateLine.PROPERTY_TMCCAR, tmcCarCriteria.list().get(0)));
-
-        if (tmcDocumentUpdateLine.list().isEmpty()) { // data belum ada
-          // ini insert
-          TmcDocumentUpdateLine newTmcDocumentUpdateLine = OBProvider.getInstance()
-              .get(TmcDocumentUpdateLine.class);
-
-          newTmcDocumentUpdateLine.setActive(true);
-          newTmcDocumentUpdateLine.setTMCDocumentupdate(header);// set header nya
-          newTmcDocumentUpdateLine.setCustomerName(tmcCarCriteria.list().get(0).getBpartner());
-          newTmcDocumentUpdateLine.setTMCCar(tmcCarCriteria.list().get(0));
-          newTmcDocumentUpdateLine.setStatus(statusCategory);
-          newTmcDocumentUpdateLine.setMaintenanceDateFrom(null);
-          newTmcDocumentUpdateLine.setMaintenanceDateTo(null);
-          newTmcDocumentUpdateLine.setACC(aCC);
-
-          OBDal.getInstance().save(newTmcDocumentUpdateLine);
-          //OBDal.getInstance().flush();
-
-          tempValidDocumentUpdateLine.add(newTmcDocumentUpdateLine.getId()); // untuk data yg sinkron berdasar static 8 jam, dll dan ada 
-          //end insert
-        } else { //insert berdasar data sebelumnya
-          TmcDocumentUpdateLine newTmcDocumentUpdateLine = OBProvider.getInstance()
-              .get(TmcDocumentUpdateLine.class);
-
-          newTmcDocumentUpdateLine.setActive(true);
-          newTmcDocumentUpdateLine.setTMCDocumentupdate(header);// set header nya
-          newTmcDocumentUpdateLine.setCustomerName(tmcCarCriteria.list().get(0).getBpartner());
-          newTmcDocumentUpdateLine.setTMCCar(tmcCarCriteria.list().get(0));
-          newTmcDocumentUpdateLine.setStatus(statusCategory);
-
-          OBCriteria<TmcDocumentUpdateLine> tmcDocumentUpdateLineLatestDate = OBDal.getInstance()
+        //modify baru [Historical 2/4 ]
+        //cek statusCategory ada atau tidak
+        if (statusCategory != null) {
+          TmcDocumentUpdate header = getHeaderInstance(header_id);
+          OBCriteria<TmcDocumentUpdateLine> tmcDocumentUpdateLine = OBDal.getInstance()
               .createCriteria(TmcDocumentUpdateLine.class);
-          tmcDocumentUpdateLineLatestDate.add(
+          tmcDocumentUpdateLine
+              .add(Restrictions.eq(TmcDocumentUpdateLine.PROPERTY_CREATEDBY, COOTRACK_USER));
+          tmcDocumentUpdateLine.add(
               Restrictions.eq(TmcDocumentUpdateLine.PROPERTY_TMCCAR, tmcCarCriteria.list().get(0)));
-          //order dari yg paling besar dan hanya ambil no 1
-          tmcDocumentUpdateLineLatestDate
-              .addOrderBy(TmcDocumentUpdateLine.PROPERTY_MAINTENANCEDATEFROM, false);
-          //set maksimum data yg keluar
-          tmcDocumentUpdateLineLatestDate.setMaxResults(1);
 
-          newTmcDocumentUpdateLine.setMaintenanceDateFrom(
-              tmcDocumentUpdateLineLatestDate.list().get(0).getMaintenanceDateFrom());
-          newTmcDocumentUpdateLine.setMaintenanceDateTo(
-              tmcDocumentUpdateLineLatestDate.list().get(0).getMaintenanceDateTo());
+          if (tmcDocumentUpdateLine.list().isEmpty()) { // data belum ada
+            // ini insert
+            TmcDocumentUpdateLine newTmcDocumentUpdateLine = OBProvider.getInstance()
+                .get(TmcDocumentUpdateLine.class);
 
-          newTmcDocumentUpdateLine.setACC(aCC);
+            newTmcDocumentUpdateLine.setActive(true);
+            newTmcDocumentUpdateLine.setTMCDocumentupdate(header);// set header nya
+            newTmcDocumentUpdateLine.setCustomerName(tmcCarCriteria.list().get(0).getBpartner());
+            newTmcDocumentUpdateLine.setTMCCar(tmcCarCriteria.list().get(0));
+            newTmcDocumentUpdateLine.setStatus(statusCategory);
+            newTmcDocumentUpdateLine.setMaintenanceDateFrom(null);
+            newTmcDocumentUpdateLine.setMaintenanceDateTo(null);
+            newTmcDocumentUpdateLine.setACC(aCC);
 
-          OBDal.getInstance().save(newTmcDocumentUpdateLine);
+            OBDal.getInstance().save(newTmcDocumentUpdateLine);
+            //OBDal.getInstance().flush();
 
-          tempValidDocumentUpdateLine.add(newTmcDocumentUpdateLine.getId()); // untuk data yg sinkron berdasar static 8 jam, dll dan ada
+            tempValidDocumentUpdateLine.add(newTmcDocumentUpdateLine.getId()); // untuk data yg sinkron berdasar static 8 jam, dll dan ada 
+            //end insert
+          } else { //insert berdasar data sebelumnya
+            TmcDocumentUpdateLine newTmcDocumentUpdateLine = OBProvider.getInstance()
+                .get(TmcDocumentUpdateLine.class);
 
+            newTmcDocumentUpdateLine.setActive(true);
+            newTmcDocumentUpdateLine.setTMCDocumentupdate(header);// set header nya
+            newTmcDocumentUpdateLine.setCustomerName(tmcCarCriteria.list().get(0).getBpartner());
+            newTmcDocumentUpdateLine.setTMCCar(tmcCarCriteria.list().get(0));
+            newTmcDocumentUpdateLine.setStatus(statusCategory);
+
+            OBCriteria<TmcDocumentUpdateLine> tmcDocumentUpdateLineLatestDate = OBDal.getInstance()
+                .createCriteria(TmcDocumentUpdateLine.class);
+            tmcDocumentUpdateLineLatestDate.add(Restrictions
+                .eq(TmcDocumentUpdateLine.PROPERTY_TMCCAR, tmcCarCriteria.list().get(0)));
+            //order dari yg paling besar dan hanya ambil no 1
+            tmcDocumentUpdateLineLatestDate
+                .addOrderBy(TmcDocumentUpdateLine.PROPERTY_MAINTENANCEDATEFROM, false);
+            //set maksimum data yg keluar
+            tmcDocumentUpdateLineLatestDate.setMaxResults(1);
+
+            newTmcDocumentUpdateLine.setMaintenanceDateFrom(
+                tmcDocumentUpdateLineLatestDate.list().get(0).getMaintenanceDateFrom());
+            newTmcDocumentUpdateLine.setMaintenanceDateTo(
+                tmcDocumentUpdateLineLatestDate.list().get(0).getMaintenanceDateTo());
+
+            newTmcDocumentUpdateLine.setACC(aCC);
+
+            OBDal.getInstance().save(newTmcDocumentUpdateLine);
+
+            tempValidDocumentUpdateLine.add(newTmcDocumentUpdateLine.getId()); // untuk data yg sinkron berdasar static 8 jam, dll dan ada
+
+          }
         }
+        //end cek statusCategory ada atau tidak
 
-        /* [Historical 3/3 ] OBCriteria<TmcDocumentUpdateLine> tmcDocumentUpdateLine = OBDal.getInstance()
+        /* [Historical 3/4 ] OBCriteria<TmcDocumentUpdateLine> tmcDocumentUpdateLine = OBDal.getInstance()
             .createCriteria(TmcDocumentUpdateLine.class);
         // filter header nya [ok]
         TmcDocumentUpdate header = getHeaderInstance(header_id);
@@ -420,23 +426,25 @@ public class ResponseResultToDB {
     //
     // adegan menghapus record yg tidak valid berdasarkan status yg ditentukan 
 
-    /* [Historical 1/3 ]  OBCriteria<TmcDocumentUpdateLine> delNotinCritTmcDocumentUpdateLine = OBDal.getInstance()
-        .createCriteria(TmcDocumentUpdateLine.class);
-    
-    delNotinCritTmcDocumentUpdateLine
-        .add(Restrictions.eq(TmcDocumentUpdateLine.PROPERTY_TMCDOCUMENTUPDATE, header));
-    delNotinCritTmcDocumentUpdateLine
-        .add(Restrictions.eq(TmcDocumentUpdateLine.PROPERTY_CREATEDBY, COOTRACK_USER));
-    
-    delNotinCritTmcDocumentUpdateLine
-        .add(Restrictions.isNull(TmcDocumentUpdateLine.PROPERTY_STATUS));
-    
-    for (TmcDocumentUpdateLine removeTmcDocumentUpdateLine : delNotinCritTmcDocumentUpdateLine
-        .list()) {
-      OBDal.getInstance().remove(removeTmcDocumentUpdateLine);
-      //OBDal.getInstance().flush();
-    }
-    */
+    /* [Historical 1/4 ] batal */
+    //    OBCriteria<TmcDocumentUpdateLine> delNotinCritTmcDocumentUpdateLine = OBDal.getInstance()
+    //        .createCriteria(TmcDocumentUpdateLine.class);
+    //
+    //    delNotinCritTmcDocumentUpdateLine
+    //        .add(Restrictions.eq(TmcDocumentUpdateLine.PROPERTY_TMCDOCUMENTUPDATE, header));
+    //    delNotinCritTmcDocumentUpdateLine
+    //        .add(Restrictions.eq(TmcDocumentUpdateLine.PROPERTY_CREATEDBY, COOTRACK_USER));
+    //
+    //    delNotinCritTmcDocumentUpdateLine
+    //        .add(Restrictions.isNull(TmcDocumentUpdateLine.PROPERTY_STATUS));
+    //
+    //    for (TmcDocumentUpdateLine removeTmcDocumentUpdateLine : delNotinCritTmcDocumentUpdateLine
+    //        .list()) {
+    //      OBDal.getInstance().remove(removeTmcDocumentUpdateLine);
+    //      //OBDal.getInstance().flush();
+    //    }
+    //
+
     // adegan menghapus record yg ada table TMC_DocumentUpdateLine tapi tidak ada di TMC_Car
     OBCriteria<TmcDocumentUpdateLine> delTmcDocumentUpdateLine = OBDal.getInstance()
         .createCriteria(TmcDocumentUpdateLine.class);
@@ -456,8 +464,9 @@ public class ResponseResultToDB {
       //OBDal.getInstance().flush();
     }
 
-    OBDal.getInstance().flush();
-    OBDal.getInstance().commitAndClose();
+    //    [Historical 4/4 ]
+    //    OBDal.getInstance().flush();
+    //    OBDal.getInstance().commitAndClose();
   }
 
   private TmcDocumentUpdate getHeaderInstance(String header_id) {
