@@ -351,17 +351,31 @@ public class ResponseResultToDB {
                 .createCriteria(TmcDocumentUpdateLine.class);
             tmcDocumentUpdateLineLatestDate.add(Restrictions
                 .eq(TmcDocumentUpdateLine.PROPERTY_TMCCAR, tmcCarCriteria.list().get(0)));
+            
+            //jangan yg kosong
+            tmcDocumentUpdateLineLatestDate.add(Restrictions
+                .isNotNull(TmcDocumentUpdateLine.PROPERTY_MAINTENANCEDATEFROM));
+            //tmcDocumentUpdateLineLatestDate.add(Restrictions.sqlRestriction(" maintenancedatefrom=(SELECT MAX(ff.maintenancedatefrom) FROM tmc_documentupdateline ff WHERE ff.maintenancedatefrom= maintenancedatefrom)"));
+            
             //order dari yg paling besar dan hanya ambil no 1
             tmcDocumentUpdateLineLatestDate
                 .addOrderBy(TmcDocumentUpdateLine.PROPERTY_MAINTENANCEDATEFROM, false);
+
             //set maksimum data yg keluar
             tmcDocumentUpdateLineLatestDate.setMaxResults(1);
-
-            newTmcDocumentUpdateLine.setMaintenanceDateFrom(
-                tmcDocumentUpdateLineLatestDate.list().get(0).getMaintenanceDateFrom());
-            newTmcDocumentUpdateLine.setMaintenanceDateTo(
-                tmcDocumentUpdateLineLatestDate.list().get(0).getMaintenanceDateTo());
-
+            
+            if (tmcDocumentUpdateLineLatestDate.list().size() > 0) {
+                newTmcDocumentUpdateLine.setMaintenanceDateFrom(
+                        tmcDocumentUpdateLineLatestDate.list().get(0).getMaintenanceDateFrom());
+                newTmcDocumentUpdateLine.setMaintenanceDateTo(
+                        tmcDocumentUpdateLineLatestDate.list().get(0).getMaintenanceDateTo());
+            } else {
+                newTmcDocumentUpdateLine.setMaintenanceDateFrom(
+                        null);
+                newTmcDocumentUpdateLine.setMaintenanceDateTo(
+                        null);
+            }
+            
             newTmcDocumentUpdateLine.setACC(aCC);
 
             OBDal.getInstance().save(newTmcDocumentUpdateLine);
