@@ -189,7 +189,34 @@ public class PAUUpdateCustomerMaintenanceActivities extends BaseProcessActionHan
                     tmcDocumentUpdateLine.setKeterangan(null);
                 }
                 
-				tmcDocumentUpdateLine.setProcess(true);
+                //baru 18-maret-2016, penambahan 4 field baru
+                
+                if (!selection.getJSONObject(i).get("tGLIsiPulsaReg").toString().equals("null")) {
+                    tmcDocumentUpdateLine.setTGLIsiPulsaReg(new SimpleDateFormat("yyyy-MM-dd").parse(selection.getJSONObject(i).get("tGLIsiPulsaReg").toString()));
+                } else {
+                    tmcDocumentUpdateLine.setTGLIsiPulsaReg(null);
+                }
+                
+                if (!selection.getJSONObject(i).get("nOMIsiPulsaReg").toString().equals("null")) {
+                    tmcDocumentUpdateLine.setNOMIsiPulsaReg(new BigDecimal( selection.getJSONObject(i).get("nOMIsiPulsaReg").toString()) );
+                } else {
+                    tmcDocumentUpdateLine.setNOMIsiPulsaReg(BigDecimal.ONE);
+                }
+                
+                
+                if (!selection.getJSONObject(i).get("tGLIsiPulsaQuota").toString().equals("null")) {
+                    tmcDocumentUpdateLine.setTGLIsiPulsaQuota(new SimpleDateFormat("yyyy-MM-dd").parse(selection.getJSONObject(i).get("tGLIsiPulsaQuota").toString()));
+                } else {
+                    tmcDocumentUpdateLine.setTGLIsiPulsaQuota(null);
+                }
+                
+                if (!selection.getJSONObject(i).get("nOMIsiPulsaQuota").toString().equals("null")) {
+                    tmcDocumentUpdateLine.setNOMIsiPulsaQuota(new BigDecimal( selection.getJSONObject(i).get("nOMIsiPulsaQuota").toString()) );
+                } else {
+                    tmcDocumentUpdateLine.setNOMIsiPulsaQuota(BigDecimal.ONE);
+                }
+                
+                tmcDocumentUpdateLine.setProcess(true);
                 
                 OBDal.getInstance().save(tmcDocumentUpdateLine);
                 OBDal.getInstance().flush();
