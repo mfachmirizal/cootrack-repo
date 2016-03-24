@@ -326,6 +326,8 @@ public class ResponseResultToDB {
                         newTmcDocumentUpdateLine.setActive(true);
                         newTmcDocumentUpdateLine.setTMCDocumentupdate(header);// set header nya
                         newTmcDocumentUpdateLine.setCustomerName(tmcCarCriteria.list().get(0).getBpartner());
+                        //Tambahan Sementara Bisnis partner kategori, karena computed column tidak dapat filter dropdown
+                        newTmcDocumentUpdateLine.setBpGroup(tmcCarCriteria.list().get(0).getBpartner().getBusinessPartnerCategory());
                         newTmcDocumentUpdateLine.setTMCCar(tmcCarCriteria.list().get(0));
                         newTmcDocumentUpdateLine.setStatus(statusCategory);
                         newTmcDocumentUpdateLine.setMaintenanceDateFrom(null);
@@ -348,6 +350,8 @@ public class ResponseResultToDB {
                         newTmcDocumentUpdateLine.setActive(true);
                         newTmcDocumentUpdateLine.setTMCDocumentupdate(header);// set header nya
                         newTmcDocumentUpdateLine.setCustomerName(tmcCarCriteria.list().get(0).getBpartner());
+                        //Tambahan Sementara Bisnis partner kategori, karena computed column tidak dapat filter dropdown
+                        newTmcDocumentUpdateLine.setBpGroup(tmcCarCriteria.list().get(0).getBpartner().getBusinessPartnerCategory());
                         newTmcDocumentUpdateLine.setTMCCar(tmcCarCriteria.list().get(0));
                         newTmcDocumentUpdateLine.setStatus(statusCategory);
                         
