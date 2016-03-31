@@ -60,7 +60,7 @@ import org.openbravo.xmlEngine.XmlDocument;
 public class CootrackUserSynchronization extends HttpSecureAppServlet {
     private static final long serialVersionUID = 1L;
     
-    static CootrackHttpClient con = new CootrackHttpClient();
+    //static CootrackHttpClient con = new CootrackHttpClient();
     
     
     
@@ -110,7 +110,7 @@ public class CootrackUserSynchronization extends HttpSecureAppServlet {
             VariablesSecureApp vars,String strWindowId, String strTabId,String strUserID,String strUser,String strPassword) throws IOException, ServletException {
         
         OBError myMessage = new OBError();
-        OpenApiUtils ou = new OpenApiUtils(con);
+        OpenApiUtils ou = new OpenApiUtils();
         
         ou.deleteToken();
         
@@ -129,7 +129,7 @@ public class CootrackUserSynchronization extends HttpSecureAppServlet {
         OBDal.getInstance().commitAndClose();
         
         try {
-            con.shutdown();
+            ou.closeConnection();
         } catch(Exception e) {
             //do nothing
         }

@@ -3,6 +3,7 @@ package com.tripad.cootrack.utility;
 //import org.apache.commons.httpclient.*;
 //import org.apache.commons.httpclient.methods.*;
 //import java.io.*;
+import com.tripad.cootrack.utility.exception.CustomJsonErrorResponseException;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -26,6 +27,7 @@ import org.apache.http.impl.client.DefaultHttpRequestRetryHandler;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
+import org.apache.http.util.EntityUtils;
 import org.openbravo.base.exception.OBException;
 
 //ganti methodnya dengan ini : http://stackoverflow.com/questions/5769717/how-can-i-get-an-http-response-body-as-a-string-in-java
@@ -84,7 +86,10 @@ public class CootrackHttpClient {
       response = client.execute(request);
 
       if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
-        result = new CustomJsonErrorResponse("5555",
+//        result = new CustomJsonErrorResponse("5555",
+//            "Error !, status : (" + response.getStatusLine().getStatusCode() + ") "
+//                + response.getStatusLine().getReasonPhrase()).getStringErrResponse();
+          result = new CustomJsonErrorResponseException("5555",
             "Error !, status : (" + response.getStatusLine().getStatusCode() + ") "
                 + response.getStatusLine().getReasonPhrase()).getStringErrResponse();
         return result;
@@ -108,14 +113,17 @@ public class CootrackHttpClient {
     } catch (SocketTimeoutException z) {
       // handle timeouts
       inProcess = false;
-      result = new CustomJsonErrorResponse("5555",
+      result = new CustomJsonErrorResponseException("5555",
           "Unable to connect to the server. Please check your Internet connection : "
               + z.getMessage()).getStringErrResponse();
       //throw new CustomJsonErrorResponseException(result);
 
     } catch (IOException e) {
       inProcess = false;
-      result = new CustomJsonErrorResponse("5555",
+//      result = new CustomJsonErrorResponse("5555",
+//          "Unable to connect to the server. Please check your Internet connection. Target : "
+//              + e.getMessage()).getStringErrResponse();
+      result = new CustomJsonErrorResponseException("5555",
           "Unable to connect to the server. Please check your Internet connection. Target : "
               + e.getMessage()).getStringErrResponse();
     }
@@ -159,10 +167,15 @@ public class CootrackHttpClient {
       encoding = encoding == null ? "UTF-8" : encoding;
       result = IOUtils.toString(in, encoding);
     } catch (MalformedURLException ex) {
-      result = new CustomJsonErrorResponse("5555", "Server Url not valid. : " + ex.getMessage())
+//      result = new CustomJsonErrorResponse("5555", "Server Url not valid. : " + ex.getMessage())
+//          .getStringErrResponse();
+        result = new CustomJsonErrorResponseException("5555", "Server Url not valid. : " + ex.getMessage())
           .getStringErrResponse();
     } catch (IOException ioe) {
-      result = new CustomJsonErrorResponse("5555",
+//      result = new CustomJsonErrorResponse("5555",
+//          "Unable to connect to the server. Please check your Internet connection. : "
+//              + ioe.getMessage()).getStringErrResponse();
+        result = new CustomJsonErrorResponseException("5555",
           "Unable to connect to the server. Please check your Internet connection. : "
               + ioe.getMessage()).getStringErrResponse();
     }

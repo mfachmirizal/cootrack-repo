@@ -48,9 +48,13 @@ public class OpenApiUtils {
 //    COOTRACK_USERNAME = user;
 //  }
 
-  public OpenApiUtils(CootrackHttpClient conParam) {
-      System.out.println("Lewat SINI 2");
-    con = conParam;
+//  public OpenApiUtils(CootrackHttpClient conParam) {
+//      System.out.println("Lewat SINI 2");
+//    con = conParam;
+//    COOTRACK_USERNAME = OBContext.getOBContext().getUser();
+//  }
+  public OpenApiUtils() {
+    con = new CootrackHttpClient();
     COOTRACK_USERNAME = OBContext.getOBContext().getUser();
   }
 
@@ -59,17 +63,17 @@ public class OpenApiUtils {
     String commonParam = "";
     TmcToken token = getToken();
     if (token == null) {
-      return new CustomJsonErrorResponse(token.getReturnCode(), "Failed to get Token !")
+      return new CustomJsonErrorResponseException(token.getReturnCode()+"Failed to get Token !")
           .getJSONErrResponse();
     }
     if (token.getReturnCode().equals("0")) {
       commonParam = "access_token=" + token.getToken() + "&account="
           + COOTRACK_USERNAME.getUsername() + "&time=" + getUnixTime();
     } else if (token.getReturnCode().equals("20001") || token.getReturnCode().equals("20004")) {
-      return new CustomJsonErrorResponse(token.getReturnCode(), "Wrong Username / Password !")
+      return new CustomJsonErrorResponseException(token.getReturnCode(), "Wrong Username / Password !")
           .getJSONErrResponse();
     } else {
-      return new CustomJsonErrorResponse(token.getReturnCode(),
+      return new CustomJsonErrorResponseException(token.getReturnCode(),
           token.getMessage() + ", Delete Token and try again").getJSONErrResponse();
     }
 
@@ -91,7 +95,8 @@ public class OpenApiUtils {
         param[0] = encodeString(COOTRACK_USERNAME.getUsername());
       }
       url = COOTRACK_GET_TARGET_INFO + "=" + param[0] + "&" + commonParam;
-
+      
+      log.error("cetak URL : "+url);
       //System.out.println("URL : "+url);
     }
 
@@ -118,7 +123,7 @@ public class OpenApiUtils {
           Thread.sleep(30);
         } catch (InterruptedException e) {
           //return new CustomJsonErrorResponse("5151", "Thread Error : "+e.getMessage()).getJSONErrResponse();
-          String strErr = new CustomJsonErrorResponse("5151", "Thread Error : " + e.getMessage())
+          String strErr = new CustomJsonErrorResponseException("5151", "Thread Error : " + e.getMessage())
               .getStringErrResponse();
           throw new CustomJsonErrorResponseException(strErr);
         }
@@ -158,7 +163,7 @@ public class OpenApiUtils {
 
     } catch (JSONException e) {
       //throw new OBException("Error [OpenApiUtils] ! : " + e.getMessage());// return new
-      jsonData = new CustomJsonErrorResponse("5555", "Error : " + e.getMessage())
+      jsonData = new CustomJsonErrorResponseException("5555", "Error : " + e.getMessage())
           .getJSONErrResponse();
     } finally {
       return jsonData;
@@ -206,8 +211,8 @@ public class OpenApiUtils {
 
   public TmcToken getToken() {
     COOTRACK_USERNAME =  OBContext.getOBContext().getUser();
-    System.out.println("TOKEN INI : "+COOTRACK_USERNAME.getUsername());  
-    System.out.println("TOKEN INI : "+COOTRACK_USERNAME.getUsername());  
+//    System.out.println("TOKEN INI : "+COOTRACK_USERNAME.getUsername());  
+//    System.out.println("TOKEN INI : "+COOTRACK_USERNAME.getUsername());  
     final OBCriteria<TmcToken> tmcTokenCrit = OBDal.getInstance().createCriteria(TmcToken.class);
     tmcTokenCrit.add(Restrictions.eq(TmcToken.PROPERTY_VALUE, COOTRACK_USERNAME.getUsername()));
     tmcTokenCrit.add(Restrictions.eq(TmcToken.PROPERTY_CREATEDBY, COOTRACK_USERNAME));
@@ -391,6 +396,10 @@ public class OpenApiUtils {
       OBDal.getInstance().flush();
       OBDal.getInstance().commitAndClose();
     }
+  }
+  
+  public void closeConnection() {
+      con.shutdown();
   }
 
 }

@@ -30,8 +30,8 @@ public class RefreshListBPFromOA extends BaseActionHandler {
   @SuppressWarnings("finally")
   protected JSONObject execute(Map<String, Object> parameters, String data) {
     User COOTRACK_USER = OBContext.getOBContext().getUser();
-    CootrackHttpClient con = new CootrackHttpClient();
-    OpenApiUtils utils = new OpenApiUtils(con/*,COOTRACK_USER*/);
+    //CootrackHttpClient con = new CootrackHttpClient();
+    OpenApiUtils utils = new OpenApiUtils(/*,COOTRACK_USER*/);
   
     String hasil = "";
     
@@ -71,7 +71,7 @@ public class RefreshListBPFromOA extends BaseActionHandler {
       System.out.println(": " + t.getMessage());
       return json;
     } finally {
-      con.shutdown();
+      utils.closeConnection();
       return json;
     }
   }

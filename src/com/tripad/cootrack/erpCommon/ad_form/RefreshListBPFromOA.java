@@ -117,8 +117,8 @@ public class RefreshListBPFromOA extends HttpSecureAppServlet {
 
     User COOTRACK_USER = OBDal.getInstance().get(User.class, vars.getUser());
 
-    CootrackHttpClient con = new CootrackHttpClient();
-    OpenApiUtils utils = new OpenApiUtils(con/*, COOTRACK_USER*/);
+    //CootrackHttpClient con = new CootrackHttpClient();
+    OpenApiUtils utils = new OpenApiUtils(/*, COOTRACK_USER*/);
     String hasil = "";
     OBError msg = new OBError();
     OBContext.setAdminMode();
@@ -166,7 +166,7 @@ public class RefreshListBPFromOA extends HttpSecureAppServlet {
     } finally {
       vars.removeSessionValue("statusRetrieveCustomer");
       OBContext.restorePreviousMode();
-      con.shutdown();
+      utils.closeConnection();
     }
 
     String strMessage = hasil;

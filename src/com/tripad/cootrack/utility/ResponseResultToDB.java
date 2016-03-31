@@ -44,6 +44,7 @@ public class ResponseResultToDB {
         COOTRACK_USER = OBContext.getOBContext().getUser();
     }
     
+    /*penarikan di mulai dari dirinya sendiri (user yg sedang login) */
     public void validateBPList(JSONObject hasilRetrieve)
             throws Exception, OBException, JSONException, CustomJsonErrorResponseException, Throwable {
         validateBPList(hasilRetrieve, null, null, null);
@@ -117,7 +118,7 @@ public class ResponseResultToDB {
                 //pakai nama dari AD_User
                 //panggil method pembuat bp cat
                 //System.out.println("dari null");
-                bpCat = getBPCategory(COOTRACK_USER.getName());
+                bpCat = getBPCategory(COOTRACK_USER.getName(),COOTRACK_USER.getUsername());
             } else {
                 bpCat = bpCatParam;
             }
@@ -185,7 +186,7 @@ public class ResponseResultToDB {
                     //validateBPList(hasilTarget);s
                     // System.out.println("ANAK : "+hasilTarget.toString());
                     HashMap<JSONObject, Category> map = new HashMap<JSONObject, Category>();
-                    Category passingCategory = getBPCategory(showname);
+                    Category passingCategory = getBPCategory(showname,name);
                     System.out.println("CAT : " + passingCategory.getName());
                     map.put(hasilTarget, passingCategory);
                     tempChildJsonObject.add(map);
@@ -548,16 +549,16 @@ public class ResponseResultToDB {
         return "unknown (" + param + ")";
     }
     
-    private Category getBPCategory(String showname) {
+    private Category getBPCategory(String showname,String value) {
         //System.out.println(showname);
         OBCriteria<Category> bpCrit = OBDal.getInstance().createCriteria(Category.class);
         //bpCrit.add(Restrictions.eq(Category.PROPERTY_CREATEDBY, COOTRACK_USER));
-        bpCrit.add(Restrictions.eq(Category.PROPERTY_SEARCHKEY, showname));
+        bpCrit.add(Restrictions.eq(Category.PROPERTY_NAME, showname));
         if (bpCrit.list().isEmpty()) {
             Category newBpCat = OBProvider.getInstance().get(Category.class);
             newBpCat.setActive(true);
             newBpCat.setName(showname);
-            newBpCat.setSearchKey(showname);
+            newBpCat.setSearchKey(value);
             newBpCat.setDescription("Business Partner Category : " + showname);
             
             OBDal.getInstance().save(newBpCat);
@@ -565,6 +566,11 @@ public class ResponseResultToDB {
             
             return newBpCat;
         } else {
+            bpCrit.list().get(0).setName(showname);
+            bpCrit.list().get(0).setSearchKey(value);
+            OBDal.getInstance().save(bpCrit.list().get(0));
+            OBDal.getInstance().flush();
+            
             return bpCrit.list().get(0);
         }
     }
@@ -649,7 +655,7 @@ public class ResponseResultToDB {
                 newBusinessPartner.setName(COOTRACK_USER.getName());
                 newBusinessPartner.setConsumptionDays(Long.getLong("0"));
                 newBusinessPartner.setCreditLimit(BigDecimal.ZERO);
-                newBusinessPartner.setBusinessPartnerCategory(getBPCategory(COOTRACK_USER.getName()));
+                newBusinessPartner.setBusinessPartnerCategory(getBPCategory(COOTRACK_USER.getName(),COOTRACK_USER.getUsername()));
                 
                 OBDal.getInstance().save(newBusinessPartner);
                 //OBDal.getInstance().flush();
@@ -660,7 +666,7 @@ public class ResponseResultToDB {
             } else {
                 listBP.list().get(0).setSearchKey(id);
                 listBP.list().get(0).setName(COOTRACK_USER.getName());
-                listBP.list().get(0).setBusinessPartnerCategory(getBPCategory(COOTRACK_USER.getName()));
+                listBP.list().get(0).setBusinessPartnerCategory(getBPCategory(COOTRACK_USER.getName(),COOTRACK_USER.getUsername()));
                 
                 OBDal.getInstance().save(listBP.list().get(0));
                 //OBDal.getInstance().flush();
