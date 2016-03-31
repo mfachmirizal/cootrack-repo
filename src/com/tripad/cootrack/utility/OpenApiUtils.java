@@ -38,12 +38,14 @@ public class OpenApiUtils {
   public static final String COOTRACK_GET_MONITOR_URL_BY_TARGET = "http://api.gpsoo.net/1/account/monitor?target";
   public static final String COOTRACK_GET_TRACKING_URL_BY_IMEI = "http://api.gpsoo.net/1/devices/tracking?map_type=GOOGLE&imeis";
 
-  public OpenApiUtils(CootrackHttpClient conParam, User user) {
-    con = conParam;
-    COOTRACK_USERNAME = user;
-  }
+//  public OpenApiUtils(CootrackHttpClient conParam, User user) {
+//      System.out.println("Lewat SINI 1");
+//    con = conParam;
+//    COOTRACK_USERNAME = user;
+//  }
 
   public OpenApiUtils(CootrackHttpClient conParam) {
+      System.out.println("Lewat SINI 2");
     con = conParam;
     COOTRACK_USERNAME = OBContext.getOBContext().getUser();
   }
@@ -177,7 +179,7 @@ public class OpenApiUtils {
 
   public void deleteToken() {
     final OBCriteria<TmcToken> tmcTokenCrit = OBDal.getInstance().createCriteria(TmcToken.class);
-    tmcTokenCrit.add(Restrictions.eq(TmcToken.PROPERTY_VALUE, "1"));
+    tmcTokenCrit.add(Restrictions.eq(TmcToken.PROPERTY_VALUE, COOTRACK_USERNAME.getUsername()));
     tmcTokenCrit.add(Restrictions.eq(TmcToken.PROPERTY_CREATEDBY, COOTRACK_USERNAME));
     for (TmcToken tokenFromDB : tmcTokenCrit.list()) {
       OBDal.getInstance().remove(tokenFromDB);
@@ -187,8 +189,11 @@ public class OpenApiUtils {
   }
 
   public TmcToken getToken() {
+    COOTRACK_USERNAME =  OBContext.getOBContext().getUser();
+    System.out.println("TOKEN INI : "+COOTRACK_USERNAME.getUsername());  
+    System.out.println("TOKEN INI : "+COOTRACK_USERNAME.getUsername());  
     final OBCriteria<TmcToken> tmcTokenCrit = OBDal.getInstance().createCriteria(TmcToken.class);
-    tmcTokenCrit.add(Restrictions.eq(TmcToken.PROPERTY_VALUE, "1"));
+    tmcTokenCrit.add(Restrictions.eq(TmcToken.PROPERTY_VALUE, COOTRACK_USERNAME.getUsername()));
     tmcTokenCrit.add(Restrictions.eq(TmcToken.PROPERTY_CREATEDBY, COOTRACK_USERNAME));
 
     if (tmcTokenCrit.count() > 0) {
@@ -220,7 +225,7 @@ public class OpenApiUtils {
         //jsonData = checkAndProcessStatusResponse(jsonData);
 
         tmcToken.setActive(true);
-        tmcToken.setValue("1");
+        tmcToken.setValue(COOTRACK_USERNAME.getUsername());
         if (Integer.parseInt(jsonData.get("ret").toString()) == 0) {
           tmcToken.setToken(jsonData.get("access_token").toString());
         } else {
@@ -238,7 +243,7 @@ public class OpenApiUtils {
 
       } catch (JSONException ex) {
         tmcToken.setActive(true);
-        tmcToken.setValue("1");
+        tmcToken.setValue(COOTRACK_USERNAME.getUsername());
         tmcToken.setToken("-");
         tmcToken.setMessage(ex.getMessage());
         tmcToken.setReturnCode("55555");

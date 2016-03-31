@@ -23,13 +23,16 @@ import org.openbravo.model.ad.access.User;
  * @author mfachmirizal
  */
 public class RefreshListBPFromOA extends BaseActionHandler {
-  static User COOTRACK_USER = OBContext.getOBContext().getUser();
+  //static User COOTRACK_USER = OBContext.getOBContext().getUser();
   
-  static CootrackHttpClient con = new CootrackHttpClient();
-  static OpenApiUtils utils = new OpenApiUtils(con,COOTRACK_USER);
+ 
     
   @SuppressWarnings("finally")
   protected JSONObject execute(Map<String, Object> parameters, String data) {
+    User COOTRACK_USER = OBContext.getOBContext().getUser();
+    CootrackHttpClient con = new CootrackHttpClient();
+    OpenApiUtils utils = new OpenApiUtils(con/*,COOTRACK_USER*/);
+  
     String hasil = "";
     
     JSONObject json = new JSONObject();

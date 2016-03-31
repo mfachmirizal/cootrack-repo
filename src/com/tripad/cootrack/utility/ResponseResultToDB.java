@@ -35,12 +35,13 @@ import com.tripad.cootrack.utility.exception.CustomJsonErrorResponseException;
  * @author mfachmirizal
  */
 public class ResponseResultToDB {
-    private User COOTRACK_USER = OBContext.getOBContext().getUser();
+    private User COOTRACK_USER ;//= OBContext.getOBContext().getUser();
     static final boolean ISBYVALUE = true;
     OpenApiUtils utils;
     
     public ResponseResultToDB(OpenApiUtils utilsParam) {
         utils = utilsParam;
+        COOTRACK_USER = OBContext.getOBContext().getUser();
     }
     
     public void validateBPList(JSONObject hasilRetrieve)
@@ -285,7 +286,7 @@ public class ResponseResultToDB {
             
             OBCriteria<TmcCar> tmcCarCriteria = OBDal.getInstance().createCriteria(TmcCar.class);
             tmcCarCriteria.add(Restrictions.eq(TmcCar.PROPERTY_IMEI, imei));
-            tmcCarCriteria.add(Restrictions.eq(TmcCar.PROPERTY_CREATEDBY, COOTRACK_USER));
+//[TMC_CAR tanpa filter created by 1/2]            tmcCarCriteria.add(Restrictions.eq(TmcCar.PROPERTY_CREATEDBY, COOTRACK_USER));
             
             if (tmcCarCriteria.count() > 0) { // bila ada maka data tersebut sinkron, tinggal tentukan
                 // update atau insert
@@ -457,7 +458,7 @@ public class ResponseResultToDB {
                 .add(Restrictions.eq(TmcDocumentUpdateLine.PROPERTY_CREATEDBY, COOTRACK_USER));
         
         OBCriteria<TmcCar> seluruhMobilDiTmcCar = OBDal.getInstance().createCriteria(TmcCar.class);
-        seluruhMobilDiTmcCar.add(Restrictions.eq(TmcCar.PROPERTY_CREATEDBY, COOTRACK_USER));
+ //[TMC_CAR tanpa filter created by 2/2]        seluruhMobilDiTmcCar.add(Restrictions.eq(TmcCar.PROPERTY_CREATEDBY, COOTRACK_USER));
         
         delTmcDocumentUpdateLine.add(Restrictions
                 .not(Restrictions.in(TmcDocumentUpdateLine.PROPERTY_TMCCAR, seluruhMobilDiTmcCar.list()))); //

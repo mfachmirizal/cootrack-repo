@@ -30,13 +30,14 @@ import com.tripad.cootrack.utility.exception.CustomJsonErrorResponseException;
  * @author mfachmirizal
  */
 public class RefreshListFilteredStatusCarByImei extends BaseActionHandler {
-  static User COOTRACK_USER = OBContext.getOBContext().getUser();
-
-  static CootrackHttpClient con = new CootrackHttpClient();
-  static OpenApiUtils utils = new OpenApiUtils(con, COOTRACK_USER);
+  
 
   @SuppressWarnings("finally")
   protected JSONObject execute(Map<String, Object> parameters, String data) {
+    User COOTRACK_USER = OBContext.getOBContext().getUser();
+      System.out.println("RefreshListFilteredStatusCarByImei : "+COOTRACK_USER.getUsername());
+    CootrackHttpClient con = new CootrackHttpClient();  
+    OpenApiUtils utils = new OpenApiUtils(con/*, COOTRACK_USER*/);
     JSONObject json = new JSONObject();
     String headerId = "";
     String hasil = "";
@@ -55,7 +56,7 @@ public class RefreshListFilteredStatusCarByImei extends BaseActionHandler {
 
         // loop dulu list imei
         OBCriteria<TmcCar> tmcCarCriteria = OBDal.getInstance().createCriteria(TmcCar.class);
-        tmcCarCriteria.add(Restrictions.eq(TmcCar.PROPERTY_CREATEDBY, COOTRACK_USER));
+        //ini tanpa filter sekarang tmcCarCriteria.add(Restrictions.eq(TmcCar.PROPERTY_CREATEDBY, COOTRACK_USER));
         int count = 1;
         int waveCount = 0;
         for (TmcCar tmcCar : tmcCarCriteria.list()) {
