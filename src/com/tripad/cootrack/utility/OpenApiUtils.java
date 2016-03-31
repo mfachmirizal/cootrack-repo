@@ -25,8 +25,12 @@ import org.openbravo.model.ad.access.User;
 import com.tripad.cootrack.data.TmcToken;
 import com.tripad.cootrack.data.TmcUserSync;
 import com.tripad.cootrack.utility.exception.CustomJsonErrorResponseException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class OpenApiUtils {
+	
+	final private static Logger log = LoggerFactory.getLogger(OpenApiUtils.class);
   // Nanti static var ini hapus
   //public User COOTRACK_USERNAME = OBContext.getOBContext().getUser();// "enduserdahlia";
   CootrackHttpClient con;
@@ -70,8 +74,15 @@ public class OpenApiUtils {
     }
 
     String url = "";
-    if (action.equals("tracking")) {
-      url = COOTRACK_GET_TRACKING_URL_BY_IMEI + "=" + param[0] + "&" + commonParam;
+    if (action.equals("tracking") || action.equals("trackingbytarget")) {
+		if (action.equals("tracking")) {
+			url = COOTRACK_GET_TRACKING_URL_BY_IMEI + "=" + param[0] + "&" + commonParam;
+		} else {
+			url = COOTRACK_GET_MONITOR_URL_BY_TARGET + "=" + param[0] + "&" + commonParam;
+			System.out.println("URL : "+url);
+			log.error("cetak URL : "+url);
+			
+		}
     } else if (action.equals("info")) {
       if (param[0] == null) {
         param[0] = encodeString(COOTRACK_USERNAME.getUsername());
@@ -169,10 +180,15 @@ public class OpenApiUtils {
     return jsonData;
   }
 
-  public JSONObject requestStatusFilteredCarByImei(String imeis)
+  public JSONObject requestStatusFilteredCarByImei(String method, String param)
       throws JSONException, CustomJsonErrorResponseException {
     JSONObject jsonData;
-    jsonData = requestData("tracking", imeis);
+	if (method.equals("byimei")) {
+		jsonData = requestData("tracking", param);
+	} else {
+		jsonData = requestData("trackingbytarget", param);
+		System.out.println("req data = "+jsonData.toString());
+	}
 
     return jsonData;
   }

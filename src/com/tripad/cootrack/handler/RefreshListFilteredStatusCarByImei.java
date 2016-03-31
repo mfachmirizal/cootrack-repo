@@ -30,6 +30,8 @@ import com.tripad.cootrack.utility.exception.CustomJsonErrorResponseException;
  * @author mfachmirizal
  */
 public class RefreshListFilteredStatusCarByImei extends BaseActionHandler {
+	static boolean PROCESS_BY_IMEI = true;
+	static boolean PROCESS_BY_TARGET = false;
   
 
   @SuppressWarnings("finally")
@@ -54,6 +56,7 @@ public class RefreshListFilteredStatusCarByImei extends BaseActionHandler {
           headerId = headerIds.getString(i);
         }
 
+		if (PROCESS_BY_TARGET) {
         // loop dulu list imei
         OBCriteria<TmcCar> tmcCarCriteria = OBDal.getInstance().createCriteria(TmcCar.class);
         //ini tanpa filter sekarang tmcCarCriteria.add(Restrictions.eq(TmcCar.PROPERTY_CREATEDBY, COOTRACK_USER));
@@ -79,7 +82,7 @@ public class RefreshListFilteredStatusCarByImei extends BaseActionHandler {
         for (String wave : waveList) {
           //String arr[] = utils.convertToArray(wave.substring(1), ",");
           // requestData disini
-          JSONObject hasilRetrieve = utils.requestStatusFilteredCarByImei(wave.substring(1));
+          JSONObject hasilRetrieve = utils.requestStatusFilteredCarByImei("byimei",wave.substring(1));
           hasil = hasilRetrieve.get("msg").toString();
           if (hasil.length() != 0) {
             break;
@@ -88,6 +91,14 @@ public class RefreshListFilteredStatusCarByImei extends BaseActionHandler {
           }
           Thread.sleep(50);
         }
+	  } else {
+		  JSONObject hasilRetrieve = utils.requestStatusFilteredCarByImei("bytarget",COOTRACK_USER.getUsername());
+		  hasil = hasilRetrieve.get("msg").toString();
+		  if (hasil.length() == 0) {
+          // Hasil retrieve simpan ke OB
+			new ResponseResultToDB(utils).validateCarStatusList(headerId, hasilRetrieve);
+		  }
+	  }
 
         json.put("jawaban", hasil);
         //Historical Test
