@@ -98,6 +98,7 @@ public class RefreshListFilteredStatusCarByImei extends BaseActionHandler {
                     }
                 } else { //by target
                     //List<CustomerClass> listCustomer = new CollectCustomerFromServer(utils,COOTRACK_USER.getUsername()).getList();
+                    //System.out.println("Masuk Else sini");
                     List<CustomerClass> listCustomer = new CollectCustomerFromDB(utils,COOTRACK_USER.getUsername()).getList();
                     List<String> customerValueList = new ArrayList<String>();
                     customerValueList.add(COOTRACK_USER.getUsername());
@@ -172,6 +173,7 @@ public class RefreshListFilteredStatusCarByImei extends BaseActionHandler {
             json.put("jawaban", e.getMessage());
         } catch (Throwable t) {
             OBDal.getInstance().rollbackAndClose();
+            //new CustomJsonErrorResponseException();
             json.put("jawaban", "Internal Error : " + t.getMessage());
         } finally {
             utils.closeConnection();

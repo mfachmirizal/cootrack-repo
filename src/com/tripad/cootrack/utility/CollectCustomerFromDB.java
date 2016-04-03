@@ -85,14 +85,15 @@ public class CollectCustomerFromDB {
     // method
     
     public List<CustomerClass> getList() throws Exception, OBException, JSONException, CustomJsonErrorResponseException, Throwable{
-        List<CustomerClass> result = new ArrayList<>();
+        List<CustomerClass> result = new ArrayList<CustomerClass>();
         //JSONObject hasilRetrieve = utils.requestListChildAccount(this.target);
+        
         fillList(result,this.target,0);
         //utils.closeConnection();
         
         int i = 1;
         for (CustomerClass cc : result) {
-            System.out.println("data ("+i+") : "+cc.getName());
+            //System.out.println("data ("+i+") : "+cc.getName());
 //            int c = 1;
 //            for (CustomerClass child : cc.getChildren()) {
 //                System.out.println("child ("+c+") : "+cc.getName());
@@ -113,8 +114,13 @@ public class CollectCustomerFromDB {
         OBCriteria<Category> listcategoryCriteria = OBDal.getInstance().createCriteria(Category.class);
         listcategoryCriteria.add(Restrictions.eq(Category.PROPERTY_SEARCHKEY,target ));
         
+        //System.out.println("Tahap 1 : "+listcategoryCriteria.count());
+        
         for (Category category :listcategoryCriteria.list() ) {
             for (BusinessPartner customer : category.getBusinessPartnerList()) {
+                
+                //System.out.println("Tahap 2 : "+customer.getName());
+                
                 customerClass = new CustomerClass();
                 //log.error("nama : "+customer.getSearchKey());
                 customerClass.setId(customer.getId());
@@ -130,7 +136,9 @@ public class CollectCustomerFromDB {
 //                OBCriteria<Category> listChildCriteria = OBDal.getInstance().createCriteria(Category.class);
 //                listChildCriteria.add(Restrictions.eq(Category.PROPERTY_SEARCHKEY,customer.getSearchKey() ));
 //                if (listChildCriteria.count() > 0) {
-                fillList(result,customer.getSearchKey(),lvl);
+                    if (!customer.getSearchKey().equals(target)) {
+                        fillList(result,customer.getSearchKey(),lvl);
+                    }
                 
                 
 //                }

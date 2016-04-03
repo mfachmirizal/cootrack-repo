@@ -91,7 +91,7 @@ public class CollectCustomerFromServer {
     // method
     
     public List<CustomerClass> getList() throws Exception, OBException, JSONException, CustomJsonErrorResponseException, Throwable{
-        List<CustomerClass> result = new ArrayList<>();
+        List<CustomerClass> result = new ArrayList<CustomerClass>();
         JSONObject hasilRetrieve = utils.requestListChildAccount(this.target);
         fillList(result,hasilRetrieve);
         //utils.closeConnection();
