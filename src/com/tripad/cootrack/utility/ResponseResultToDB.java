@@ -266,7 +266,8 @@ public class ResponseResultToDB {
                 String device_info = carList.getJSONObject(i).get("device_info").toString();
                 // String gps_time = carList.getJSONObject(i).get("gps_time").toString();
                 String sys_time = carList.getJSONObject(i).get("sys_time").toString();
-                // String heart_time = carList.getJSONObject(i).get("heart_time").toString();
+                
+                String heart_time = carList.getJSONObject(i).get("heart_time").toString();
                 String server_time = carList.getJSONObject(i).get("server_time").toString();
                 // String lng = carList.getJSONObject(i).get("lng").toString();
                 // String lat = carList.getJSONObject(i).get("lat").toString();
@@ -302,6 +303,9 @@ public class ResponseResultToDB {
                     //                        Long.parseLong(server_time.trim()), "minutes");
                     int dayInterval = utils.getIntervalFromUnix(Long.parseLong(sys_time.trim()),
                             Long.parseLong(server_time.trim()), "days");
+                    
+                    int hertDayInterval = utils.getIntervalFromUnix(Long.parseLong(heart_time.trim()),
+                            Long.parseLong(heart_time.trim()), "days");
 
                     int nearExpired = utils.getIntervalFromUnix(Long.parseLong(server_time.trim()),
                             tmcCarCriteria.list().get(0).getOUTTime(), "days");
@@ -317,7 +321,7 @@ public class ResponseResultToDB {
 //                        System.out.println("IMEI & Expired : "+imei+" & "+nearExpired);
 //                    }
                     //System.out.println("IMEI & Expired : "+imei+" & "+nearExpired);
-                    statusCategory = getStatusCategory(device_info, dayInterval, hourInterval, speed,
+                    statusCategory = getStatusCategory(device_info, dayInterval,hertDayInterval, hourInterval, speed,
                             nearExpired);
 
                     aCC = getStatusAcc(aCC);
@@ -491,7 +495,7 @@ public class ResponseResultToDB {
         return header;
     }
     
-    private String getStatusCategory(String device_info, int dayInterval, int hourInterval,
+    private String getStatusCategory(String device_info, int dayInterval, int hertDayInterval, int hourInterval,
             String speed, int nearExpired) {
         String hasil = "";
         
@@ -514,16 +518,16 @@ public class ResponseResultToDB {
         else if ((device_info.equals("0")) && (dayInterval >= 30) /* && (speed.equals("0")) */ ) {
             hasil = "Static 30 Days";
         }
-        // offline 1 ~ 15 days
-        else if ((device_info.equals("3")) && (dayInterval < 15) /* && (speed.equals("0")) */ ) {
+        // offline 1 ~ 15 days asalnya offline berdasar dayInterval
+        else if ((device_info.equals("3")) && (hertDayInterval < 15) /* && (speed.equals("0")) */ ) {
             hasil = "Offline 1 Days";
         }
         // offline 15 ~ 30
-        else if ((device_info.equals("3")) && (dayInterval < 30) /* && (speed.equals("0")) */ ) {
+        else if ((device_info.equals("3")) && (hertDayInterval < 30) /* && (speed.equals("0")) */ ) {
             hasil = "Offline 15 Days";
         }
         //offline 30 ~ 60
-        else if ((device_info.equals("3")) && (dayInterval < 60) /* && (speed.equals("0")) */ ) {
+        else if ((device_info.equals("3")) && (hertDayInterval < 60) /* && (speed.equals("0")) */ ) {
             hasil = "Offline 30 Days";
         }
         /*else {
