@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="RptC_Invoice_Item" pageWidth="595" pageHeight="842" columnWidth="483" leftMargin="56" rightMargin="56" topMargin="56" bottomMargin="56" whenResourceMissingType="Empty" uuid="ba105678-0f35-4ce7-b632-394813628f0a">
-	<property name="ireport.zoom" value="1.3310000000000217"/>
+	<property name="ireport.zoom" value="1.7715610000000317"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="336"/>
+	<property name="ireport.y" value="480"/>
 	<style name="default" vAlign="Middle" fontName="Bitstream Vera Sans" fontSize="8"/>
 	<style name="Report_Title" fontName="Bitstream Vera Sans" fontSize="18"/>
 	<style name="Report_Subtitle" forecolor="#555555" fontName="Bitstream Vera Sans" fontSize="14"/>
@@ -302,6 +302,20 @@ $F{bp_data}]]></textFieldExpression>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{phone_and_phone2}]]></textFieldExpression>
 			</textField>
+			<textField>
+				<reportElement x="484" y="-180" width="80" height="9" uuid="a70a8162-5bf3-4535-982d-907c62f89810"/>
+				<textElement textAlignment="Right">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="564" y="-180" width="40" height="9" uuid="02968a6a-3b21-4e20-a210-1b5f8bb065ce"/>
+				<textElement>
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
 		</band>
 	</pageHeader>
 	<columnHeader>
@@ -442,7 +456,7 @@ $F{bp_data}]]></textFieldExpression>
 	</detail>
 	<columnFooter>
 		<band height="77">
-			<printWhenExpression><![CDATA[($V{TOTAL_PAGE}-$V{COLUMN_NUMBER}) != 0]]></printWhenExpression>
+			<printWhenExpression><![CDATA[$P{REPORT_PARAMETERS_MAP}.get("isLastPage")]]></printWhenExpression>
 			<line>
 				<reportElement x="483" y="0" width="1" height="76" uuid="0480986b-5645-48a7-ac3b-c701f40e74a1"/>
 			</line>
@@ -544,9 +558,11 @@ $F{bp_data}]]></textFieldExpression>
 		</band>
 	</columnFooter>
 	<pageFooter>
-		<band height="210">
+		<band height="209">
 			<staticText>
-				<reportElement x="0" y="30" width="63" height="20" uuid="e59d6a70-d5eb-4674-8a26-c3a3880b12ac"/>
+				<reportElement x="0" y="30" width="63" height="20" uuid="e59d6a70-d5eb-4674-8a26-c3a3880b12ac">
+					<printWhenExpression><![CDATA[$P{REPORT_PARAMETERS_MAP}.get("isLastPage")]]></printWhenExpression>
+				</reportElement>
 				<box rightPadding="1"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="8"/>
@@ -554,14 +570,18 @@ $F{bp_data}]]></textFieldExpression>
 				<text><![CDATA[No PO]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="63" y="30" width="11" height="20" uuid="c0e075a4-317a-4e94-8bd3-6366293f2247"/>
+				<reportElement x="63" y="30" width="11" height="20" uuid="c0e075a4-317a-4e94-8bd3-6366293f2247">
+					<printWhenExpression><![CDATA[$P{REPORT_PARAMETERS_MAP}.get("isLastPage")]]></printWhenExpression>
+				</reportElement>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
 				<text><![CDATA[:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="0" y="50" width="63" height="20" uuid="6dc47f99-22d8-4c2c-8287-b29a98f78645"/>
+				<reportElement x="0" y="50" width="63" height="20" uuid="6dc47f99-22d8-4c2c-8287-b29a98f78645">
+					<printWhenExpression><![CDATA[$P{REPORT_PARAMETERS_MAP}.get("isLastPage")]]></printWhenExpression>
+				</reportElement>
 				<box rightPadding="1"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="8"/>
@@ -569,14 +589,18 @@ $F{bp_data}]]></textFieldExpression>
 				<text><![CDATA[No Surat Jalan]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="63" y="50" width="11" height="20" uuid="8ad3dd94-cd87-4149-bc9b-9036e23421d5"/>
+				<reportElement x="63" y="50" width="11" height="20" uuid="8ad3dd94-cd87-4149-bc9b-9036e23421d5">
+					<printWhenExpression><![CDATA[$P{REPORT_PARAMETERS_MAP}.get("isLastPage")]]></printWhenExpression>
+				</reportElement>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
 				<text><![CDATA[:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="0" y="70" width="63" height="20" uuid="3494ae6e-812d-41f8-8eef-2359fbd383ad"/>
+				<reportElement x="0" y="70" width="63" height="20" uuid="3494ae6e-812d-41f8-8eef-2359fbd383ad">
+					<printWhenExpression><![CDATA[$P{REPORT_PARAMETERS_MAP}.get("isLastPage")]]></printWhenExpression>
+				</reportElement>
 				<box rightPadding="1"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="8"/>
@@ -584,35 +608,45 @@ $F{bp_data}]]></textFieldExpression>
 				<text><![CDATA[Pembayaran]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="63" y="70" width="11" height="20" uuid="19869e5b-c5e2-4957-8d82-b40ce43d3458"/>
+				<reportElement x="63" y="70" width="11" height="20" uuid="19869e5b-c5e2-4957-8d82-b40ce43d3458">
+					<printWhenExpression><![CDATA[$P{REPORT_PARAMETERS_MAP}.get("isLastPage")]]></printWhenExpression>
+				</reportElement>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
 				<text><![CDATA[:]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="80" y="30" width="154" height="20" uuid="2a8052c4-e77c-4086-a0d7-df7f7989e37d"/>
+				<reportElement x="80" y="30" width="154" height="20" uuid="2a8052c4-e77c-4086-a0d7-df7f7989e37d">
+					<printWhenExpression><![CDATA[$P{REPORT_PARAMETERS_MAP}.get("isLastPage")]]></printWhenExpression>
+				</reportElement>
 				<textElement verticalAlignment="Middle" markup="none">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{order_documentno}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="80" y="50" width="154" height="20" uuid="1c76454a-8f0b-4d12-8391-b251ed7b18e4"/>
+				<reportElement x="80" y="50" width="154" height="20" uuid="1c76454a-8f0b-4d12-8391-b251ed7b18e4">
+					<printWhenExpression><![CDATA[$P{REPORT_PARAMETERS_MAP}.get("isLastPage")]]></printWhenExpression>
+				</reportElement>
 				<textElement verticalAlignment="Middle" markup="none">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{inout_documentno}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="80" y="70" width="154" height="20" uuid="f53e412c-42e9-4758-be47-a482c3124b0a"/>
+				<reportElement x="80" y="70" width="154" height="20" uuid="f53e412c-42e9-4758-be47-a482c3124b0a">
+					<printWhenExpression><![CDATA[$P{REPORT_PARAMETERS_MAP}.get("isLastPage")]]></printWhenExpression>
+				</reportElement>
 				<textElement verticalAlignment="Middle" markup="none">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{paymethod_name}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="290" y="17" width="194" height="20" uuid="0bac136a-e72c-4459-b91a-abe41ebc8332"/>
+				<reportElement x="290" y="17" width="194" height="20" uuid="0bac136a-e72c-4459-b91a-abe41ebc8332">
+					<printWhenExpression><![CDATA[$P{REPORT_PARAMETERS_MAP}.get("isLastPage")]]></printWhenExpression>
+				</reportElement>
 				<box rightPadding="1"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8" isBold="true"/>
@@ -620,73 +654,95 @@ $F{bp_data}]]></textFieldExpression>
 				<text><![CDATA[Please Remit your payment to bellow account]]></text>
 			</staticText>
 			<rectangle>
-				<reportElement x="304" y="39" width="170" height="153" uuid="fd6166aa-e2f3-4674-b55b-078c873a0a21"/>
+				<reportElement x="304" y="39" width="170" height="153" uuid="fd6166aa-e2f3-4674-b55b-078c873a0a21">
+					<printWhenExpression><![CDATA[$P{REPORT_PARAMETERS_MAP}.get("isLastPage")]]></printWhenExpression>
+				</reportElement>
 			</rectangle>
 			<staticText>
-				<reportElement x="304" y="51" width="169" height="15" uuid="9d15c624-023e-447f-b1e4-827df5390377"/>
+				<reportElement x="304" y="51" width="169" height="15" uuid="9d15c624-023e-447f-b1e4-827df5390377">
+					<printWhenExpression><![CDATA[$P{REPORT_PARAMETERS_MAP}.get("isLastPage")]]></printWhenExpression>
+				</reportElement>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="9" isBold="true"/>
 				</textElement>
 				<text><![CDATA[BANK MANDIRI]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="304" y="66" width="169" height="15" uuid="fbe170bd-02d0-43fd-b3c7-9d82bf318b28"/>
+				<reportElement x="304" y="66" width="169" height="15" uuid="fbe170bd-02d0-43fd-b3c7-9d82bf318b28">
+					<printWhenExpression><![CDATA[$P{REPORT_PARAMETERS_MAP}.get("isLastPage")]]></printWhenExpression>
+				</reportElement>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="9" isBold="true"/>
 				</textElement>
 				<text><![CDATA[A/C : 156-000159-232-0]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="304" y="81" width="169" height="15" uuid="6fa2b6d3-bd20-432a-93d7-c5d0370a14e2"/>
+				<reportElement x="304" y="81" width="169" height="15" uuid="6fa2b6d3-bd20-432a-93d7-c5d0370a14e2">
+					<printWhenExpression><![CDATA[$P{REPORT_PARAMETERS_MAP}.get("isLastPage")]]></printWhenExpression>
+				</reportElement>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="9" isBold="true"/>
 				</textElement>
 				<text><![CDATA[A/N : Luhur Pambudi W]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="304" y="96" width="169" height="13" uuid="0c99a6c4-cfac-4509-943f-91a4f09ab73b"/>
+				<reportElement x="304" y="96" width="169" height="13" uuid="0c99a6c4-cfac-4509-943f-91a4f09ab73b">
+					<printWhenExpression><![CDATA[$P{REPORT_PARAMETERS_MAP}.get("isLastPage")]]></printWhenExpression>
+				</reportElement>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="9" isBold="true"/>
 				</textElement>
 				<text><![CDATA[]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="304" y="109" width="169" height="13" uuid="db5d8b43-5cd2-4bc7-9402-6f0266bf6ac3"/>
+				<reportElement x="304" y="109" width="169" height="13" uuid="db5d8b43-5cd2-4bc7-9402-6f0266bf6ac3">
+					<printWhenExpression><![CDATA[$P{REPORT_PARAMETERS_MAP}.get("isLastPage")]]></printWhenExpression>
+				</reportElement>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="9" isBold="true"/>
 				</textElement>
 				<text><![CDATA[atau]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="304" y="133" width="169" height="13" uuid="cac2e1b5-6e30-4ce8-b6bd-6be51afe0acc"/>
+				<reportElement x="304" y="133" width="169" height="13" uuid="cac2e1b5-6e30-4ce8-b6bd-6be51afe0acc">
+					<printWhenExpression><![CDATA[$P{REPORT_PARAMETERS_MAP}.get("isLastPage")]]></printWhenExpression>
+				</reportElement>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="9" isBold="true"/>
 				</textElement>
 				<text><![CDATA[]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="304" y="133" width="169" height="15" uuid="83fb2ad9-3358-41d4-9814-d4f253ada52a"/>
+				<reportElement x="304" y="133" width="169" height="15" uuid="83fb2ad9-3358-41d4-9814-d4f253ada52a">
+					<printWhenExpression><![CDATA[$P{REPORT_PARAMETERS_MAP}.get("isLastPage")]]></printWhenExpression>
+				</reportElement>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="9" isBold="true"/>
 				</textElement>
 				<text><![CDATA[BANK MANDIRI]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="304" y="163" width="169" height="15" uuid="e43a90a7-e7c9-42e6-b08d-08ee0b222714"/>
+				<reportElement x="304" y="163" width="169" height="15" uuid="e43a90a7-e7c9-42e6-b08d-08ee0b222714">
+					<printWhenExpression><![CDATA[$P{REPORT_PARAMETERS_MAP}.get("isLastPage")]]></printWhenExpression>
+				</reportElement>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="9" isBold="true"/>
 				</textElement>
 				<text><![CDATA[A/N : Luhur Pambudi W]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="304" y="148" width="169" height="15" uuid="5068cefb-6a97-47df-8655-2fbf7b2a8dfb"/>
+				<reportElement x="304" y="148" width="169" height="15" uuid="5068cefb-6a97-47df-8655-2fbf7b2a8dfb">
+					<printWhenExpression><![CDATA[$P{REPORT_PARAMETERS_MAP}.get("isLastPage")]]></printWhenExpression>
+				</reportElement>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="9" isBold="true"/>
 				</textElement>
 				<text><![CDATA[A/C : 156-000159-232-0]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="0" y="109" width="139" height="17" uuid="3a996107-9d04-4925-a78f-03f6067928cc"/>
+				<reportElement x="0" y="109" width="139" height="17" uuid="3a996107-9d04-4925-a78f-03f6067928cc">
+					<printWhenExpression><![CDATA[$P{REPORT_PARAMETERS_MAP}.get("isLastPage")]]></printWhenExpression>
+				</reportElement>
 				<box rightPadding="1"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8"/>
@@ -694,7 +750,9 @@ $F{bp_data}]]></textFieldExpression>
 				<text><![CDATA[Salam Hormat,]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="1" y="177" width="139" height="13" uuid="78e33dce-20c4-4846-83e9-a8983d116dd7"/>
+				<reportElement x="1" y="177" width="139" height="13" uuid="78e33dce-20c4-4846-83e9-a8983d116dd7">
+					<printWhenExpression><![CDATA[$P{REPORT_PARAMETERS_MAP}.get("isLastPage")]]></printWhenExpression>
+				</reportElement>
 				<box rightPadding="1"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8" isBold="true" isUnderline="true"/>
@@ -702,35 +760,47 @@ $F{bp_data}]]></textFieldExpression>
 				<text><![CDATA[Dini Indriani]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="1" y="190" width="139" height="13" uuid="2491223e-17b0-4669-b441-996f68642b75"/>
+				<reportElement x="1" y="190" width="139" height="13" uuid="2491223e-17b0-4669-b441-996f68642b75">
+					<printWhenExpression><![CDATA[$P{REPORT_PARAMETERS_MAP}.get("isLastPage")]]></printWhenExpression>
+				</reportElement>
 				<box rightPadding="1"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8" isBold="true" isUnderline="false"/>
 				</textElement>
 				<text><![CDATA[Operation Manager]]></text>
 			</staticText>
-			<textField>
-				<reportElement x="362" y="201" width="80" height="9" uuid="a70a8162-5bf3-4535-982d-907c62f89810"/>
-				<textElement textAlignment="Right">
-					<font size="7"/>
-				</textElement>
-				<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
-			</textField>
-			<textField evaluationTime="Report">
-				<reportElement x="442" y="201" width="40" height="9" uuid="02968a6a-3b21-4e20-a210-1b5f8bb065ce"/>
-				<textElement>
-					<font size="7"/>
-				</textElement>
-				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
-			</textField>
 			<staticText>
-				<reportElement x="0" y="9" width="63" height="20" uuid="05cd5008-f947-449f-8378-8ef33f49169c"/>
+				<reportElement x="0" y="9" width="63" height="20" uuid="05cd5008-f947-449f-8378-8ef33f49169c">
+					<printWhenExpression><![CDATA[$P{REPORT_PARAMETERS_MAP}.get("isLastPage")]]></printWhenExpression>
+				</reportElement>
 				<box rightPadding="1"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="9" isBold="true" isItalic="false" isUnderline="true"/>
 				</textElement>
 				<text><![CDATA[Terlampir]]></text>
 			</staticText>
+			<textField>
+				<reportElement x="363" y="200" width="80" height="9" uuid="88efb3f7-42e4-42ed-b836-d5f7f7675950"/>
+				<textElement textAlignment="Right">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="443" y="200" width="40" height="9" uuid="66eb164d-5c4f-4b90-ad8e-f6542f379880"/>
+				<textElement>
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
 		</band>
 	</pageFooter>
+	<summary>
+		<band height="1">
+			<textField>
+				<reportElement x="3" y="0" width="0" height="1" uuid="237c1d19-b484-4272-ad4f-9f6c6388caf2"/>
+				<textFieldExpression><![CDATA[$P{REPORT_PARAMETERS_MAP}.put("isLastPage",Boolean.TRUE)]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
 </jasperReport>
