@@ -143,6 +143,7 @@ public class ResponseResultToDB {
                 //di rubah jadi pakai method
                 tempImeiServer = validateCar(hasilTarget, newBusinessPartner);
             } else { // bila BP SUdah adaa, maka edit
+				tmcListChildAcc.list().get(0).setTmcOpenapiIdent(id);
                 tmcListChildAcc.list().get(0).setSearchKey(name);
                 tmcListChildAcc.list().get(0).setName(showname);
                 tmcListChildAcc.list().get(0).setBusinessPartnerCategory(bpCat);
