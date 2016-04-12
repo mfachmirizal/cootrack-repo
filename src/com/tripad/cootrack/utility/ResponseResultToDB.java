@@ -305,8 +305,8 @@ public class ResponseResultToDB {
                     int dayInterval = utils.getIntervalFromUnix(Long.parseLong(sys_time.trim()),
                             Long.parseLong(server_time.trim()), "days");
 
-                    int hertDayInterval = utils.getIntervalFromUnix(Long.parseLong(heart_time.trim()),
-                            Long.parseLong(heart_time.trim()), "days");
+                    int heartDayInterval = utils.getIntervalFromUnix(Long.parseLong(heart_time.trim()),
+                            Long.parseLong(server_time.trim()), "days");
 
                     int nearExpired = utils.getIntervalFromUnix(Long.parseLong(server_time.trim()),
                             tmcCarCriteria.list().get(0).getOUTTime(), "days");
@@ -317,12 +317,12 @@ public class ResponseResultToDB {
                     //System.out.println("Fase 3/4");
                     //debug imei 864717003511874
 //                    System.out.println("IMEI & Expired : "+imei+" & "+nearExpired);
-//                    if (imei.equals("864717003511874")) {
-//                        System.out.println("Server time & get out TIME : "+server_time.trim()+" & "+tmcCarCriteria.list().get(0).getOUTTime());
-//                        System.out.println("IMEI & Expired : "+imei+" & "+nearExpired);
-//                    }
+                  //  if (imei.equals("868120100610069")) {
+                  //      //System.out.println("Server time & get out TIME : "+server_time.trim()+" & "+tmcCarCriteria.list().get(0).getOUTTime());
+                  //      System.out.println("IMEI & heart day : "+imei+" & "+heartDayInterval);
+                  //  }
                     //System.out.println("IMEI & Expired : "+imei+" & "+nearExpired);
-                    statusCategory = getStatusCategory(device_info, dayInterval,hertDayInterval, hourInterval, speed,
+                    statusCategory = getStatusCategory(device_info, dayInterval,heartDayInterval, hourInterval, speed,
                             nearExpired);
 
                     aCC = getStatusAcc(aCC);
@@ -496,7 +496,7 @@ public class ResponseResultToDB {
         return header;
     }
 
-    private String getStatusCategory(String device_info, int dayInterval, int hertDayInterval, int hourInterval,
+    private String getStatusCategory(String device_info, int dayInterval, int heartDayInterval, int hourInterval,
             String speed, int nearExpired) {
         String hasil = "";
 
@@ -520,15 +520,15 @@ public class ResponseResultToDB {
             hasil = "Static 30 Days";
         }
         // offline 1 ~ 15 days asalnya offline berdasar dayInterval
-        else if ((device_info.equals("3")) && (hertDayInterval < 15) /* && (speed.equals("0")) */ ) {
+        else if ((device_info.equals("3")) && (heartDayInterval < 15) /* && (speed.equals("0")) */ ) {
             hasil = "Offline 1 Days";
         }
         // offline 15 ~ 30
-        else if ((device_info.equals("3")) && (hertDayInterval < 30) /* && (speed.equals("0")) */ ) {
+        else if ((device_info.equals("3")) && (heartDayInterval < 30) /* && (speed.equals("0")) */ ) {
             hasil = "Offline 15 Days";
         }
         //offline 30 ~ 60
-        else if ((device_info.equals("3")) && (hertDayInterval < 60) /* && (speed.equals("0")) */ ) {
+        else if ((device_info.equals("3")) && (heartDayInterval < 60) /* && (speed.equals("0")) */ ) {
             hasil = "Offline 30 Days";
         }
         /*else {
