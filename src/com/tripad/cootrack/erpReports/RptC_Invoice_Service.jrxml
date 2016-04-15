@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="595" pageHeight="842" columnWidth="483" leftMargin="56" rightMargin="56" topMargin="56" bottomMargin="56" whenResourceMissingType="Empty" uuid="ba105678-0f35-4ce7-b632-394813628f0a">
 	<property name="ireport.zoom" value="1.3310000000000217"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="256"/>
+	<property name="ireport.y" value="254"/>
 	<style name="default" vAlign="Middle" fontName="Bitstream Vera Sans" fontSize="8"/>
 	<style name="Report_Title" fontName="Bitstream Vera Sans" fontSize="18"/>
 	<style name="Report_Subtitle" forecolor="#555555" fontName="Bitstream Vera Sans" fontSize="14"/>
@@ -705,7 +705,7 @@ $F{bp_data}]]></textFieldExpression>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="9" isBold="true"/>
 				</textElement>
-				<text><![CDATA[BANK MANDIRI]]></text>
+				<text><![CDATA[BCA]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="304" y="163" width="169" height="15" uuid="e43a90a7-e7c9-42e6-b08d-08ee0b222714">
@@ -723,7 +723,7 @@ $F{bp_data}]]></textFieldExpression>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="9" isBold="true"/>
 				</textElement>
-				<text><![CDATA[A/C : 156-000159-232-0]]></text>
+				<text><![CDATA[A/C : 842 026 2974]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="0" y="109" width="139" height="17" uuid="3a996107-9d04-4925-a78f-03f6067928cc">
