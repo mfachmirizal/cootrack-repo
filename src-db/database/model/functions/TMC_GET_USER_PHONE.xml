@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+  <database name="FUNCTION TMC_GET_USER_PHONE">
+    <function name="TMC_GET_USER_PHONE" type="VARCHAR">
+      <parameter name="partner_id" type="VARCHAR" mode="in">
+        <default/>
+      </parameter>
+      <body><![CDATA[/*************************************************************************
+Loginusa - M Fachmi Rizal SELECT PHONE FROM AD_USER where C_BPARTNER_ID='AE7267AE268B471AA6B61801681011B3' ORDER BY CREATED desc limit 1;
+************************************************************************/
+  v_Phone VARCHAR2(100):='';
+BEGIN
+
+SELECT PHONE INTO v_Phone FROM AD_USER where C_BPARTNER_ID=partner_id ORDER BY CREATED desc limit 1;
+
+IF (v_Phone = '' || v_Phone IS NULL) THEN
+	return '';
+END IF;
+
+return v_Phone;
+END TMC_GET_USER_PHONE
+]]></body>
+    </function>
+  </database>
