@@ -148,6 +148,7 @@ public class CootrackHttpClient {
     } catch (Exception e) {
       //do nothing
     }
+
   }
 
   public void cancel() {

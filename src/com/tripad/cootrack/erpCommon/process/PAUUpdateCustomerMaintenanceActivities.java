@@ -32,24 +32,24 @@ import org.openbravo.service.db.CallStoredProcedure;
  *
  */
 public class PAUUpdateCustomerMaintenanceActivities extends BaseProcessActionHandler {
-    
+
     private static  Logger log = Logger.getLogger(PAUUpdateCustomerMaintenanceActivities.class);
-    
+
     @Override
     protected JSONObject doExecute(Map<String, Object> parameters, String content) {
         try {
             JSONObject request = new JSONObject(content);
-            
+
             log.info(">> parameters: " + parameters);
             // log.info(">> content:" + content);
-            
+
             log.info(">> request : "+request.toString());
-            
+
             // _selection contains the rows that the user selected.
             /*JSONArray selection = new JSONArray(
             request.getString(ApplicationConstants.SELECTION_PROPERTY));*/
             JSONArray selection = request.getJSONObject("_params").getJSONObject("prm_pau_customer_maintenance").getJSONArray(ApplicationConstants.SELECTION_PROPERTY) ;
-            
+
             log.info(">> selected: " + selection);
             String id= null;
             String p_gps_ditelpon= null;
@@ -66,7 +66,7 @@ public class PAUUpdateCustomerMaintenanceActivities extends BaseProcessActionHan
             Date p_maintenancedate_to= null;
             String p_jawaban_customer= null;
             String p_keterangan = null;
-            
+
             for (int i = 0; i < selection.length(); i++) {
                 log.info("LENGTH : "+selection.length());
                 log.info(">> Nilai id : "+selection.getJSONObject(i).get("id").toString());
@@ -85,144 +85,150 @@ public class PAUUpdateCustomerMaintenanceActivities extends BaseProcessActionHan
                 log.info(">> Nilai jawabanCustomer : "+selection.getJSONObject(i).get("jawabanCustomer").toString());
                 log.info(">> Nilai keterangan : "+selection.getJSONObject(i).get("keterangan").toString());
                 id = (String) selection.getJSONObject(i).get("id");
-                
+
                 TmcDocumentUpdateLine tmcDocumentUpdateLine = OBDal.getInstance().get(TmcDocumentUpdateLine.class,id);
-                
-                
+
+
                 if (!selection.getJSONObject(i).get("gPSDiTelepon").toString().equals("null")) {
                     tmcDocumentUpdateLine.setGPSDiTelepon(selection.getJSONObject(i).get("gPSDiTelepon").toString());
                 } else {
                     tmcDocumentUpdateLine.setGPSDiTelepon(null);
                 }
-                
+
                 if (!selection.getJSONObject(i).get("gPSDiSMS").toString().equals("null")) {
                     tmcDocumentUpdateLine.setGPSDiSMS(selection.getJSONObject(i).get("gPSDiSMS").toString());
                 } else {
                     tmcDocumentUpdateLine.setGPSDiSMS(null);
                 }
-                
-                
+
+
                 if (!selection.getJSONObject(i).get("masaAktif").toString().equals("null")) {
                     tmcDocumentUpdateLine.setMasaAktif(new SimpleDateFormat("yyyy-MM-dd").parse(selection.getJSONObject(i).get("masaAktif").toString())); //2016-01-07
                 } else {
                     tmcDocumentUpdateLine.setMasaAktif(null);
                 }
-                
-                
+
+
                 if (!selection.getJSONObject(i).get("sisaPulsa").toString().equals("null")) {
                     tmcDocumentUpdateLine.setSisaPulsa(new BigDecimal(selection.getJSONObject(i).get("sisaPulsa").toString()));
                 } else {
                     tmcDocumentUpdateLine.setSisaPulsa(null);
                 }
-                
-                
+
+
                 if (!selection.getJSONObject(i).get("sisaQuota").toString().equals("null")) {
                     tmcDocumentUpdateLine.setSisaQuota(new Long(selection.getJSONObject(i).get("sisaQuota").toString()));
                 } else {
                     tmcDocumentUpdateLine.setSisaQuota(null);
                 }
-                
-                
+
+
                 if (!selection.getJSONObject(i).get("analisaProblem").toString().equals("null")) {
                     tmcDocumentUpdateLine.setAnalisaProblem(selection.getJSONObject(i).get("analisaProblem").toString());
                 } else {
                     tmcDocumentUpdateLine.setAnalisaProblem(null);
                 }
-                
-                
+
+
                 if (!selection.getJSONObject(i).get("solvingBySystem").toString().equals("null")) {
                     tmcDocumentUpdateLine.setSolvingBySystem(selection.getJSONObject(i).get("solvingBySystem").toString());
                 } else {
                     tmcDocumentUpdateLine.setSolvingBySystem(null);
                 }
-                
-                
+
+
                 if (!selection.getJSONObject(i).get("result").toString().equals("null")) {
                     tmcDocumentUpdateLine.setResult(selection.getJSONObject(i).get("result").toString());
                 } else {
                     tmcDocumentUpdateLine.setResult(null);
                 }
-                
-                
-                
+
+
+
                 if (!selection.getJSONObject(i).get("byPhone").toString().equals("null")) {
                     tmcDocumentUpdateLine.setByPhone(selection.getJSONObject(i).get("byPhone").equals("Y") ? true : false);
                 } else {
                     tmcDocumentUpdateLine.setByPhone(null);
                 }
-                
-                
-                
+
+
+
                 if (!selection.getJSONObject(i).get("bySMS").toString().equals("null")) {
                     tmcDocumentUpdateLine.setBySMS(selection.getJSONObject(i).get("bySMS").equals("Y") ? true : false);
                 } else {
                     tmcDocumentUpdateLine.setBySMS(null);
                 }
-                
-                
+
+
                 if (!selection.getJSONObject(i).get("maintenanceDateFrom").toString().equals("null")) {
                     tmcDocumentUpdateLine.setMaintenanceDateFrom( new SimpleDateFormat("yyyy-MM-dd").parse(selection.getJSONObject(i).get("maintenanceDateFrom").toString()));
                 } else {
                     tmcDocumentUpdateLine.setMaintenanceDateFrom(null);
                 }
-                
-                
-                
+
+
+
                 if (!selection.getJSONObject(i).get("maintenanceDateTo").toString().equals("null")) {
                     tmcDocumentUpdateLine.setMaintenanceDateTo( new SimpleDateFormat("yyyy-MM-dd").parse(selection.getJSONObject(i).get("maintenanceDateTo").toString()));
                 } else {
                     tmcDocumentUpdateLine.setMaintenanceDateTo( null );
                 }
-                
-                
-                
+
+                //pengisian ke
+                if (!selection.getJSONObject(i).get("pengisianke").toString().equals("null")) {
+                    tmcDocumentUpdateLine.setPengisianke(Long.parseLong(selection.getJSONObject(i).get("pengisianke").toString()));
+                } else {
+                    tmcDocumentUpdateLine.setPengisianke(new Long("0"));
+                }
+
+
                 if (!selection.getJSONObject(i).get("jawabanCustomer").toString().equals("null")) {
                     tmcDocumentUpdateLine.setJawabanCustomer(selection.getJSONObject(i).get("jawabanCustomer").toString());
                 } else {
                     tmcDocumentUpdateLine.setJawabanCustomer(null);
                 }
-                
-                
+
+
                 if (!selection.getJSONObject(i).get("keterangan").toString().equals("null")) {
                     tmcDocumentUpdateLine.setKeterangan(selection.getJSONObject(i).get("keterangan").toString());
                 } else {
                     tmcDocumentUpdateLine.setKeterangan(null);
                 }
-                
+
                 //baru 18-maret-2016, penambahan 4 field baru
-                
+
                 if (!selection.getJSONObject(i).get("tGLIsiPulsaReg").toString().equals("null")) {
                     tmcDocumentUpdateLine.setTGLIsiPulsaReg(new SimpleDateFormat("yyyy-MM-dd").parse(selection.getJSONObject(i).get("tGLIsiPulsaReg").toString()));
                 } else {
                     tmcDocumentUpdateLine.setTGLIsiPulsaReg(null);
                 }
-                
+
                 if (!selection.getJSONObject(i).get("nOMIsiPulsaReg").toString().equals("null")) {
                     tmcDocumentUpdateLine.setNOMIsiPulsaReg(new BigDecimal( selection.getJSONObject(i).get("nOMIsiPulsaReg").toString()) );
                 } else {
                     tmcDocumentUpdateLine.setNOMIsiPulsaReg(BigDecimal.ONE);
                 }
-                
-                
+
+
                 if (!selection.getJSONObject(i).get("tGLIsiPulsaQuota").toString().equals("null")) {
                     tmcDocumentUpdateLine.setTGLIsiPulsaQuota(new SimpleDateFormat("yyyy-MM-dd").parse(selection.getJSONObject(i).get("tGLIsiPulsaQuota").toString()));
                 } else {
                     tmcDocumentUpdateLine.setTGLIsiPulsaQuota(null);
                 }
-                
+
                 if (!selection.getJSONObject(i).get("nOMIsiPulsaQuota").toString().equals("null")) {
                     tmcDocumentUpdateLine.setNOMIsiPulsaQuota(new BigDecimal( selection.getJSONObject(i).get("nOMIsiPulsaQuota").toString()) );
                 } else {
                     tmcDocumentUpdateLine.setNOMIsiPulsaQuota(BigDecimal.ONE);
                 }
-                
+
                 tmcDocumentUpdateLine.setProcess(true);
-                
+
                 OBDal.getInstance().save(tmcDocumentUpdateLine);
                 OBDal.getInstance().flush();
             }
-            
-            
+
+
             /*// _allRows contains all the rows available in the grid
             JSONArray allRows = new JSONArray(request.getString(ApplicationConstants.ALL_ROWS_PARAM));
             log.info(">> allRows: " + allRows);
@@ -251,7 +257,7 @@ public class PAUUpdateCustomerMaintenanceActivities extends BaseProcessActionHan
 //
 //            OBDal.getInstance().flush();
             OBDal.getInstance().commitAndClose();
-            
+
             request.put("MESSAGE", "Sukses !");
             return request;
         } catch (Exception e) {
@@ -259,6 +265,5 @@ public class PAUUpdateCustomerMaintenanceActivities extends BaseProcessActionHan
         }
         return new JSONObject();
     }
-    
-}
 
+}

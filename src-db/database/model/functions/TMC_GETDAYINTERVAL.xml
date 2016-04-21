@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+  <database name="FUNCTION TMC_GETDAYINTERVAL">
+    <function name="TMC_GETDAYINTERVAL" type="VARCHAR">
+      <parameter name="a" type="TIMESTAMP" mode="in">
+        <default/>
+      </parameter>
+      <parameter name="b" type="TIMESTAMP" mode="in">
+        <default/>
+      </parameter>
+      <body><![CDATA[/*************************************************************************
+Loginusa - M Fachmi Rizal 
+************************************************************************/
+  v_Result INTEGER; 
+BEGIN
+
+select (a::date - b::date) into v_Result;
+
+return v_Result;
+END TMC_GETDAYINTERVAL
+]]></body>
+    </function>
+  </database>

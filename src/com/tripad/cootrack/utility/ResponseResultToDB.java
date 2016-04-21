@@ -378,6 +378,9 @@ public class ResponseResultToDB {
                             //isi maintenance date from dan to
                             isiMaintenanceDateFromTo(tmcCarCriteria,newTmcDocumentUpdateLine);
 
+                            //isi pengisianke
+                            isiPengisianKe(tmcCarCriteria,newTmcDocumentUpdateLine);
+
                             //isi tanggal dan nominal pulsa Reguler
                             isiTanggalNominalPulsaReguler(tmcCarCriteria,newTmcDocumentUpdateLine);
 
@@ -758,6 +761,32 @@ public class ResponseResultToDB {
                     null);
             newTmcDocumentUpdateLine.setMaintenanceDateTo(
                     null);
+        }
+    }
+
+    private void isiPengisianKe(OBCriteria<TmcCar> tmcCarCriteria,TmcDocumentUpdateLine newTmcDocumentUpdateLine) {
+        OBCriteria<TmcDocumentUpdateLine> tmcDocumentUpdateLineBiggestPengisianKe = OBDal.getInstance()
+                .createCriteria(TmcDocumentUpdateLine.class);
+        tmcDocumentUpdateLineBiggestPengisianKe.add(Restrictions
+                .eq(TmcDocumentUpdateLine.PROPERTY_TMCCAR, tmcCarCriteria.list().get(0)));
+
+        //jangan yg kosong
+        tmcDocumentUpdateLineBiggestPengisianKe.add(Restrictions
+                .isNotNull(TmcDocumentUpdateLine.PROPERTY_PENGISIANKE));
+
+        //order dari yg paling besar dan hanya ambil no 1
+        tmcDocumentUpdateLineBiggestPengisianKe
+                .addOrderBy(TmcDocumentUpdateLine.PROPERTY_PENGISIANKE, false); //false menandakan descending
+
+        //set maksimum data yg keluar
+        tmcDocumentUpdateLineBiggestPengisianKe.setMaxResults(1);
+
+        if (tmcDocumentUpdateLineBiggestPengisianKe.list().size() > 0) {
+            newTmcDocumentUpdateLine.setPengisianke(
+                    tmcDocumentUpdateLineBiggestPengisianKe.list().get(0).getPengisianke());
+        } else {
+            newTmcDocumentUpdateLine.setPengisianke(
+                    new Long("0"));
         }
     }
 
