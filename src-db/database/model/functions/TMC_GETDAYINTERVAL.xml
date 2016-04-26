@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
   <database name="FUNCTION TMC_GETDAYINTERVAL">
-    <function name="TMC_GETDAYINTERVAL" type="VARCHAR">
+    <function name="TMC_GETDAYINTERVAL" type="NUMERIC">
       <parameter name="a" type="TIMESTAMP" mode="in">
         <default/>
       </parameter>
@@ -10,7 +10,7 @@
       <body><![CDATA[/*************************************************************************
 Loginusa - M Fachmi Rizal 
 ************************************************************************/
-  v_Result INTEGER; 
+  v_Result NUMBER; 
 BEGIN
 
 select (a::date - b::date) into v_Result;
