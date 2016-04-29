@@ -671,6 +671,7 @@ public class ResponseResultToDB {
                 //tmcListChildAcc.add(Restrictions.eq(BusinessPartner.PROPERTY_TMCOPENAPIIDENT, id));
                 listBP.add(Restrictions.eq(BusinessPartner.PROPERTY_TMCOPENAPIIDENT, id));
             }
+            //bila masih bermasalah dalam penarikan customer -> create rootBP, komen baris dibawah ini
             listBP.add(Restrictions.eq(BusinessPartner.PROPERTY_CREATEDBY, COOTRACK_USER));
 
             if (listBP.list().isEmpty()) { // Kosong, maka Insert
