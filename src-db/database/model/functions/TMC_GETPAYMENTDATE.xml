@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+  <database name="FUNCTION TMC_GETPAYMENTDATE">
+    <function name="TMC_GETPAYMENTDATE" type="TIMESTAMP">
+      <parameter name="dateto" type="TIMESTAMP" mode="in">
+        <default/>
+      </parameter>
+      <body><![CDATA[v_Hasil timestamp without time zone;
+
+BEGIN
+
+
+
+
+SELECT dateto + '1 month'::interval INTO v_Hasil;
+
+
+RETURN v_Hasil;
+END TMC_GETPAYMENTDATE
+]]></body>
+    </function>
+  </database>
