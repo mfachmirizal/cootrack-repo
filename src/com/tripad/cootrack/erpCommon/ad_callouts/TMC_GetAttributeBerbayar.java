@@ -44,8 +44,8 @@ public class TMC_GetAttributeBerbayar extends SimpleCallout {
           .add(Restrictions.eq(TmcDocumentUpdateLine.PROPERTY_CUSTOMERNAME, bp));
 
       // berdasar status : Maintenance Pulsa dan Quota
-      tmcDocumentUpdateLineLatest.add(
-          Restrictions.eq(TmcDocumentUpdateLine.PROPERTY_STATUS, "Maintenance Pulsa atau Quota"));
+      // tmcDocumentUpdateLineLatest.add(
+      // Restrictions.eq(TmcDocumentUpdateLine.PROPERTY_STATUS, "Maintenance Pulsa atau Quota"));
 
       // order dari created date yg paling besar
       tmcDocumentUpdateLineLatest.addOrderBy(TmcDocumentUpdateLine.PROPERTY_CREATIONDATE, false);
