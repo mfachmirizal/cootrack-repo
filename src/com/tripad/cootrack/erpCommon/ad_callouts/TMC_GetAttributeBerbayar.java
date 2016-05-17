@@ -67,7 +67,6 @@ public class TMC_GetAttributeBerbayar extends SimpleCallout {
         info.addResult("inpprofitPulsa", prevDocument.getProfitPulsa());
         info.addResult("inpprofitQuota", prevDocument.getProfitQuota());
         info.addResult("inpcreditAwal", prevDocument.getCreditAwal());
-        
       }
 
     } catch (Exception e) {
