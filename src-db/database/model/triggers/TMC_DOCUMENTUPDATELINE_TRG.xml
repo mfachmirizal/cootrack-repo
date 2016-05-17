@@ -1,0 +1,70 @@
+<?xml version="1.0"?>
+  <database name="TRIGGER TMC_DOCUMENTUPDATELINE_TRG">
+    <trigger name="TMC_DOCUMENTUPDATELINE_TRG" table="TMC_DOCUMENTUPDATELINE" fires="after" insert="true" update="true" delete="false" foreach="row">
+      <body><![CDATA[
+    /*************************************************************************
+    * The contents of this file are subject to the Compiere Public
+    * License 1.1 ("License"); You may not use this file except in
+    * compliance with the License. You may obtain a copy of the License in
+    * the legal folder of your Openbravo installation.
+    * Software distributed under the License is distributed on an
+    * "AS IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
+    * implied. See the License for the specific language governing rights
+    * and limitations under the License.
+    * The Original Code is  Compiere  ERP &  Business Solution
+    * The Initial Developer of the Original Code is Jorg Janke and ComPiere, Inc.
+    * Portions created by Jorg Janke are Copyright (C) 1999-2001 Jorg Janke,
+    * parts created by ComPiere are Copyright (C) ComPiere, Inc.;
+    * All Rights Reserved.
+    * Contributor(s): Openbravo SLU
+    * Contributions are Copyright (C) 2001-2008 Openbravo, S.L.U.
+    *
+    * Specifically, this derivative work is based upon the following Compiere
+    * file and version.
+    *************************************************************************
+    * Update Header GrandTotal
+    * Convert Amount to Commission Currrency
+    * Calculate Commission Amount
+    */
+  v_Periode NUMBER:=0;
+  v_creditAwal NUMBER:=0;
+  v_Result NUMBER:=0;
+  v_NomPulsa NUMBER:=0;
+  v_NomQuota NUMBER:=0;
+  v_ProfitPulsa NUMBER:=0;
+  v_ProfitQuota NUMBER:=0;
+  v_TotalOrder NUMBER:=0;
+  v_TotalMaintenance NUMBER:=0;
+  
+    
+BEGIN
+    
+    IF AD_isTriggerEnabled()='N' THEN RETURN;
+    END IF;
+
+
+
+  IF(INSERTING OR UPDATING) THEN
+    
+   SELECT tmc_getdayinterval(:NEW.maintenancedateto,:NEW.maintenancedatefrom) INTO v_Periode FROM DUAL;
+   
+
+   SELECT nom_isi_pulsa_reg,nom_isi_pulsa_quota,profit_pulsa,profit_quota,credit_awal INTO v_NomPulsa,v_NomQuota,v_ProfitPulsa,
+   v_ProfitQuota,v_creditAwal FROM tmc_documentupdateline WHERE tmc_documentupdateline_id = :NEW.tmc_documentupdateline_id;
+
+   v_TotalOrder = COALESCE(v_NomPulsa,0) +  COALESCE(v_NomQuota,0) +  COALESCE(v_ProfitPulsa,0) +  COALESCE(v_ProfitQuota,0);
+   v_TotalMaintenance = v_TotalOrder * v_Periode;
+
+   IF(v_TotalMaintenance > abs(v_creditAwal)) THEN
+
+   RAISE_APPLICATION_ERROR(-20000, '@TMC_CreditNotMatch@') ;
+
+   END IF;
+
+   
+   
+  END IF;
+END TMC_DOCUMENTUPDATELINE_TRG
+]]></body>
+    </trigger>
+  </database>

@@ -17,9 +17,9 @@ dl.tgl_isi_pulsa_quota as tanggalisipulsaquota,
 dl.nom_isi_pulsa_quota as nominalisipulsaquota,
 dl.maintenancedatefrom as maintenancedatefrom,
 dl.maintenancedateto as maintenancedateto,
-abs(date_part('month',age(dl.maintenancedatefrom,dl.maintenancedateto))) as period,
+tmc_getdayinterval(dl.maintenancedateto,dl.maintenancedatefrom) as period,
 dl.pengisianke as pengisianke,
-abs(date_part('month',age(dl.maintenancedatefrom,dl.maintenancedateto))) - dl.pengisianke as sisapengisian
+tmc_getdayinterval(dl.maintenancedateto,dl.maintenancedatefrom) - dl.pengisianke as sisapengisian
 FROM tmc_documentupdateline dl,c_bpartner bp,tmc_car cr
 WHERE dl.status = 'Maintenance Pulsa atau Quota'
 AND bp.c_bpartner_id = dl.c_bpartner_id
@@ -32,7 +32,7 @@ AND cr.tmc_car_id = dl.tmc_car_id
 AND (abs(date_part('month',age(dl.maintenancedatefrom,dl.maintenancedateto))) - dl.pengisianke) != 0
 )
 
-AND EXTRACT(DAY FROM TO_DATE(dl.maintenancedatefrom)) = EXTRACT(DAY FROM DATE ($P{CHECKINGDATE}))
+AND (EXTRACT(DAY FROM TO_DATE(dl.tgl_isi_pulsa_reg)) = EXTRACT(DAY FROM DATE ($P{CHECKINGDATE})) OR EXTRACT(DAY FROM TO_DATE(dl.tgl_isi_pulsa_quota)) = EXTRACT(DAY FROM DATE ($P{CHECKINGDATE})))
 AND $P{CHECKINGDATE} BETWEEN dl.maintenancedatefrom AND dl.maintenancedateto]]>
 	</queryString>
 	<field name="customername" class="java.lang.String"/>
@@ -43,9 +43,9 @@ AND $P{CHECKINGDATE} BETWEEN dl.maintenancedatefrom AND dl.maintenancedateto]]>
 	<field name="nominalisipulsaquota" class="java.math.BigDecimal"/>
 	<field name="maintenancedatefrom" class="java.sql.Timestamp"/>
 	<field name="maintenancedateto" class="java.sql.Timestamp"/>
-	<field name="period" class="java.lang.Double"/>
+	<field name="period" class="java.math.BigDecimal"/>
 	<field name="pengisianke" class="java.math.BigDecimal"/>
-	<field name="sisapengisian" class="java.lang.Double"/>
+	<field name="sisapengisian" class="java.math.BigDecimal"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>

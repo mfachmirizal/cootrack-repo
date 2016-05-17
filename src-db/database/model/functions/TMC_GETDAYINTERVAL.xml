@@ -13,7 +13,7 @@ Loginusa - M Fachmi Rizal
   v_Result NUMBER; 
 BEGIN
 
-select (abs(date_part('month',age(a::date,b::date))) + 1) into v_Result;
+select (date_part('month',age(a::date,b::date)) + 1) into v_Result;
 
 return v_Result;
 END TMC_GETDAYINTERVAL

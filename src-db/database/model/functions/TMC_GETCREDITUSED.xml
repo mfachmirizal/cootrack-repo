@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+  <database name="FUNCTION TMC_GETCREDITUSED">
+    <function name="TMC_GETCREDITUSED" type="NUMERIC">
+      <parameter name="p_partner_id" type="VARCHAR" mode="in">
+        <default/>
+      </parameter>
+      <body><![CDATA[v_CreditUsed NUMBER:=0;
+v_Result NUMBER:=0;
+
+BEGIN
+
+SELECT so_creditused INTO v_CreditUsed FROM c_bpartner WHERE c_bpartner_id = p_partner_id;
+
+IF(v_CreditUsed < 0)THEN
+     v_Result:=abs(v_CreditUsed);
+ELSE 
+     v_Result:=0;
+END IF;
+
+RETURN v_Result;
+END TMC_GETCREDITUSED
+]]></body>
+    </function>
+  </database>
