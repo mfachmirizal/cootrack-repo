@@ -508,11 +508,33 @@ public class ResponseResultToDB {
                 && (dayInterval == 0) /* && (speed.equals("0")) */ ) {
             hasil = "Static 8 Hours";
         }
-        // static 1 days ++
+        // static 1 days
         else if ((device_info.equals("0")) && (dayInterval >= 1)
-                && (dayInterval < 15) /* && (speed.equals("0")) */ ) {
+                && (dayInterval < 2/*15*/) /* && (speed.equals("0")) */ ) {
             hasil = "Static 1 Day";
         }
+        //penambahan static 2,3,4,5
+        // static 2 days
+        else if ((device_info.equals("0")) && (dayInterval >= 2)
+                && (dayInterval < 3) /* && (speed.equals("0")) */ ) {
+            hasil = "Static 2 Day";
+        }
+        // static 3 days
+        else if ((device_info.equals("0")) && (dayInterval >= 3)
+                && (dayInterval < 4) /* && (speed.equals("0")) */ ) {
+            hasil = "Static 3 Day";
+        }
+        // static 4 days
+        else if ((device_info.equals("0")) && (dayInterval >= 4)
+                && (dayInterval < 5) /* && (speed.equals("0")) */ ) {
+            hasil = "Static 4 Day";
+        }
+        // static 5 days ++
+        else if ((device_info.equals("0")) && (dayInterval >= 5)
+                && (dayInterval < 15) /* && (speed.equals("0")) */ ) {
+            hasil = "Static 5 Day";
+        }
+        //end penambahan static 2,3,4,5
         //static 15 days ++
         else if ((device_info.equals("0")) && (dayInterval >= 15)
                 && (dayInterval < 30)/* && (speed.equals("0")) */ ) {
@@ -522,10 +544,28 @@ public class ResponseResultToDB {
         else if ((device_info.equals("0")) && (dayInterval >= 30) /* && (speed.equals("0")) */ ) {
             hasil = "Static 30 Days";
         }
-        // offline 1 ~ 15 days asalnya offline berdasar dayInterval
-        else if ((device_info.equals("3")) && (heartDayInterval < 15) /* && (speed.equals("0")) */ ) {
+        // offline 1  days asalnya 1 ~ 15
+        else if ((device_info.equals("3")) && (heartDayInterval < 2) /* && (speed.equals("0")) */ ) {
             hasil = "Offline 1 Days";
         }
+        //penambahan offline 2,3,4,5
+        // offline 2 days
+        else if ((device_info.equals("3")) && (heartDayInterval < 3) /* && (speed.equals("0")) */ ) {
+            hasil = "Offline 2 Days";
+        }
+        // offline 3 days
+        else if ((device_info.equals("3")) && (heartDayInterval < 4) /* && (speed.equals("0")) */ ) {
+            hasil = "Offline 3 Days";
+        }
+        // offline 4 days
+        else if ((device_info.equals("3")) && (heartDayInterval < 5) /* && (speed.equals("0")) */ ) {
+            hasil = "Offline 4 Days";
+        }
+        // offline 5 days
+        else if ((device_info.equals("3")) && (heartDayInterval < 6) /* && (speed.equals("0")) */ ) {
+            hasil = "Offline 5 Days";
+        }
+        //end penambahan offline 2,3,4,5
         // offline 15 ~ 30
         else if ((device_info.equals("3")) && (heartDayInterval < 30) /* && (speed.equals("0")) */ ) {
             hasil = "Offline 15 Days";
