@@ -29,13 +29,10 @@
   v_Periode NUMBER:=0;
   v_creditAwal NUMBER:=0;
   v_Result NUMBER:=0;
-  v_NomPulsa NUMBER:=0;
-  v_NomQuota NUMBER:=0;
-  v_ProfitPulsa NUMBER:=0;
-  v_ProfitQuota NUMBER:=0;
+  v_Budget NUMBER:=0;
   v_TotalOrder NUMBER:=0;
   v_TotalMaintenance NUMBER:=0;
-  
+   
     
 BEGIN
     
@@ -48,10 +45,9 @@ BEGIN
     
    SELECT tmc_getdayinterval(:NEW.maintenancedateto,:NEW.maintenancedatefrom) INTO v_Periode FROM DUAL;
    
-   SELECT nom_isi_pulsa_reg,nom_isi_pulsa_quota,profit_pulsa,profit_quota,credit_awal INTO v_NomPulsa,v_NomQuota,v_ProfitPulsa,
-   v_ProfitQuota,v_creditAwal FROM tmc_documentupdateline WHERE tmc_documentupdateline_id = :NEW.tmc_documentupdateline_id;
+   SELECT budget,credit_awal INTO v_Budget,v_creditAwal FROM tmc_documentupdateline WHERE tmc_documentupdateline_id = :NEW.tmc_documentupdateline_id;
 
-   v_TotalOrder = COALESCE(v_NomPulsa,0) +  COALESCE(v_NomQuota,0) +  COALESCE(v_ProfitPulsa,0) +  COALESCE(v_ProfitQuota,0);
+   v_TotalOrder = COALESCE(v_Budget,0);
    v_TotalMaintenance = v_TotalOrder * v_Periode;
 
    IF(v_TotalMaintenance > abs(v_creditAwal) AND :NEW.status = 'Maintenance Pulsa atau Quota') THEN

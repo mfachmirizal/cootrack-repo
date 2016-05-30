@@ -64,9 +64,8 @@ public class TMC_GetAttributeBerbayar extends SimpleCallout {
         info.addResult("inpmaintenancedatefrom",
             dateFormat.format(prevDocument.getMaintenanceDateFrom()).toString());
         info.addResult("inppengisianke", prevDocument.getPengisianke());
-        info.addResult("inpprofitPulsa", prevDocument.getProfitPulsa());
-        info.addResult("inpprofitQuota", prevDocument.getProfitQuota());
-        info.addResult("inpcreditAwal", prevDocument.getCreditAwal());
+        info.addResult("inpbudget", prevDocument.getBudget());
+        info.addResult("inpprofit", prevDocument.getProfit());
       }
 
     } catch (Exception e) {

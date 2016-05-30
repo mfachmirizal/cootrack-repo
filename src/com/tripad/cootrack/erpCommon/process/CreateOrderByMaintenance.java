@@ -73,8 +73,7 @@ public class CreateOrderByMaintenance extends BaseProcessActionHandler {
 
             BigDecimal nominalPulsa = BigDecimal.ZERO;
             BigDecimal nominalQuota = BigDecimal.ZERO;
-            BigDecimal profitPulsa = BigDecimal.ZERO;
-            BigDecimal profitQuota = BigDecimal.ZERO;
+            BigDecimal budgetNominal = BigDecimal.ZERO;
             BigDecimal totalOrder = BigDecimal.ZERO;
               
             TmcDocumentUpdateLine parentDocumentUpdateLine = null;
@@ -103,8 +102,8 @@ public class CreateOrderByMaintenance extends BaseProcessActionHandler {
 
         nominalPulsa = parentDocumentUpdateLine.getNOMIsiPulsaReg();
         nominalQuota = parentDocumentUpdateLine.getNOMIsiPulsaQuota();
-        profitPulsa = parentDocumentUpdateLine.getProfitPulsa();
-        profitQuota = parentDocumentUpdateLine.getProfitQuota();
+        budgetNominal = parentDocumentUpdateLine.getBudget();
+
 
         }
 
@@ -160,7 +159,7 @@ public class CreateOrderByMaintenance extends BaseProcessActionHandler {
        OBDal.getInstance().save(documentSequenceupdate);
        OBDal.getInstance().flush();
 
-       totalOrder = (nominalPulsa.add(nominalQuota)).add((profitPulsa).add(profitQuota));
+       totalOrder = (budgetNominal);
 
         OrderLine orderLineInsert = OBProvider.getInstance().get(OrderLine.class);
 

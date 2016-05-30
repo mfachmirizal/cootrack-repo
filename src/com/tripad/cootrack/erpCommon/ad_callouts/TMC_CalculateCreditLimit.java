@@ -45,15 +45,14 @@ public class TMC_CalculateCreditLimit extends SimpleCallout {
   String strCarId = info.getStringParameter("inptmcCarId", null);
   String a = info.getStringParameter("inpmaintenancedatefrom", null);
   String b = info.getStringParameter("inpmaintenancedateto", null);
-  BigDecimal c = info.getBigDecimalParameter("inpprofitPulsa");
-  BigDecimal d = info.getBigDecimalParameter("inpprofitQuota");
+  BigDecimal c = info.getBigDecimalParameter("inpbudget");
+
 
   BigDecimal nominalPengisianReguler = BigDecimal.ZERO;
   BigDecimal nominalPengisianQuota = BigDecimal.ZERO;
 
 
-  BigDecimal profitPulsa = BigDecimal.ZERO;
-  BigDecimal profitQuota = BigDecimal.ZERO;
+  BigDecimal nominalBudget = BigDecimal.ZERO;
   BigDecimal totalOrder = BigDecimal.ZERO;
 
   BusinessPartner parentBusinessPartner = null;
@@ -78,10 +77,10 @@ int diffMonth = 0;
                    diffYear = endCalendar.get(Calendar.YEAR) - startCalendar.get(Calendar.YEAR);
                    diffMonth = diffYear * 12 + endCalendar.get(Calendar.MONTH) - startCalendar.get(Calendar.MONTH);
 
-             profitPulsa = c;
-             profitQuota = d;       
+             nominalBudget = c;
+      
 
-        totalOrder = (nominalPengisianReguler.add(nominalPengisianQuota)).add((profitPulsa).add(profitQuota));
+        totalOrder = (nominalBudget);
 
 
 

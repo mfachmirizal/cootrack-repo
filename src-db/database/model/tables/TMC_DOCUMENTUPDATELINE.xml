@@ -145,11 +145,11 @@
         <default><![CDATA[N]]></default>
         <onCreateDefault/>
       </column>
-      <column name="PROFIT_PULSA" primaryKey="false" required="false" type="DECIMAL" autoIncrement="false">
+      <column name="BUDGET" primaryKey="false" required="false" type="DECIMAL" autoIncrement="false">
         <default><![CDATA[0]]></default>
         <onCreateDefault/>
       </column>
-      <column name="PROFIT_QUOTA" primaryKey="false" required="false" type="DECIMAL" autoIncrement="false">
+      <column name="PROFIT" primaryKey="false" required="false" type="DECIMAL" autoIncrement="false">
         <default><![CDATA[0]]></default>
         <onCreateDefault/>
       </column>
