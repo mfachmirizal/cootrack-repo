@@ -66,6 +66,8 @@ public class TMC_GetAttributeBerbayar extends SimpleCallout {
         info.addResult("inppengisianke", prevDocument.getPengisianke());
         info.addResult("inpbudget", prevDocument.getBudget());
         info.addResult("inpprofit", prevDocument.getProfit());
+        //tambahan callout field saldo awal (credit awal)
+        info.addResult("inpcreditAwal", prevDocument.getCreditAwal());
       }
 
     } catch (Exception e) {
