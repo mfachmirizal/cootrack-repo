@@ -1,0 +1,926 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="DOInstalasi" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="095af344-3fe1-4e71-8010-aeabca90c79a">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="78"/>
+	<property name="ireport.y" value="739"/>
+	<parameter name="DOCUMENT_ID" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT mi.documentno, mi.movementdate,bp.name,cl.address1 as alamat,bpl.phone
+FROM m_inout mi,c_bpartner bp
+LEFT JOIN c_bpartner_location bpl ON bpl.c_bpartner_id = bp.c_bpartner_id
+LEFT JOIN c_location cl ON cl.c_location_id = bpl.c_location_id
+where mi.m_inout_id = $P{DOCUMENT_ID}
+AND bp.c_bpartner_id = mi.c_bpartner_id]]>
+	</queryString>
+	<field name="documentno" class="java.lang.String">
+		<fieldDescription><![CDATA[--OBTG:NVARCHAR--]]></fieldDescription>
+	</field>
+	<field name="movementdate" class="java.sql.Timestamp"/>
+	<field name="name" class="java.lang.String"/>
+	<field name="alamat" class="java.lang.String"/>
+	<field name="phone" class="java.lang.String">
+		<fieldDescription><![CDATA[--OBTG:NVARCHAR--]]></fieldDescription>
+	</field>
+	<background>
+		<band height="802" splitType="Stretch">
+			<line>
+				<reportElement x="0" y="801" width="555" height="1" uuid="a14de3de-b7d5-4e9b-aee6-bea531d073a3"/>
+			</line>
+			<line>
+				<reportElement x="0" y="0" width="555" height="1" uuid="f5ba92d7-6d26-48da-990b-eeaa25901aed"/>
+			</line>
+			<line>
+				<reportElement x="0" y="1" width="1" height="800" uuid="6934500f-5dad-4c9d-b7a6-45f053a58ba2"/>
+			</line>
+			<line>
+				<reportElement x="555" y="2" width="1" height="800" uuid="e3465676-3a9c-4878-8602-b6760f451361"/>
+			</line>
+		</band>
+	</background>
+	<columnHeader>
+		<band height="794" splitType="Stretch">
+			<staticText>
+				<reportElement x="1" y="107" width="555" height="19" uuid="482788fd-007e-4a28-87bf-4bab7439ccb6"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Tahoma" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[GPS TRACKER INSTALLATION & SERVICE REPORT]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="11" y="126" width="100" height="12" uuid="789671ef-decf-4911-a0b0-87842acd14f2"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Tahoma" size="8"/>
+				</textElement>
+				<text><![CDATA[Nomor Dokumen]]></text>
+			</staticText>
+			<line>
+				<reportElement x="1" y="138" width="555" height="1" uuid="227168db-0bc2-45b0-90eb-a3bf025beb22"/>
+			</line>
+			<staticText>
+				<reportElement x="126" y="126" width="3" height="12" uuid="19c35204-2c0c-481c-8991-488a49498149"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Tahoma" size="8"/>
+				</textElement>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="11" y="139" width="100" height="12" uuid="e4423a0e-a280-4182-81cc-31aa7db6d037"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Tahoma" size="8"/>
+				</textElement>
+				<text><![CDATA[Customer]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="126" y="139" width="3" height="12" uuid="3efeb090-fc6c-4976-8ae9-ae4bdc40a0de"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Tahoma" size="8"/>
+				</textElement>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="11" y="151" width="100" height="12" uuid="1ad77018-43ab-4d2e-9dee-38277528df76"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Tahoma" size="8"/>
+				</textElement>
+				<text><![CDATA[Nomor HP Customer]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="126" y="151" width="3" height="12" uuid="7f1fbc02-133d-4147-9120-e620bcb19c89"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Tahoma" size="8"/>
+				</textElement>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="11" y="163" width="100" height="12" uuid="a605f4d0-530c-46a3-ac1a-9f3577a76ce8"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Tahoma" size="8"/>
+				</textElement>
+				<text><![CDATA[Alamat]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="126" y="163" width="3" height="12" uuid="fb1ebf25-f743-47ef-b038-c39cab74258b"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Tahoma" size="8"/>
+				</textElement>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<line>
+				<reportElement x="1" y="182" width="555" height="1" uuid="4a13c692-aa5b-4740-8349-dea29388598f"/>
+			</line>
+			<staticText>
+				<reportElement x="11" y="182" width="149" height="13" uuid="5a71d9d6-f40d-4bbc-83f7-73ccf31111d3"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Tahoma" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[INSTALLASI BARU]]></text>
+			</staticText>
+			<line>
+				<reportElement x="2" y="195" width="555" height="1" uuid="1be56455-5fc9-429e-a22d-cb6233adc4ca"/>
+			</line>
+			<staticText>
+				<reportElement x="11" y="196" width="149" height="14" uuid="5fb595bf-3dca-4d25-b3b7-33d84e76201f"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Tahoma" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[INDENTIFICATION]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="11" y="217" width="100" height="10" uuid="1ba9f6a7-e4a3-4a41-aede-47d23303e3fb"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Tahoma" size="8"/>
+				</textElement>
+				<text><![CDATA[Type GPS Tracking]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="11" y="227" width="100" height="10" uuid="5792b791-f52e-4b4c-888f-ce13d30e755c"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Tahoma" size="8"/>
+				</textElement>
+				<text><![CDATA[IMEI No.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="129" y="217" width="3" height="10" uuid="3ba55bb1-8111-47bf-8065-3123a509ec0e"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Tahoma" size="8"/>
+				</textElement>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="129" y="227" width="3" height="10" uuid="f9694153-db33-4ad9-b44a-16850372c5c8"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Tahoma" size="8"/>
+				</textElement>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="11" y="237" width="100" height="10" uuid="ea990ac4-b2d8-44eb-bdb4-1727c6b3f2e0"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Tahoma" size="8"/>
+				</textElement>
+				<text><![CDATA[SimCard No.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="11" y="247" width="100" height="10" uuid="aa72a633-195b-4cb8-81dc-a64a20a4e5a1"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Tahoma" size="8"/>
+				</textElement>
+				<text><![CDATA[Pin No.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="11" y="257" width="100" height="10" uuid="55d06464-d936-4f91-b438-df6a0ad60808"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Tahoma" size="8"/>
+				</textElement>
+				<text><![CDATA[Jenis Kendaraan]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="11" y="267" width="100" height="10" uuid="5b47b0f5-31e5-49b8-9d7b-f89ccf978267"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Tahoma" size="8"/>
+				</textElement>
+				<text><![CDATA[No polisi kendaraan]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="129" y="237" width="3" height="10" uuid="4d62f1d8-912f-4464-a52d-79ef1b98ee6f"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Tahoma" size="8"/>
+				</textElement>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="129" y="247" width="3" height="10" uuid="c0e3d2db-4f6d-4583-9282-89f8faeb26e8"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Tahoma" size="8"/>
+				</textElement>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="129" y="257" width="3" height="10" uuid="cc3922e6-9405-48ca-ac79-cf4625e28478"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Tahoma" size="8"/>
+				</textElement>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="129" y="267" width="3" height="10" uuid="9781f884-33d5-4ae7-8dee-e7b112085475"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Tahoma" size="8"/>
+				</textElement>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="314" y="217" width="100" height="10" uuid="6dcab6db-c03d-4ed6-8992-fe7a33f23027"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Tahoma" size="8"/>
+				</textElement>
+				<text><![CDATA[Identifikasi lain *]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="414" y="217" width="3" height="10" uuid="a913b203-14e0-4632-990f-30cf55316be7"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Tahoma" size="8"/>
+				</textElement>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="314" y="241" width="100" height="10" uuid="45ee5141-f950-49fc-8a35-6ea0edd1c302"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Tahoma" size="8"/>
+				</textElement>
+				<text><![CDATA[Alamat Webtracker]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="414" y="241" width="3" height="10" uuid="f61964a4-b310-41a8-a702-5f4791653172"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Tahoma" size="8"/>
+				</textElement>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="314" y="251" width="100" height="10" uuid="3a6919a7-6bca-4dae-9b05-851ecc99e077"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Tahoma" size="8"/>
+				</textElement>
+				<text><![CDATA[Username]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="314" y="261" width="100" height="10" uuid="8716060d-92cb-4f10-9d3b-ece2690ab9b0"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Tahoma" size="8"/>
+				</textElement>
+				<text><![CDATA[Password]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="414" y="251" width="3" height="10" uuid="f500a94f-afcb-4596-9a6f-55c059bcbad0"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Tahoma" size="8"/>
+				</textElement>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="414" y="261" width="3" height="10" uuid="840dad00-096a-4a44-b850-0b10c540a11d"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Tahoma" size="8"/>
+				</textElement>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="314" y="271" width="205" height="10" uuid="d506ac10-698b-43a0-9a06-c07956edf243"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Tahoma" size="8"/>
+				</textElement>
+				<text><![CDATA[* Jika Kendaraan belum memiliki no polisi]]></text>
+			</staticText>
+			<line>
+				<reportElement x="2" y="282" width="555" height="1" uuid="3cc9dfc1-e242-4ff5-b328-533d0300fc5d"/>
+			</line>
+			<line>
+				<reportElement x="2" y="329" width="555" height="1" uuid="06cfe163-26d8-4d70-89c7-61e771081cbd"/>
+			</line>
+			<staticText>
+				<reportElement x="29" y="283" width="185" height="15" uuid="3f4aaa90-0c98-457b-a90b-6eb03ca9ad9e"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Tahoma" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[SERVICE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="29" y="298" width="185" height="12" uuid="a2189866-8d9e-4955-9098-a8480e1c817b"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Tahoma" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Apakah masih dalam masa garansi ?]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="119" y="310" width="30" height="12" uuid="9e5b407d-e02d-4944-96f5-1d094e9a118a"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="98" y="310" width="21" height="12" uuid="c41ceaee-a544-4873-a2c2-a363f79dcaf8"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Tahoma" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Ya]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="149" y="310" width="35" height="12" uuid="48197e57-0e13-46c3-a2fd-03f4e80ef2df"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Tahoma" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Tidak]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="184" y="310" width="30" height="12" uuid="6d1a5979-f546-4a1d-8dd6-d62112afe52e"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="314" y="283" width="185" height="15" uuid="eba4e7ae-4283-488a-8078-9365c710da83"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Tahoma" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Jenis Service]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="314" y="300" width="185" height="12" uuid="b715f232-e112-46ff-9443-3ae4d17952aa"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Tahoma" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Apakah service ini berbayar?]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="383" y="312" width="21" height="12" uuid="0610d7d2-a666-46d8-987e-981a8c64c739"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Tahoma" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Ya]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="404" y="312" width="30" height="12" uuid="28b40488-5a78-4640-a51b-37a98bb6acd0"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="434" y="312" width="35" height="12" uuid="e2af5a19-8906-4765-91cb-8336669b6a25"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Tahoma" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Tidak]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="469" y="312" width="30" height="12" uuid="1305f1aa-db96-43e5-850f-c527e5bc7441"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="11" y="333" width="115" height="12" uuid="0d2cce61-67cf-4810-9484-831e0d5e8ad6"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Tahoma" size="8"/>
+				</textElement>
+				<text><![CDATA[Ganti Posisi Alat]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="142" y="333" width="30" height="12" uuid="54dc8237-e4ab-4ec9-a793-e37f3b35f905"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="11" y="345" width="115" height="12" uuid="79d934a9-4070-46b2-b416-4a50121cc0a0"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Tahoma" size="8"/>
+				</textElement>
+				<text><![CDATA[Ganti Simcard GPS]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="142" y="345" width="30" height="12" uuid="923b6b8a-fcec-4001-a68b-e9fdd7be620a"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="11" y="362" width="115" height="12" uuid="909caecf-4dc0-4170-a01d-691087ecda1c"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Tahoma" size="8"/>
+				</textElement>
+				<text><![CDATA[No Simcard Baru]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="142" y="362" width="3" height="12" uuid="660d7255-e689-4e8a-9bac-870147f09d9b"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Tahoma" size="8"/>
+				</textElement>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="11" y="374" width="115" height="12" uuid="228f6ca3-469f-47cf-9d37-9dfe3a32b3c7"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Tahoma" size="8"/>
+				</textElement>
+				<text><![CDATA[No PIN]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="142" y="374" width="3" height="12" uuid="1d37b2b0-d524-4e6a-bf1f-e2704632f88c"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Tahoma" size="8"/>
+				</textElement>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="11" y="386" width="115" height="12" uuid="d098a989-15b7-4c5a-a3eb-81612dae7505"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Tahoma" size="8"/>
+				</textElement>
+				<text><![CDATA[Pengecekan kondisi GPS]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="142" y="386" width="30" height="12" uuid="8cf1227d-1ca7-4c44-a31e-33245ce45b6a"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="11" y="398" width="115" height="12" uuid="26f4aa59-3ac4-4bf5-b4ac-4bffdcec5a57"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Tahoma" size="8"/>
+				</textElement>
+				<text><![CDATA[Masalah yang ditemukan]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="142" y="398" width="3" height="12" uuid="f9d2567c-0357-4e4e-b796-4a1f7145b581"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Tahoma" size="8"/>
+				</textElement>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="249" y="333" width="183" height="12" uuid="afbaea83-ac9b-4c7a-9dbc-22ee5818c21f"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Tahoma" size="8"/>
+				</textElement>
+				<text><![CDATA[Bongkar GPS]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="436" y="333" width="30" height="12" uuid="1ffca4bc-a604-48cd-ae38-49041e0aa9b4"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="249" y="345" width="183" height="12" uuid="03312c3c-3eb7-4a5e-ba82-610c07749905"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Tahoma" size="8"/>
+				</textElement>
+				<text><![CDATA[Pasang GPS Kembali]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="249" y="362" width="183" height="12" uuid="ee0a125a-4e3e-4333-a087-75f2a56abc44"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Tahoma" size="8"/>
+				</textElement>
+				<text><![CDATA[Jenis No pol kendaraan yang dibongkar]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="436" y="362" width="3" height="12" uuid="e902546d-b3a8-41d3-9ac8-979377f8b4d6"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Tahoma" size="8"/>
+				</textElement>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="436" y="345" width="30" height="12" uuid="64ae7685-218b-4020-b5f3-084b247f1e51"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="249" y="374" width="183" height="12" uuid="674e8bc9-0ac2-4a12-a7a2-65295eb990d3"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Tahoma" size="8"/>
+				</textElement>
+				<text><![CDATA[Jenis kendaraan yang diinstall kembali]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="436" y="374" width="3" height="12" uuid="c01e9c94-fa72-497e-b247-bb9345f6a144"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Tahoma" size="8"/>
+				</textElement>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="249" y="386" width="183" height="12" uuid="df6a7e62-0ae6-4615-8208-2bbc5783fe83"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Tahoma" size="8"/>
+				</textElement>
+				<text><![CDATA[No pol kendaraan yang diinstall kembali]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="436" y="386" width="3" height="12" uuid="7026dc21-f6de-4bb8-9d7a-db6c23a07021"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Tahoma" size="8"/>
+				</textElement>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="249" y="398" width="110" height="12" uuid="ff8b4f5f-5281-4923-9d0d-753668d568f0"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Tahoma" size="8"/>
+				</textElement>
+				<text><![CDATA[Ganti spareparts]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="399" y="398" width="75" height="12" uuid="06149688-c4cb-4638-8985-3d592594712a"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Tahoma" size="8"/>
+				</textElement>
+				<text><![CDATA[Nama spareparts]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="364" y="398" width="30" height="12" uuid="f944b363-beb6-4597-9b8e-7b3eb6c6d856"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="474" y="398" width="3" height="12" uuid="32d16658-fde1-417e-b5af-21dec41e39f4"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Tahoma" size="8"/>
+				</textElement>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="249" y="410" width="110" height="12" uuid="2e040c77-b0c8-421f-b6ff-d527b52bbc42"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Tahoma" size="8"/>
+				</textElement>
+				<text><![CDATA[GPS ex Supplier lain]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="364" y="410" width="30" height="12" uuid="6170624f-8774-44fd-8859-457399e98d96"/>
+			</rectangle>
+			<line>
+				<reportElement x="2" y="424" width="555" height="1" uuid="bf30f61f-4e1f-49c6-9e60-4112ca9244e9"/>
+			</line>
+			<staticText>
+				<reportElement x="11" y="425" width="185" height="20" uuid="1daf6c66-d7a1-426b-9c40-3d197e56c16d"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Tahoma" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[PENGECEKAN FITUR STANDAR GPS]]></text>
+			</staticText>
+			<line>
+				<reportElement x="2" y="445" width="555" height="1" uuid="a3a6ddff-46ec-431d-a44f-b8be73206b56"/>
+			</line>
+			<staticText>
+				<reportElement x="11" y="450" width="115" height="12" uuid="5afd45b3-d8c3-4f6d-894a-2a95b74388b8"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Tahoma" size="8"/>
+				</textElement>
+				<text><![CDATA[Sinyal GSM Kartu]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="11" y="462" width="115" height="12" uuid="9d35408c-644a-4334-938f-144c0356fa2a"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Tahoma" size="8"/>
+				</textElement>
+				<text><![CDATA[Sinyal GPS alat]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="11" y="474" width="115" height="12" uuid="942786a9-6a1b-46a9-a011-a0d87297f8f9"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Tahoma" size="8"/>
+				</textElement>
+				<text><![CDATA[Sadap suara]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="244" y="450" width="208" height="12" uuid="cbe57893-a339-4229-9027-cd4b893b3407"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Tahoma" size="8"/>
+				</textElement>
+				<text><![CDATA[Mematikan & Menghidupkan mesin lewat SMS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="244" y="462" width="208" height="12" uuid="76b5d139-e3d1-4347-8984-bd35841ff977"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Tahoma" size="8"/>
+				</textElement>
+				<text><![CDATA[Settingan Timer]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="244" y="474" width="208" height="12" uuid="73fef9c0-9e64-4321-8a28-34288b2be4ac"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Tahoma" size="8"/>
+				</textElement>
+				<text><![CDATA[Mengetahui ACC On atau Off di WEB]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="126" y="450" width="30" height="12" uuid="c2b1bc2c-27d4-4a4a-88f6-675594259a2c"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="126" y="462" width="30" height="12" uuid="f7dc6500-5277-4037-b67b-0c794d071de4"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="126" y="474" width="30" height="12" uuid="0d16f543-72a9-4a74-b5e6-6038a45a40a1"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="454" y="450" width="30" height="12" uuid="ffb238b2-b4c1-4a74-a724-50cac4931b3d"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="454" y="462" width="30" height="12" uuid="b2f9ee05-36c4-425f-8e6b-263f8208891e"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="454" y="474" width="30" height="12" uuid="82248f08-a984-4759-838e-26a3e957114e"/>
+			</rectangle>
+			<line>
+				<reportElement x="1" y="489" width="555" height="1" uuid="9408d0e1-ff56-43b5-8eeb-d5dc2775b28d"/>
+			</line>
+			<staticText>
+				<reportElement x="1" y="490" width="147" height="27" uuid="df485d09-b124-42d3-8da7-6cd2f0b61a8c"/>
+				<box leftPadding="6">
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Tahoma" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[PENGECEKAN KENDARAAN SETELAH INSTALASI]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="150" y="490" width="156" height="27" uuid="39ad94b6-52d3-4772-8472-0c9252ab2e0a"/>
+				<box leftPadding="6">
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Tahoma" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[FITUR TAMBAHAN]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="11" y="527" width="100" height="12" uuid="d50abee9-0860-4616-9b4f-30192f1b328c"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Tahoma" size="8"/>
+				</textElement>
+				<text><![CDATA[Tombol Jendela]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="11" y="539" width="100" height="12" uuid="3fc86f1b-e69e-4c06-bc85-889ed75449da"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Tahoma" size="8"/>
+				</textElement>
+				<text><![CDATA[Alarm Mobil]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="11" y="551" width="100" height="12" uuid="d7e9c6af-5f8c-4155-be87-4c1ae4cad762"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Tahoma" size="8"/>
+				</textElement>
+				<text><![CDATA[Lampu dalam mobil]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="11" y="563" width="100" height="12" uuid="8974a141-b8d2-4887-8a6e-7f6a372b3db6"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Tahoma" size="8"/>
+				</textElement>
+				<text><![CDATA[Tape mobil]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="11" y="575" width="100" height="12" uuid="7c24c6f1-d962-4822-8f99-da1ea192adca"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Tahoma" size="8"/>
+				</textElement>
+				<text><![CDATA[Lampu luar mobil]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="112" y="527" width="30" height="12" uuid="4183fffd-86ca-4b29-8be8-ec5eb3f57e14"/>
+			</rectangle>
+			<line>
+				<reportElement x="148" y="517" width="1" height="77" uuid="d573dc64-bbb0-4979-825f-40fc25e3f1cf"/>
+			</line>
+			<rectangle>
+				<reportElement x="112" y="539" width="30" height="12" uuid="e8591d0d-a0c5-4b0f-a9d3-055eb6d00b46"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="112" y="551" width="30" height="12" uuid="560825df-d3ec-41d3-8abe-c593a8cd71e2"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="112" y="563" width="30" height="12" uuid="55a7d532-ca42-4fca-91f7-48b824683896"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="112" y="575" width="30" height="12" uuid="89899c53-a16b-47cd-a101-07a97e74ce72"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="154" y="527" width="109" height="12" uuid="84f3d378-c2f8-48b9-90bf-286f1a1c8384"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Tahoma" size="8"/>
+				</textElement>
+				<text><![CDATA[Camera]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="154" y="539" width="109" height="12" uuid="3a1dda18-932d-4d7b-bcab-58527f7f40d1"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Tahoma" size="8"/>
+				</textElement>
+				<text><![CDATA[Sensor Bensin]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="154" y="551" width="109" height="12" uuid="a1563e16-6fbc-4ac0-a884-6b87a01a133c"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Tahoma" size="8"/>
+				</textElement>
+				<text><![CDATA[2 Arah komunikasi]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="154" y="563" width="109" height="12" uuid="7f78391f-94e1-4906-a630-798614a685bb"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Tahoma" size="8"/>
+				</textElement>
+				<text><![CDATA[RFID Reader LED/LCD Display]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="263" y="527" width="30" height="12" uuid="972a8c4b-8a2e-40e0-bd4a-16ab4af83526"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="263" y="539" width="30" height="12" uuid="afbcd0ca-ee48-47fe-8e7d-d767eb8823c9"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="263" y="551" width="30" height="12" uuid="0b317860-e82a-4014-9055-5d0cfe3123b7"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="263" y="563" width="30" height="12" uuid="a6259ba8-1500-4a53-8a70-ff6dc0b26c60"/>
+			</rectangle>
+			<line>
+				<reportElement x="306" y="517" width="1" height="77" uuid="e39d125a-ac75-4fd8-b0d6-0a94da500c47"/>
+			</line>
+			<line>
+				<reportElement x="2" y="594" width="555" height="1" uuid="a9dfda79-7df8-4479-8112-1bf1c8324bd1"/>
+			</line>
+			<staticText>
+				<reportElement x="325" y="492" width="174" height="12" uuid="346ce653-419e-4678-bc45-a01de0ddc5eb"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Tahoma" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[No HP untuk on/off mesin lewat sms]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="345" y="504" width="3" height="12" uuid="6c884d56-5b6e-4b72-80a0-09958dda9c35"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Tahoma" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[-]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="345" y="516" width="3" height="12" uuid="35e0d980-fe5b-4cc8-9b6d-26c18c632d26"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Tahoma" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[-]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="325" y="530" width="174" height="12" uuid="ab00bc81-c660-4fce-8ccd-544a43c30789"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Tahoma" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[No HP untuk on/off mesin lewat sms]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="345" y="542" width="3" height="12" uuid="242935d0-c602-4263-9f85-d3f8a46402e8"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Tahoma" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[-]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="345" y="554" width="3" height="12" uuid="177886af-6e85-4bc4-a05e-6ca501dbc809"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Tahoma" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[-]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="345" y="566" width="3" height="12" uuid="fc54de1b-536b-4e07-b555-bd6c0c74f42c"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Tahoma" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[-]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="2" y="599" width="304" height="22" uuid="616cff30-6e9f-40c9-8fcb-9ffe2adccf4a"/>
+				<box leftPadding="6"/>
+				<textElement verticalAlignment="Top">
+					<font fontName="Tahoma" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Nilai Kepuasan terhadap instalasi/service yang dilakukan nilai 1-10 complain terhadap pelayanan dari kami dan perbaikan yang diusulkan]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="318" y="599" width="30" height="12" uuid="78cdee16-1679-46c7-a8db-f23a8022d278"/>
+			</rectangle>
+			<line>
+				<reportElement x="1" y="621" width="555" height="1" uuid="bc22b486-a923-472a-8f2c-c311cfa86751"/>
+			</line>
+			<staticText>
+				<reportElement x="11" y="639" width="131" height="12" uuid="70ff0578-37e9-4ce3-9eb9-54b7b5cf3251"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Tahoma" size="8"/>
+				</textElement>
+				<text><![CDATA[Teknisi yang menginstall/service]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="11" y="705" width="131" height="12" uuid="19ca221d-a7ac-4ca3-930f-d861876de94f"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Tahoma" size="8"/>
+				</textElement>
+				<text><![CDATA[Nama Jelas :]]></text>
+			</staticText>
+			<line>
+				<reportElement x="154" y="622" width="1" height="116" uuid="190ea06a-2420-4581-b2d2-5e6b653444cb"/>
+			</line>
+			<staticText>
+				<reportElement x="162" y="639" width="152" height="12" uuid="5baa7638-9db5-4d7d-b30d-7c55cacae9d1"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Tahoma" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CUSTOMER CHECK LIST]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="162" y="652" width="152" height="12" uuid="349a87b9-ca98-4006-a830-33c80cbb5b3b"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Tahoma" size="8"/>
+				</textElement>
+				<text><![CDATA[1) GPS sudah terinstall dengan baik]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="162" y="664" width="152" height="12" uuid="8cbbd4de-9014-4f34-b069-f9a167ca85e6"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Tahoma" size="8"/>
+				</textElement>
+				<text><![CDATA[2) Customer sudah melakukan test fitur]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="162" y="676" width="152" height="20" uuid="a8975b35-83de-412d-99a1-910826f18b47"/>
+				<textElement verticalAlignment="Top">
+					<font fontName="Tahoma" size="8"/>
+				</textElement>
+				<text><![CDATA[3) Customer sudah melakukan test fungsi Electrical]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="162" y="696" width="152" height="29" uuid="fd6296b4-528a-4dbc-9808-07c2b89eb764"/>
+				<textElement verticalAlignment="Top">
+					<font fontName="Tahoma" size="8"/>
+				</textElement>
+				<text><![CDATA[4) Customer sudah mengetahui alamat Web,username,dan password sebelum teknisi pulang]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="334" y="652" width="30" height="12" uuid="3fb81a7f-e843-4604-a032-90bd115fe1d5"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="334" y="664" width="30" height="12" uuid="5bc08bf4-e21f-40ed-9988-de8aed6b9769"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="334" y="676" width="30" height="12" uuid="f7228b00-f308-42db-a172-7846c4d5fb94"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="334" y="696" width="30" height="12" uuid="74db5df1-a6ff-487f-9440-670cd6f44683"/>
+			</rectangle>
+			<line>
+				<reportElement x="0" y="738" width="555" height="1" uuid="6a5c7d3c-8fa7-4360-a14c-e025d75b1a2d"/>
+			</line>
+			<staticText>
+				<reportElement x="275" y="13" width="270" height="12" uuid="b6a55092-621e-4191-8941-f4bd1e1a91e2"/>
+				<box rightPadding="4"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Tahoma" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Sinar kompas utama jl hebras blok C14 no 12]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="275" y="25" width="270" height="12" uuid="e756e78a-0453-429e-b602-6e598aacdd9a"/>
+				<box rightPadding="4"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Tahoma" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Mekarsari tambun selatan Bekasi 17512]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="275" y="37" width="270" height="12" uuid="157aec87-d082-4673-a965-dbea9579216d"/>
+				<box rightPadding="4"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Tahoma" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Telp / Fax:021-83935551-52 / 021-88372060]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="275" y="49" width="270" height="12" uuid="0f0aaa84-9a66-4a3e-8ee4-eb5264d4256a"/>
+				<box rightPadding="4"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Tahoma" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[www.jawaratacker.com]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="750" width="555" height="12" uuid="7e9ee8a2-dae8-4cbd-8520-3437378ac4a4"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Tahoma" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[www.budikaryateknologi.com]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="762" width="555" height="12" uuid="f12d9338-e29a-48e2-9612-9b88144e90e6"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Tahoma" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Simple technology simple life]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="144" y="126" width="100" height="12" uuid="d6481e29-9416-4118-ba0d-ae44146e2dd4"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{documentno}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="144" y="139" width="100" height="12" uuid="03dae8e1-595a-463e-ad87-cdb741f85854"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{name}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="144" y="151" width="100" height="12" uuid="677b904f-4d43-4d99-9931-7adb03139148"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{phone}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="144" y="163" width="411" height="12" uuid="d9d6a146-9aed-488f-8f14-7c712a28b01b"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{alamat}]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnHeader>
+</jasperReport>
