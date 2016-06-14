@@ -145,7 +145,8 @@ public class ResponseResultToDB {
             } else { // bila BP SUdah adaa, maka edit
 				tmcListChildAcc.list().get(0).setTmcOpenapiIdent(id);
                 tmcListChildAcc.list().get(0).setSearchKey(name);
-                tmcListChildAcc.list().get(0).setName(showname);
+                //edit : komen line di bawah, untuk memenuhi syarat BP yg namenya di edit, namanya tidak ikut server cootrack
+                // tmcListChildAcc.list().get(0).setName(showname);
                 tmcListChildAcc.list().get(0).setBusinessPartnerCategory(bpCat);
 
                 OBDal.getInstance().save(tmcListChildAcc.list().get(0));
