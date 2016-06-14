@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="DOInstalasi" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="095af344-3fe1-4e71-8010-aeabca90c79a">
+	<property name="ireport.zoom" value="1.2396694214876032"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="12"/>
+	<parameter name="DOCUMENT_ID" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT mi.documentno, mi.movementdate,bp.name,coalesce(cl.address1,'') as alamat,coalesce(bpl.phone,'') as phone
+FROM m_inout mi,c_bpartner bp
+LEFT JOIN c_bpartner_location bpl ON bpl.c_bpartner_id = bp.c_bpartner_id
+LEFT JOIN c_location cl ON cl.c_location_id = bpl.c_location_id
+where mi.m_inout_id IN ($P{DOCUMENT_ID})
+AND bp.c_bpartner_id = mi.c_bpartner_id]]>
+	</queryString>
+	<field name="documentno" class="java.lang.String">
+		<fieldDescription><![CDATA[--OBTG:NVARCHAR--]]></fieldDescription>
+	</field>
+	<field name="movementdate" class="java.sql.Timestamp"/>
+	<field name="name" class="java.lang.String"/>
+	<field name="alamat" class="java.lang.String"/>
+	<field name="phone" class="java.lang.String">
+		<fieldDescription><![CDATA[--OBTG:NVARCHAR--]]></fieldDescription>
+	</field>
+	<background>
+		<band height="802" splitType="Stretch">
+			<line>
+				<reportElement x="0" y="801" width="555" height="1" uuid="a14de3de-b7d5-4e9b-aee6-bea531d073a3"/>
+			</line>
+			<line>
+				<reportElement x="0" y="0" width="555" height="1" uuid="f5ba92d7-6d26-48da-990b-eeaa25901aed"/>
+			</line>
+			<line>
+				<reportElement x="0" y="1" width="1" height="800" uuid="6934500f-5dad-4c9d-b7a6-45f053a58ba2"/>
+			</line>
+			<line>
+				<reportElement x="555" y="0" width="1" height="802" uuid="e3465676-3a9c-4878-8602-b6760f451361"/>
+			</line>
+			<line>
+				<reportElement x="114" y="122" width="1" height="513" uuid="075eee02-ef30-41e9-9f42-d100e74a7dd9"/>
+			</line>
+			<line>
+				<reportElement x="332" y="122" width="1" height="513" uuid="9cad26e9-3ec2-4d50-831c-36120ce4b082"/>
+			</line>
+		</band>
+	</background>
+	<columnHeader>
+		<band height="139" splitType="Stretch">
+			<line>
+				<reportElement x="1" y="122" width="555" height="1" uuid="6a5c7d3c-8fa7-4360-a14c-e025d75b1a2d"/>
+			</line>
+			<staticText>
+				<reportElement x="15" y="55" width="270" height="12" uuid="b6a55092-621e-4191-8941-f4bd1e1a91e2"/>
+				<box rightPadding="4"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Tahoma" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Sinar kompas utama jl hebras blok C14 no 12]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="15" y="67" width="270" height="12" uuid="e756e78a-0453-429e-b602-6e598aacdd9a"/>
+				<box rightPadding="4"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Tahoma" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Mekarsari tambun selatan Bekasi 17512]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="15" y="79" width="270" height="12" uuid="157aec87-d082-4673-a965-dbea9579216d"/>
+				<box rightPadding="4"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Tahoma" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Telp / Fax:021-83935551-52 / 021-88372060]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="15" y="91" width="270" height="12" uuid="0f0aaa84-9a66-4a3e-8ee4-eb5264d4256a"/>
+				<box rightPadding="4"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Tahoma" size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[www.jawaratacker.com]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="432" y="38" width="112" height="12" uuid="03dae8e1-595a-463e-ad87-cdb741f85854"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{name}]]></textFieldExpression>
+			</textField>
+			<image scaleImage="FillFrame">
+				<reportElement x="13" y="5" width="272" height="50" uuid="10bbc9b4-6f2a-46e2-972f-cdf2ad7ffbab"/>
+				<imageExpression><![CDATA["com/tripad/cootrack/erpReport/Logo.jpg"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="432" y="14" width="112" height="12" uuid="95d050c1-d239-4569-b329-2535b9990914"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Tahoma" size="8"/>
+				</textElement>
+				<text><![CDATA[Bekasi,................................]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="432" y="26" width="112" height="12" uuid="4ee711f5-cc5f-4a4b-b348-31654dd227be"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Tahoma" size="8"/>
+				</textElement>
+				<text><![CDATA[Kepada YTH]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="318" y="91" width="100" height="15" uuid="4eb492d7-d610-484e-acbb-8db6107a28d7"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Tahoma" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Nomor Surat Jalan]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="436" y="91" width="3" height="15" uuid="216f08e8-da19-473e-8235-bbb9f5fddd9b"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Tahoma" size="10"/>
+				</textElement>
+				<text><![CDATA[:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="444" y="91" width="100" height="15" uuid="b06e1509-93da-4e5f-8135-c5fe2b64b607"/>
+				<textElement verticalAlignment="Middle">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{documentno}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="1" y="123" width="114" height="15" uuid="055ebfa3-cbbd-4c2f-8505-904117f0566a"/>
+				<box leftPadding="5"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Tahoma" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Banyaknya]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="115" y="123" width="217" height="15" uuid="8c26e004-34c9-4e01-ae7c-7079d919508d"/>
+				<box leftPadding="0"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Tahoma" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Nama Barang]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="332" y="123" width="223" height="15" uuid="e102f0e5-0a41-4bed-bd66-1a898118e550"/>
+				<box leftPadding="0"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Tahoma" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Keterangan]]></text>
+			</staticText>
+			<line>
+				<reportElement x="1" y="138" width="555" height="1" uuid="45f8494e-1e51-4dc8-b4a3-d92f7aa12215"/>
+			</line>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="23"/>
+	</detail>
+	<columnFooter>
+		<band height="168">
+			<staticText>
+				<reportElement x="13" y="22" width="117" height="15" uuid="a3591e18-40fc-417a-8e65-9c6da9715be6"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Tahoma" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Tanda Terima]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="13" y="83" width="117" height="15" uuid="b0c1417c-ab78-47de-baba-737680ffd030"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Tahoma" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[(..............................)]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="159" y="22" width="248" height="76" uuid="d1966522-d9be-4a58-a28e-1df984ef2295"/>
+				<box topPadding="5" leftPadding="5">
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Top">
+					<font fontName="Tahoma" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Note"]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="0" y="0" width="555" height="1" uuid="802d15d3-2c24-42a4-b493-4d59eb996fdc"/>
+			</line>
+			<staticText>
+				<reportElement x="427" y="22" width="117" height="15" uuid="de5c6a9c-ae0f-409e-9962-c324c74e034f"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Tahoma" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Hormat Kami]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="427" y="83" width="117" height="15" uuid="103b7df4-7336-46a3-9151-4bf9188528a0"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Tahoma" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[(..............................)]]></text>
+			</staticText>
+		</band>
+	</columnFooter>
+</jasperReport>
