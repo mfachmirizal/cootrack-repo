@@ -923,7 +923,7 @@ AND bp.c_bpartner_id = mi.c_bpartner_id]]>
 			</textField>
 			<image scaleImage="FillFrame">
 				<reportElement x="12" y="13" width="263" height="80" uuid="27732dc5-7121-4369-9524-9008c3923dca"/>
-				<imageExpression><![CDATA["com/tripad/cootrack/erpReports/jawaraTracker.jpg"]]></imageExpression>
+				<imageExpression><![CDATA["/com/tripad/cootrack/erpReports/jawaraTracker.jpg"]]></imageExpression>
 			</image>
 		</band>
 	</columnHeader>
