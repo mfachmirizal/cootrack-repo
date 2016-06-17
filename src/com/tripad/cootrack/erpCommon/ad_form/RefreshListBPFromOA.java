@@ -57,7 +57,7 @@ public class RefreshListBPFromOA extends HttpSecureAppServlet {
   private final String THIS_PACKAGE_CLASS = "com.tripad.cootrack.erpCommon.ad_form." + THIS_CLASS;
 
   //User COOTRACK_USER = OBContext.getOBContext().getUser();
-  //    
+  //
   //    CootrackHttpClient con = new CootrackHttpClient();
   //    OpenApiUtils utils = new OpenApiUtils(con);
 
@@ -72,7 +72,7 @@ public class RefreshListBPFromOA extends HttpSecureAppServlet {
       String strTabId = vars.getRequestGlobalVariable("inpTabId", "RefreshListBPFromOA|tabId");
       String strId = "";//vars.getStringParameter("inpfinFinancialAccountId");
       /*      final int accesslevel = 3;
-      
+
       if ((org.openbravo.erpCommon.utility.WindowAccessData.hasReadOnlyAccess(this, vars.getRole(),
       strTabId))
       || !(Utility.isElementInList(
