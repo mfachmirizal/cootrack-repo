@@ -47,6 +47,15 @@ public class ResponseResultToDB {
   /*penarikan di mulai dari dirinya sendiri (user yg sedang login) */
   public void validateBPList(JSONObject hasilRetrieve)
   throws Exception, OBException, JSONException, CustomJsonErrorResponseException, Throwable {
+    //pemanggilan pertama, ubah dlu semua ke true is expirednya
+    OBCriteria<BusinessPartner> allCustomer = OBDal.getInstance().createCriteria(BusinessPartner.class);
+    allCustomer.add(Restrictions.eq(BusinessPartner.PROPERTY_CREATEDBY, COOTRACK_USER));
+    for (BusinessPartner resetCustomerExpired : allCustomer.list()) {
+      resetCustomerExpired.setTmcIsexpired(true);
+      OBDal.getInstance().save(resetCustomerExpired);
+    }
+    //end ubah dlu semua ke true is expirednya
+
     validateBPList(hasilRetrieve, null, null, null);
   }
 
@@ -98,8 +107,6 @@ public class ResponseResultToDB {
     JSONObject hasilTarget;
     JSONArray carList;
 
-    //tempIdDataServer.add(rootBP.getTmcOpenapiIdent());  //asal
-
     for (int i = 0; i < childList.length(); i++) {
       String id = childList.getJSONObject(i).get("id").toString();
       String name = childList.getJSONObject(i).get("name").toString();
@@ -123,6 +130,7 @@ public class ResponseResultToDB {
         bpCat = bpCatParam;
       }
 
+
       if (tmcListChildAcc.list().isEmpty()) { // bila tidak ada maka insert
         BusinessPartner newBusinessPartner = OBProvider.getInstance().get(BusinessPartner.class);
 
@@ -131,6 +139,10 @@ public class ResponseResultToDB {
         // newBusinessPartner.setTmcOpenapiUser(name);
         newBusinessPartner.setSearchKey(name);
         newBusinessPartner.setName(showname);
+
+        //tambah isTmcIsexpired = false karena ini baru
+        newBusinessPartner.setTmcIsexpired(false);
+
         newBusinessPartner.setConsumptionDays(Long.getLong("0"));
         newBusinessPartner.setCreditLimit(BigDecimal.ZERO);
         newBusinessPartner.setBusinessPartnerCategory(bpCat);
@@ -147,6 +159,10 @@ public class ResponseResultToDB {
         tmcListChildAcc.list().get(0).setSearchKey(name);
         //edit : komen line di bawah, untuk memenuhi syarat BP yg namenya di edit, namanya tidak ikut server cootrack
         // tmcListChildAcc.list().get(0).setName(showname);
+
+        //tambah isTmcIsexpired = false karena ini update, dan menyatakan bahwa bp ini sinkron (ada di server)
+        tmcListChildAcc.list().get(0).setTmcIsexpired(false);
+
         tmcListChildAcc.list().get(0).setBusinessPartnerCategory(bpCat);
 
         OBDal.getInstance().save(tmcListChildAcc.list().get(0));
@@ -681,6 +697,7 @@ throws CustomJsonErrorResponseException, Throwable {
       // newBusinessPartner.setTmcOpenapiUser(name);
       newBusinessPartner.setSearchKey(id);
       newBusinessPartner.setName(COOTRACK_USER.getName());
+      newBusinessPartner.setTmcIsexpired(false);
       newBusinessPartner.setConsumptionDays(Long.getLong("0"));
       newBusinessPartner.setCreditLimit(BigDecimal.ZERO);
       newBusinessPartner.setBusinessPartnerCategory(getBPCategory(COOTRACK_USER.getName(),COOTRACK_USER.getUsername()));
@@ -694,6 +711,7 @@ throws CustomJsonErrorResponseException, Throwable {
     } else {
       listBP.list().get(0).setSearchKey(id);
       listBP.list().get(0).setName(COOTRACK_USER.getName());
+      listBP.list().get(0).setTmcIsexpired(false);
       listBP.list().get(0).setBusinessPartnerCategory(getBPCategory(COOTRACK_USER.getName(),COOTRACK_USER.getUsername()));
 
       OBDal.getInstance().save(listBP.list().get(0));
