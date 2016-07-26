@@ -589,7 +589,11 @@ private Category getBPCategory(String showname,String value) {
   //System.out.println(showname);
   OBCriteria<Category> bpCrit = OBDal.getInstance().createCriteria(Category.class);
   //bpCrit.add(Restrictions.eq(Category.PROPERTY_CREATEDBY, COOTRACK_USER));
-  bpCrit.add(Restrictions.eq(Category.PROPERTY_NAME, showname));
+  
+  //edit jadi di komen yg bawah. Karena apabila namenya di ganti, akan kacau. jadi filter bedasarkan value
+  //bpCrit.add(Restrictions.eq(Category.PROPERTY_NAME, showname));
+  bpCrit.add(Restrictions.eq(Category.PROPERTY_SEARCHKEY, value));
+  
   if (bpCrit.list().isEmpty()) {
     Category newBpCat = OBProvider.getInstance().get(Category.class);
     newBpCat.setActive(true);
