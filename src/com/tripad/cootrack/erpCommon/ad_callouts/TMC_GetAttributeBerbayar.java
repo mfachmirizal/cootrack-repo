@@ -32,7 +32,7 @@ public class TMC_GetAttributeBerbayar extends SimpleCallout {
       String strCarId = info.getStringParameter("inptmcCarId", null);
 
       DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
-
+    
       TmcCar car = OBDal.getInstance().get(TmcCar.class, strCarId);
       BusinessPartner bp = OBDal.getInstance().get(BusinessPartner.class, strBusinessPartnerId);
 
@@ -56,17 +56,18 @@ public class TMC_GetAttributeBerbayar extends SimpleCallout {
       tmcDocumentUpdateLineLatest.setMaxResults(1);
 
       for (TmcDocumentUpdateLine prevDocument : tmcDocumentUpdateLineLatest.list()) {
-        info.addResult("inptglIsiPulsaReg",
+        info.addResult("inptglIsiPulsaRegSebelumnya",
             dateFormat.format(prevDocument.getTGLIsiPulsaReg()).toString());
         info.addResult("inpnomIsiPulsaReg", prevDocument.getNOMIsiPulsaReg().toString());
-        info.addResult("inptglIsiPulsaQuota",
+        info.addResult("inptglIsiPulsaQuotaSebelumnya",
             dateFormat.format(prevDocument.getTGLIsiPulsaQuota()).toString());
         info.addResult("inpnomIsiPulsaQuota", prevDocument.getNOMIsiPulsaQuota().toString());
         info.addResult("inpmaintenancedateto",
             dateFormat.format(prevDocument.getMaintenanceDateTo()).toString());
         info.addResult("inpmaintenancedatefrom",
             dateFormat.format(prevDocument.getMaintenanceDateFrom()).toString());
-        info.addResult("inppengisianke", prevDocument.getPengisianke().toString());
+        Long pengisianKe = prevDocument.getPengisianke() + new Long("1");
+        info.addResult("inppengisianke", pengisianKe.toString());
         info.addResult("inpbudget", prevDocument.getBudget().toString());
         info.addResult("inpprofit", prevDocument.getProfit().toString());
         //tambahan callout field saldo awal (credit awal)
