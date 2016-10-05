@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+  <database name="FUNCTION TMC_GETHARIJADWALISINQUO">
+    <function name="TMC_GETHARIJADWALISINQUO" type="VARCHAR">
+      <parameter name="p_maintenanceline_id" type="VARCHAR" mode="in">
+        <default/>
+      </parameter>
+      <body><![CDATA[/*************************************************************************
+Loginusa - M Fachmi Rizal 
+************************************************************************/
+  v_Result VARCHAR2(255):='';
+BEGIN
+
+SELECT CASE WHEN date_part('days',age(now(), dl.tgl_isi_pulsa_quota + ('1 MONTH')+1)) = 0 THEN 'Hari ini adalah jadwal pengisian' WHEN date_part('days',age(now(), dl.tgl_isi_pulsa_quota + ('1 MONTH')+1)) > 0 THEN 'Terlewat '||date_part('days',age(now(), dl.tgl_isi_pulsa_quota + ('1 MONTH')+1)) ||' hari dari jadwal yang ditetapkan' ELSE
+'Masih terjadwal dengan baik '||abs(date_part('days',age(now(), dl.tgl_isi_pulsa_quota + ('1 MONTH')+1)))||' hari lagi adalah jadwal pengisian' END INTO v_Result
+FROM tmc_documentupdateline dl WHERE dl.tmc_documentupdateline_id = p_maintenanceline_id;
+
+RETURN v_Result;
+END TMC_GETHARIJADWALISINQUO
+]]></body>
+    </function>
+  </database>

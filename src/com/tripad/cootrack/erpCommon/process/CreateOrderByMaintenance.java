@@ -147,6 +147,7 @@ public class CreateOrderByMaintenance extends BaseProcessActionHandler {
        orderInsert.setPriceList(parentPriceList);
        orderInsert.setPaymentMethod(parentFIN_PaymentMethod);
        orderInsert.setPaymentTerms(parentPaymentTerm);
+       orderInsert.setTmcDocumentupdateline(parentDocumentUpdateLine);
 
 
        OBDal.getInstance().save(orderInsert);

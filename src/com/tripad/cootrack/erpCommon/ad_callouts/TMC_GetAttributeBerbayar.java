@@ -43,31 +43,34 @@ public class TMC_GetAttributeBerbayar extends SimpleCallout {
           .add(Restrictions.eq(TmcDocumentUpdateLine.PROPERTY_CUSTOMERNAME, bp));
 
       // berdasar status : Maintenance Pulsa dan Quota
-      // tmcDocumentUpdateLineLatest.add(
-      // Restrictions.eq(TmcDocumentUpdateLine.PROPERTY_STATUS, "Maintenance Pulsa atau Quota"));
-
+       tmcDocumentUpdateLineLatest.add(
+       Restrictions.eq(TmcDocumentUpdateLine.PROPERTY_STATUS, "Maintenance Pulsa atau Quota"));
+       
       // order dari updated date yg paling besar
       tmcDocumentUpdateLineLatest.addOrderBy(TmcDocumentUpdateLine.PROPERTY_UPDATED, false);
-
+      
+      // Berdasarkan data yang sudah dibuat sales ordernya
+             tmcDocumentUpdateLineLatest.add(
+       Restrictions.eq(TmcDocumentUpdateLine.PROPERTY_ISSALESORDER,true));
       // set maksimum data yg keluar
       tmcDocumentUpdateLineLatest.setMaxResults(1);
 
       for (TmcDocumentUpdateLine prevDocument : tmcDocumentUpdateLineLatest.list()) {
         info.addResult("inptglIsiPulsaReg",
             dateFormat.format(prevDocument.getTGLIsiPulsaReg()).toString());
-        info.addResult("inpnomIsiPulsaReg", prevDocument.getNOMIsiPulsaReg());
+        info.addResult("inpnomIsiPulsaReg", prevDocument.getNOMIsiPulsaReg().toString());
         info.addResult("inptglIsiPulsaQuota",
             dateFormat.format(prevDocument.getTGLIsiPulsaQuota()).toString());
-        info.addResult("inpnomIsiPulsaQuota", prevDocument.getNOMIsiPulsaQuota());
+        info.addResult("inpnomIsiPulsaQuota", prevDocument.getNOMIsiPulsaQuota().toString());
         info.addResult("inpmaintenancedateto",
             dateFormat.format(prevDocument.getMaintenanceDateTo()).toString());
         info.addResult("inpmaintenancedatefrom",
             dateFormat.format(prevDocument.getMaintenanceDateFrom()).toString());
-        info.addResult("inppengisianke", prevDocument.getPengisianke());
-        info.addResult("inpbudget", prevDocument.getBudget());
-        info.addResult("inpprofit", prevDocument.getProfit());
+        info.addResult("inppengisianke", prevDocument.getPengisianke().toString());
+        info.addResult("inpbudget", prevDocument.getBudget().toString());
+        info.addResult("inpprofit", prevDocument.getProfit().toString());
         //tambahan callout field saldo awal (credit awal)
-        info.addResult("inpcreditAwal", prevDocument.getCreditAwal());
+        info.addResult("inpcreditAwal", prevDocument.getCreditAwal().toString());
       }
 
     } catch (Exception e) {

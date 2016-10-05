@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="MaintenanceIsiPulsaDanQuota" pageWidth="842" pageHeight="595" orientation="Landscape" whenNoDataType="BlankPage" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="fe5197b6-742c-4d6b-b4ca-89a71498db1d">
-	<property name="ireport.zoom" value="1.0"/>
-	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="0"/>
+	<property name="ireport.zoom" value="2.1435888100000016"/>
+	<property name="ireport.x" value="526"/>
+	<property name="ireport.y" value="184"/>
 	<parameter name="AD_ORG_ID" class="java.lang.String">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
@@ -10,7 +10,8 @@
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
 	<queryString>
-		<![CDATA[SELECT bp.name as customername,cr.name as car,
+		<![CDATA[SELECT DISTINCT ON (cr.tmc_car_id)
+bp.name as customername,cr.name as car,
 dl.tgl_isi_pulsa_reg as tanggalisipulsareguler,
 dl.nom_isi_pulsa_reg as nominalisipulsareguler,
 dl.tgl_isi_pulsa_quota as tanggalisipulsaquota,
@@ -19,21 +20,33 @@ dl.maintenancedatefrom as maintenancedatefrom,
 dl.maintenancedateto as maintenancedateto,
 tmc_getdayinterval(dl.maintenancedateto,dl.maintenancedatefrom) as period,
 dl.pengisianke as pengisianke,
-tmc_getdayinterval(dl.maintenancedateto,dl.maintenancedatefrom) - dl.pengisianke as sisapengisian
-FROM tmc_documentupdateline dl,c_bpartner bp,tmc_car cr
+tmc_getdayinterval(dl.maintenancedateto,dl.maintenancedatefrom) - dl.pengisianke as sisapengisian,
+dl.tgl_isi_pulsa_reg as tanggalterakhirisipulsareguler,dl.tgl_isi_pulsa_reg + ('1 MONTH') as tanggalpengisianpulsaregulerberikutnya,
+dl.tgl_isi_pulsa_quota as tanggalterakhirisipulsaquota,dl.tgl_isi_pulsa_quota + ('1 MONTH') as tanggalpengisianpulsaquotaberikutnya,
+age(now(), dl.tgl_isi_pulsa_reg + ('1 MONTH')+1) AS lamaharipengisianpulsareguler,
+age(now(), dl.tgl_isi_pulsa_quota + ('1 MONTH')+1) AS lamaharipengisianpulsaquota,
+CASE WHEN date_part('days',age(now(), dl.tgl_isi_pulsa_reg + ('1 MONTH')+1)) = 0 THEN 'Hari ini adalah jadwal pengisian' WHEN date_part('days',age(now(), dl.tgl_isi_pulsa_reg + ('1 MONTH')+1)) > 0 THEN 'Terlewat '||date_part('days',age(now(), dl.tgl_isi_pulsa_reg + ('1 MONTH')+1)) ||' hari dari jadwal yang ditetapkan' ELSE
+'Masih terjadwal dengan baik '||abs(date_part('days',age(now(), dl.tgl_isi_pulsa_reg + ('1 MONTH')+1)))||' hari lagi adalah jadwal pengisian' END AS statusjadwalpulsareguler,
+CASE WHEN date_part('days',age(now(), dl.tgl_isi_pulsa_quota + ('1 MONTH')+1)) = 0 THEN 'Hari ini adalah jadwal pengisian' WHEN date_part('days',age(now(), dl.tgl_isi_pulsa_quota + ('1 MONTH')+1)) > 0 THEN 'Terlewat '||date_part('days',age(now(), dl.tgl_isi_pulsa_quota + ('1 MONTH')+1)) ||' hari dari jadwal yang ditetapkan' ELSE
+'Masih terjadwal dengan baik '||abs(date_part('days',age(now(), dl.tgl_isi_pulsa_quota + ('1 MONTH')+1)))||' hari lagi adalah jadwal pengisian' END AS statusjadwalpulsaquota,
+dl.issalesorder
+FROM tmc_documentupdateline dl,c_bpartner bp,tmc_car cr,tmc_documentupdate tmc
 WHERE dl.status = 'Maintenance Pulsa atau Quota'
 AND bp.c_bpartner_id = dl.c_bpartner_id
 AND cr.tmc_car_id = dl.tmc_car_id
-AND (abs(date_part('month',age(dl.maintenancedatefrom,dl.maintenancedateto))) - dl.pengisianke) != 0
-AND dl.created = (SELECT MAX(dl.created) FROM tmc_documentupdateline dl,c_bpartner bp,tmc_car cr
-WHERE dl.status = 'Maintenance Pulsa atau Quota'
 AND bp.c_bpartner_id = dl.c_bpartner_id
-AND cr.tmc_car_id = dl.tmc_car_id
 AND (abs(date_part('month',age(dl.maintenancedatefrom,dl.maintenancedateto))) - dl.pengisianke) != 0
-)
-
+AND tmc.tmc_documentupdate_id = dl.tmc_documentupdate_id
+AND dl.issalesorder = 'Y'
 AND (EXTRACT(DAY FROM TO_DATE(dl.tgl_isi_pulsa_reg)) = EXTRACT(DAY FROM DATE ($P{CHECKINGDATE})) OR EXTRACT(DAY FROM TO_DATE(dl.tgl_isi_pulsa_quota)) = EXTRACT(DAY FROM DATE ($P{CHECKINGDATE})))
-AND $P{CHECKINGDATE} BETWEEN dl.maintenancedatefrom AND dl.maintenancedateto]]>
+AND $P{CHECKINGDATE} BETWEEN dl.maintenancedatefrom AND dl.maintenancedateto
+GROUP BY bp.name,cr.name,dl.tgl_isi_pulsa_reg,dl.nom_isi_pulsa_reg,dl.tgl_isi_pulsa_quota,
+dl.nom_isi_pulsa_quota,
+dl.maintenancedatefrom,
+dl.maintenancedateto,
+dl.pengisianke,cr.tmc_car_id,dl.created,
+dl.issalesorder
+ORDER BY cr.tmc_car_id, dl.created DESC;]]>
 	</queryString>
 	<field name="customername" class="java.lang.String"/>
 	<field name="car" class="java.lang.String"/>
@@ -46,6 +59,15 @@ AND $P{CHECKINGDATE} BETWEEN dl.maintenancedatefrom AND dl.maintenancedateto]]>
 	<field name="period" class="java.math.BigDecimal"/>
 	<field name="pengisianke" class="java.math.BigDecimal"/>
 	<field name="sisapengisian" class="java.math.BigDecimal"/>
+	<field name="tanggalterakhirisipulsareguler" class="java.sql.Timestamp"/>
+	<field name="tanggalpengisianpulsaregulerberikutnya" class="java.sql.Timestamp"/>
+	<field name="tanggalterakhirisipulsaquota" class="java.sql.Timestamp"/>
+	<field name="tanggalpengisianpulsaquotaberikutnya" class="java.sql.Timestamp"/>
+	<field name="lamaharipengisianpulsareguler" class="org.postgresql.util.PGInterval"/>
+	<field name="lamaharipengisianpulsaquota" class="org.postgresql.util.PGInterval"/>
+	<field name="statusjadwalpulsareguler" class="java.lang.String"/>
+	<field name="statusjadwalpulsaquota" class="java.lang.String"/>
+	<field name="issalesorder" class="java.lang.String"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -70,7 +92,7 @@ AND $P{CHECKINGDATE} BETWEEN dl.maintenancedatefrom AND dl.maintenancedateto]]>
 	<columnHeader>
 		<band height="31" splitType="Stretch">
 			<staticText>
-				<reportElement x="0" y="0" width="132" height="31" uuid="a85f5aa7-8d6c-4ba0-b9dd-dc3a106da06d"/>
+				<reportElement x="27" y="0" width="73" height="31" uuid="a85f5aa7-8d6c-4ba0-b9dd-dc3a106da06d"/>
 				<box leftPadding="4">
 					<topPen lineWidth="0.5"/>
 					<leftPen lineWidth="0.5"/>
@@ -78,255 +100,464 @@ AND $P{CHECKINGDATE} BETWEEN dl.maintenancedatefrom AND dl.maintenancedateto]]>
 					<rightPen lineWidth="0.5"/>
 				</box>
 				<textElement verticalAlignment="Middle">
-					<font fontName="Tahoma" size="8" isBold="true"/>
+					<font fontName="Tahoma" size="5" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Cutomer Name]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="132" y="0" width="76" height="31" uuid="eb17aa55-4874-400b-8977-853db5c2b361"/>
+				<reportElement x="100" y="0" width="35" height="31" uuid="eb17aa55-4874-400b-8977-853db5c2b361"/>
 				<box>
 					<topPen lineWidth="0.5"/>
 					<bottomPen lineWidth="0.5" lineStyle="Solid"/>
 					<rightPen lineWidth="0.5"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Tahoma" size="8" isBold="true"/>
+					<font fontName="Tahoma" size="5" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Car]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="208" y="0" width="71" height="31" uuid="4f6c0e15-8af9-4350-8355-182faa893c31"/>
+				<reportElement x="135" y="0" width="35" height="31" uuid="4f6c0e15-8af9-4350-8355-182faa893c31"/>
 				<box>
 					<topPen lineWidth="0.5"/>
 					<bottomPen lineWidth="0.5" lineStyle="Solid"/>
 					<rightPen lineWidth="0.5"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Tahoma" size="8" isBold="true"/>
+					<font fontName="Tahoma" size="5" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Tgl Isi Pulsa Reguler]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="279" y="0" width="54" height="31" uuid="042e7f0a-cb05-40dc-a917-d0908cb67c94"/>
+				<reportElement x="170" y="0" width="35" height="31" uuid="042e7f0a-cb05-40dc-a917-d0908cb67c94"/>
 				<box>
 					<topPen lineWidth="0.5"/>
 					<bottomPen lineWidth="0.5" lineStyle="Solid"/>
 					<rightPen lineWidth="0.5"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Tahoma" size="8" isBold="true"/>
+					<font fontName="Tahoma" size="5" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Nominal Isi Pulsa Reguler]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="333" y="0" width="71" height="31" uuid="9012f350-0636-4367-90b1-8352522fca07"/>
+				<reportElement x="205" y="0" width="35" height="31" uuid="9012f350-0636-4367-90b1-8352522fca07"/>
 				<box>
 					<topPen lineWidth="0.5"/>
 					<bottomPen lineWidth="0.5" lineStyle="Solid"/>
 					<rightPen lineWidth="0.5"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Tahoma" size="8" isBold="true"/>
+					<font fontName="Tahoma" size="5" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Tgl Isi Pulsa Quota]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="460" y="0" width="58" height="31" uuid="5f677b32-9f6b-4426-ad58-7dca6fe7bee3"/>
+				<reportElement x="275" y="0" width="35" height="31" uuid="5f677b32-9f6b-4426-ad58-7dca6fe7bee3"/>
 				<box>
 					<topPen lineWidth="0.5"/>
 					<bottomPen lineWidth="0.5" lineStyle="Solid"/>
 					<rightPen lineWidth="0.5"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Tahoma" size="8" isBold="true"/>
+					<font fontName="Tahoma" size="5" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Maintenance Date From]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="518" y="0" width="71" height="31" uuid="77956bfd-617e-46dd-a36e-1d3411ca87cc"/>
+				<reportElement x="310" y="0" width="35" height="31" uuid="77956bfd-617e-46dd-a36e-1d3411ca87cc"/>
 				<box>
 					<topPen lineWidth="0.5"/>
 					<bottomPen lineWidth="0.5" lineStyle="Solid"/>
 					<rightPen lineWidth="0.5"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Tahoma" size="8" isBold="true"/>
+					<font fontName="Tahoma" size="5" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Maintenance Date To]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="589" y="0" width="71" height="31" uuid="b1cb69a1-26e3-4694-93b9-c08c6a4fd72c"/>
+				<reportElement x="345" y="0" width="35" height="31" uuid="b1cb69a1-26e3-4694-93b9-c08c6a4fd72c"/>
 				<box>
 					<topPen lineWidth="0.5"/>
 					<bottomPen lineWidth="0.5" lineStyle="Solid"/>
 					<rightPen lineWidth="0.5"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Tahoma" size="8" isBold="true"/>
+					<font fontName="Tahoma" size="5" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Periode]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="660" y="0" width="71" height="31" uuid="e6951988-6644-4e96-a1e9-d8f24fa4157e"/>
+				<reportElement x="380" y="0" width="35" height="31" uuid="e6951988-6644-4e96-a1e9-d8f24fa4157e"/>
 				<box>
 					<topPen lineWidth="0.5"/>
 					<bottomPen lineWidth="0.5" lineStyle="Solid"/>
 					<rightPen lineWidth="0.5"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Tahoma" size="8" isBold="true"/>
+					<font fontName="Tahoma" size="5" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Pengisian Ke]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="731" y="0" width="71" height="31" uuid="2abdae03-a8a5-4afa-b438-7bdc60baa05e"/>
+				<reportElement x="415" y="0" width="35" height="31" uuid="2abdae03-a8a5-4afa-b438-7bdc60baa05e"/>
 				<box>
 					<topPen lineWidth="0.5"/>
 					<bottomPen lineWidth="0.5" lineStyle="Solid"/>
 					<rightPen lineWidth="0.5"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Tahoma" size="8" isBold="true"/>
+					<font fontName="Tahoma" size="5" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Sisa Pengisian]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="404" y="0" width="56" height="31" uuid="25c51ce7-3152-448f-b233-797f0c8e576a"/>
+				<reportElement x="240" y="0" width="35" height="31" uuid="25c51ce7-3152-448f-b233-797f0c8e576a"/>
 				<box>
 					<topPen lineWidth="0.5"/>
 					<bottomPen lineWidth="0.5" lineStyle="Solid"/>
 					<rightPen lineWidth="0.5"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Tahoma" size="8" isBold="true"/>
+					<font fontName="Tahoma" size="5" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Nominal Isi Pulsa Quota]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="450" y="0" width="35" height="31" uuid="754daf77-bd06-44de-aa77-ca2d9e70ac82"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Tahoma" size="5" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Tanggal Terakhir Pengisian Pulsa Reguler]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="485" y="0" width="35" height="31" uuid="022057e4-8239-4b26-993f-5f3d95a1f4d5"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Tahoma" size="5" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Tanggal Pengisian Pulsa Reguler Berikutnya]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="520" y="0" width="45" height="31" uuid="c055abef-5637-4bf7-a4ea-872d9afb9df4"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Tahoma" size="5" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Lama Hari Pengisian Pulsa Reguler]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="635" y="0" width="45" height="31" uuid="941a66d4-2498-4d31-957e-2156679e15e3"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Tahoma" size="5" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Lama Hari Pengisian Pulsa Quota]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="565" y="0" width="35" height="31" uuid="f3ed1fde-6b7c-4451-aa65-98de9b3b6c58"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Tahoma" size="5" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Tanggal Pengisian Pulsa Quota Berikutnya]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="0" width="27" height="31" uuid="4515697f-1af3-4994-ad7a-d3a2f96264e1"/>
+				<box leftPadding="4">
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Tahoma" size="5" isBold="true"/>
+				</textElement>
+				<text><![CDATA[No]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="680" y="0" width="61" height="31" uuid="c1ca8407-b9d1-41ab-90ce-541139e6b327"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Tahoma" size="5" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Status Jadwal Pengisian Pulsa Reguler]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="741" y="0" width="61" height="31" uuid="b2c90c18-6b19-4566-ab94-49c12910dd96"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Tahoma" size="5" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Status Jadwal Pengisian Pulsa Quota]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="600" y="0" width="35" height="31" uuid="a449108e-6706-4618-a4cf-9328aac716e9"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5" lineStyle="Solid"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Tahoma" size="5" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Tanggal Terakhir Pengisian Pulsa Quota]]></text>
 			</staticText>
 		</band>
 	</columnHeader>
 	<detail>
 		<band height="20" splitType="Stretch">
 			<textField isBlankWhenNull="true">
-				<reportElement x="0" y="0" width="132" height="20" uuid="c8c00e5a-113c-48e6-9eb5-fa94d5088d8d"/>
+				<reportElement x="27" y="0" width="73" height="20" uuid="c8c00e5a-113c-48e6-9eb5-fa94d5088d8d"/>
 				<box leftPadding="4">
 					<leftPen lineWidth="0.5"/>
 					<bottomPen lineWidth="0.5"/>
 					<rightPen lineWidth="0.5"/>
 				</box>
 				<textElement verticalAlignment="Middle">
-					<font fontName="Tahoma" size="8"/>
+					<font fontName="Tahoma" size="5"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{customername}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="132" y="0" width="76" height="20" uuid="0ce62204-c327-49a0-9406-d3049fc24c66"/>
+				<reportElement x="100" y="0" width="35" height="20" uuid="0ce62204-c327-49a0-9406-d3049fc24c66"/>
 				<box>
 					<bottomPen lineWidth="0.5"/>
 					<rightPen lineWidth="0.5"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Tahoma" size="8"/>
+					<font fontName="Tahoma" size="5"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{car}]]></textFieldExpression>
 			</textField>
 			<textField pattern="dd-MM-yyyy" isBlankWhenNull="true">
-				<reportElement x="208" y="0" width="71" height="20" uuid="41af530c-0426-4452-96fe-f1d563d88b08"/>
+				<reportElement x="135" y="0" width="35" height="20" uuid="41af530c-0426-4452-96fe-f1d563d88b08"/>
 				<box>
 					<bottomPen lineWidth="0.5"/>
 					<rightPen lineWidth="0.5"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Tahoma" size="8"/>
+					<font fontName="Tahoma" size="5"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{tanggalisipulsareguler}]]></textFieldExpression>
 			</textField>
 			<textField pattern="dd-MM-yyyy" isBlankWhenNull="true">
-				<reportElement x="333" y="0" width="71" height="20" uuid="b153ab16-a12d-4c7f-92cf-66f0b0382cbf"/>
+				<reportElement x="205" y="0" width="35" height="20" uuid="b153ab16-a12d-4c7f-92cf-66f0b0382cbf"/>
 				<box>
 					<bottomPen lineWidth="0.5"/>
 					<rightPen lineWidth="0.5"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Tahoma" size="8"/>
+					<font fontName="Tahoma" size="5"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{tanggalisipulsaquota}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00" isBlankWhenNull="true">
-				<reportElement x="279" y="0" width="54" height="20" uuid="9911ebb2-8b35-40d9-86c5-4b821b6edd2b"/>
+				<reportElement x="170" y="0" width="35" height="20" uuid="9911ebb2-8b35-40d9-86c5-4b821b6edd2b"/>
 				<box rightPadding="4">
 					<bottomPen lineWidth="0.5"/>
 					<rightPen lineWidth="0.5"/>
 				</box>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
-					<font fontName="Tahoma" size="8"/>
+					<font fontName="Tahoma" size="5"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{nominalisipulsareguler}]]></textFieldExpression>
 			</textField>
 			<textField pattern="dd-MM-yyyy" isBlankWhenNull="true">
-				<reportElement x="460" y="0" width="58" height="20" uuid="b4c8ed91-5777-477a-817c-aaa36c90e751"/>
+				<reportElement x="275" y="0" width="35" height="20" uuid="b4c8ed91-5777-477a-817c-aaa36c90e751"/>
 				<box>
 					<bottomPen lineWidth="0.5"/>
 					<rightPen lineWidth="0.5"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Tahoma" size="8"/>
+					<font fontName="Tahoma" size="5"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{maintenancedatefrom}]]></textFieldExpression>
 			</textField>
 			<textField pattern="dd-MM-yyyy" isBlankWhenNull="true">
-				<reportElement x="518" y="0" width="71" height="20" uuid="3fadca01-babc-475c-966b-66abe3261b30"/>
+				<reportElement x="310" y="0" width="35" height="20" uuid="3fadca01-babc-475c-966b-66abe3261b30"/>
 				<box>
 					<bottomPen lineWidth="0.5"/>
 					<rightPen lineWidth="0.5"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Tahoma" size="8"/>
+					<font fontName="Tahoma" size="5"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{maintenancedateto}]]></textFieldExpression>
 			</textField>
 			<textField pattern="###0" isBlankWhenNull="true">
-				<reportElement x="589" y="0" width="71" height="20" uuid="00af17e3-4e52-4bf1-a05a-6473c08ee521"/>
+				<reportElement x="345" y="0" width="35" height="20" uuid="00af17e3-4e52-4bf1-a05a-6473c08ee521"/>
 				<box>
 					<bottomPen lineWidth="0.5"/>
 					<rightPen lineWidth="0.5"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Tahoma" size="8"/>
+					<font fontName="Tahoma" size="5"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{period}]]></textFieldExpression>
 			</textField>
 			<textField pattern="" isBlankWhenNull="true">
-				<reportElement x="660" y="0" width="71" height="20" uuid="499bcb59-e014-4eeb-b046-97357573d988"/>
+				<reportElement x="380" y="0" width="35" height="20" uuid="499bcb59-e014-4eeb-b046-97357573d988"/>
 				<box>
 					<bottomPen lineWidth="0.5"/>
 					<rightPen lineWidth="0.5"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Tahoma" size="8"/>
+					<font fontName="Tahoma" size="5"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{pengisianke}]]></textFieldExpression>
 			</textField>
 			<textField pattern="###0" isBlankWhenNull="true">
-				<reportElement x="731" y="0" width="71" height="20" uuid="40585a69-6465-4b84-b714-c90ff20c556c"/>
+				<reportElement x="415" y="0" width="35" height="20" uuid="40585a69-6465-4b84-b714-c90ff20c556c"/>
 				<box>
 					<bottomPen lineWidth="0.5"/>
 					<rightPen lineWidth="0.5"/>
 				</box>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Tahoma" size="8"/>
+					<font fontName="Tahoma" size="5"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{sisapengisian}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00" isBlankWhenNull="true">
-				<reportElement x="404" y="0" width="56" height="20" uuid="68185c80-3448-4fc5-a334-d3c109a77c0a"/>
+				<reportElement x="240" y="0" width="35" height="20" uuid="68185c80-3448-4fc5-a334-d3c109a77c0a"/>
 				<box rightPadding="4">
 					<bottomPen lineWidth="0.5"/>
 					<rightPen lineWidth="0.5"/>
 				</box>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
-					<font fontName="Tahoma" size="8"/>
+					<font fontName="Tahoma" size="5"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{nominalisipulsaquota}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd-MM-yyyy" isBlankWhenNull="true">
+				<reportElement x="450" y="0" width="35" height="20" uuid="a1225c27-b7bd-4e7b-8368-7ad40ee58b0c"/>
+				<box>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Tahoma" size="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{tanggalterakhirisipulsareguler}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd-MM-yyyy" isBlankWhenNull="true">
+				<reportElement x="485" y="0" width="35" height="20" uuid="f90669f1-7cfd-42ae-abef-e2838cc1e5e8"/>
+				<box>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Tahoma" size="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{tanggalpengisianpulsaregulerberikutnya}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement x="520" y="0" width="45" height="20" uuid="b5d636e0-f701-4f9b-ad73-89e13dadf386"/>
+				<box>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Tahoma" size="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{lamaharipengisianpulsareguler}.getDays()]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd-MM-yyyy" isBlankWhenNull="true">
+				<reportElement x="565" y="0" width="35" height="20" uuid="11a9af6c-53f3-4412-8881-55654000b49c"/>
+				<box>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Tahoma" size="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{tanggalpengisianpulsaquotaberikutnya}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement x="635" y="0" width="45" height="20" uuid="840b8b2a-8919-4092-9bf6-d81ce5a74898"/>
+				<box>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Tahoma" size="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{lamaharipengisianpulsaquota}.getDays()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="0" width="27" height="20" uuid="08e8d11f-bfa0-4809-ab2b-7b3dc6a7469d"/>
+				<box leftPadding="4">
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Tahoma" size="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{COLUMN_COUNT}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="680" y="0" width="61" height="20" uuid="a4318eb6-a69f-4aa7-ad72-a490dbd51197"/>
+				<box>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Tahoma" size="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{statusjadwalpulsareguler}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="741" y="0" width="61" height="20" uuid="b3ab512f-8962-4f7d-abf3-90af05b67c0e"/>
+				<box>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Tahoma" size="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{statusjadwalpulsaquota}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd-MM-yyyy" isBlankWhenNull="true">
+				<reportElement x="600" y="0" width="35" height="20" uuid="e2b6e9ff-f3c1-4029-a400-7a7b3bf44885"/>
+				<box>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Tahoma" size="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{tanggalterakhirisipulsaquota}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
