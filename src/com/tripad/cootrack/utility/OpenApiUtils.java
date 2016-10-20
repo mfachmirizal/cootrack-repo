@@ -106,7 +106,7 @@ public class OpenApiUtils {
 
     JSONObject hasil = new JSONObject(jsonResponse);
 
-    //System.out.println("Hasil return : "+hasil.get("ret").toString());
+    System.out.println("Hasil return : "+hasil.get("ret").toString());
     //auto get token yg expired belum di tambahkan
     if ((hasil.get("ret").toString()).equals("10005")
         || (hasil.get("ret").toString()).equals("10006")) { //token error / not existed
@@ -143,7 +143,7 @@ public class OpenApiUtils {
       throw new CustomJsonErrorResponseException(
           hasil.get("msg").toString() + ". Please retry again.");
     }
-
+	  System.out.println("Hasil : " + hasil.toString());
     return hasil;
   }
 

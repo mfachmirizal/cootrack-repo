@@ -256,8 +256,9 @@ public class RefreshListBPFromOA extends HttpSecureAppServlet {
     if (utils.getCurrentPassword() != null) {
       JSONObject hasilRetrieve = utils.requestListChildAccount(null);
       hasil = hasilRetrieve.get("msg").toString();
-      if (hasil.length() == 0) {
+      if (hasil.length() == 0 || hasil.toLowerCase().equals("ok")) {
         // Retrieve seluruh Data dari OpenAPi Ke BP
+		System.out.println("dikirim ke validateBPList : "+hasilRetrieve.toString());
         new ResponseResultToDB(utils).validateBPList(hasilRetrieve);
       }
       json.put("jawaban", hasil);
